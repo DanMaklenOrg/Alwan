@@ -1,6 +1,10 @@
 *.iml
 
+# Flutter/Dart pub
 .dart_tool/
 .packages
+.flutter-plugins
+.flutter-plugins-dependencies
+**/generated_plugin_registrant.dart
 
 /build/
