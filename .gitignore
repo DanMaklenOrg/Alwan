@@ -1,5 +1,3 @@
-*.iml
-
 # Flutter/Dart pub
 .dart_tool/
 .packages
