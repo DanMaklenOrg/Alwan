@@ -1,4 +1,5 @@
-import 'package:alwan/warframe_screen.dart';
+import 'package:alwan/pika/domain/warframe_pika_domain.dart';
+import 'package:alwan/pika_domain_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Dan Maklen App',
-      home: WarframeScreen(),
+      home: PikaDomainScreen(domain: WarframePikaDomain(),),
     );
   }
 }
