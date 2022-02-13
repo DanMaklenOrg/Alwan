@@ -34,19 +34,6 @@ class WarframePikaDomain extends PikaDomain {
   //#region Definition
   static final PikaEntry _def = PikaEntry('Warframe', children: [
     _defProjectOwnAllEquipment,
-    PikaEntry(
-      'Max MR',
-      children: [
-        PikaEntry(
-          'Warframes',
-          children: [
-            PikaEntry('Equinox'),
-            PikaEntry('Equinox Prime'),
-            PikaEntry('Excalibre Umbra'),
-          ],
-        ),
-      ],
-    ),
   ]);
 
   static final PikaEntry _defProjectOwnAllEquipment = PikaEntry(
