@@ -2,12 +2,14 @@ name: CD
 on:
   workflow_run:
     workflows: CI
+#    branches: master
+    types: completed
 
 jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
-#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Deploy Infrastructure
         run: echo "Hello World"
