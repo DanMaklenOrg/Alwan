@@ -1,4 +1,4 @@
-name: CI
+name: CICD
 on:
   push:
     branches:
@@ -27,3 +27,23 @@ jobs:
         with:
           name: alwanReleaseBuildArtifact
           path: build/web
+  deploy-infra:
+    name: Deploy Infrastructure
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Deploy Infrastructure
+        run: echo "Hello World"
+  deploy-alwan:
+    name: Deploy Alwan
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: deploy-infra
+    steps:
+      name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: alwanReleaseBuildArtifact
+      - run: ls
+      - name: Deploy Alwan
+        run: echo "Hello World"
