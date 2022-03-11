@@ -35,7 +35,7 @@ jobs:
 #    needs: build
     steps:
       - name: Deploy Infrastructure
-        uses: DanMaklenOrg/Overlord/Deploy/Infra/SPA@master
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
 
   deploy-alwan:
     name: Deploy Alwan
