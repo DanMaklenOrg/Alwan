@@ -35,7 +35,7 @@ jobs:
 #    needs: build
     steps:
       - name: Deploy Infrastructure
-        uses: Overloard/Deploy/Infra/SPA
+        uses: Overloard/Deploy/Infra/SPA@master
 
   deploy-alwan:
     name: Deploy Alwan
