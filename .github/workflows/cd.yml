@@ -24,4 +24,5 @@ jobs:
           - workflow: CI
       - run: ls
       - name: Deploy Alwan
+
         run: echo "Hello World"
