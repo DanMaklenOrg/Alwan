@@ -19,7 +19,7 @@ jobs:
           cache: true
       - name: Using Flutter Version
         run: flutter --version
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - name: Build Release
         run: flutter build web --release
