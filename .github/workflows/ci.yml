@@ -23,3 +23,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Build Release
         run: flutter build web --release
+      - name: Upload Build Artifacts
+          uses: actions/upload-artifact@v3
+          with:
+            name: alwanReleaseBuildArtifact
+            path: build/web
