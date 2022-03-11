@@ -32,10 +32,10 @@ jobs:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
 #    if: github.ref == 'refs/heads/master'
-    needs: build
+#    needs: build
     steps:
       - name: Deploy Infrastructure
-        run: echo "Hello World"
+        uses: Overloard/Deploy/Infra/SPA
 
   deploy-alwan:
     name: Deploy Alwan
@@ -47,6 +47,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
+          path: build/web
       - run: ls
       - name: Deploy Alwan
         run: echo "Hello World"
