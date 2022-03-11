@@ -31,7 +31,8 @@ jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
+    needs: build
     steps:
       - name: Deploy Infrastructure
         run: echo "Hello World"
@@ -39,7 +40,7 @@ jobs:
   deploy-alwan:
     name: Deploy Alwan
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs: deploy-infra
     steps:
       - name: Download Build Artifacts
