@@ -1,4 +1,12 @@
-on: [pull_request]
+name: CICD
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
