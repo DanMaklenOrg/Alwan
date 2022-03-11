@@ -16,6 +16,9 @@ jobs:
         with:
           flutter-version: '2.8.x'
           channel: 'stable'
+      - name: Using Flutter Version
       - run: flutter --version
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Build Release
         run: flutter build web --release
