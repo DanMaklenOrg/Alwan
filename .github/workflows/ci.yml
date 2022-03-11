@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.x'
+          channel: 'stable'
+          cache: true
+      - name: Using Flutter Version
+        run: flutter --version
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Build Release
+        run: flutter build web --release
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: alwanReleaseBuildArtifact
+          path: build/web
