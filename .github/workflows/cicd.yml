@@ -39,7 +39,7 @@ jobs:
         with:
           name: Alwan
           domainName: danmaklen.com
-          certificateArn: ${{CERTIFICATEARN}}
+          certificateArn: ${{secrets.CERTIFICATEARN}}
 
   deploy-alwan:
     name: Deploy Alwan
