@@ -31,12 +31,14 @@ jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
-    container: contino/aws-cdk
+    container: mcr.microsoft.com/dotnet/sdk:5.0
     #    if: github.ref == 'refs/heads/master'
 #    needs: build
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+      - name: Setup CDK
+        run: apt-get -y update && apt-get -y install zip unzip && apt-get install -y nodejs && apt-get install -y npm && npm install -g aws-cdk
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
         working-directory: Alwan.Infra
