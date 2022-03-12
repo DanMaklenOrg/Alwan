@@ -35,7 +35,7 @@ jobs:
 #    needs: build
     steps:
       - name: Deploy Infrastructure
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@test
         with:
           name: Alwan
           domainName: danmaklen.com
