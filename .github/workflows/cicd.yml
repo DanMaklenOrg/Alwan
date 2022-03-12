@@ -39,6 +39,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
+        working-directory: Alwan.Infra
       - run: "echo 'Reminder: add CNAME record to your domain $domainName with value $edgeDomain'"
       - run: "echo '::setOutputs name=bucketArn::$bucketArn'"
   deploy-alwan:
