@@ -31,16 +31,23 @@ jobs:
   deploy-infra:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/master'
+    container: contino/aws-cdk
+    #    if: github.ref == 'refs/heads/master'
 #    needs: build
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
       - name: Deploy Infrastructure
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@Test
-        with:
-          name: Alwan
-          domainName: danmaklen.com
-          certificateArn: ${{secrets.CertificateArn}}
-
+        run: |
+          cdk deploy \
+            --app=Alwan.Infra \
+            --require-approval never \
+            --outputs-file $outputFile \
+            -c Name="Alwan" \
+            -c DomainName="danmaklen.com" \
+            -c CertificateArn="${{secrets.CertificateArn}}"
+      - run: "echo 'Reminder: add CNAME record to your domain \`$domainName\` with value \`$edgeDomain\`'"
+      - run: "echo '::setOutputs name=bucketArn::$bucketArn'"
   deploy-alwan:
     name: Deploy Alwan
     runs-on: ubuntu-latest
