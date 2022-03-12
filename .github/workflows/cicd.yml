@@ -46,7 +46,7 @@ jobs:
             -c Name="Alwan" \
             -c DomainName="danmaklen.com" \
             -c CertificateArn="${{secrets.CertificateArn}}"
-      - run: "echo 'Reminder: add CNAME record to your domain \`$domainName\` with value \`$edgeDomain\`'"
+      - run: "echo 'Reminder: add CNAME record to your domain $domainName with value $edgeDomain'"
       - run: "echo '::setOutputs name=bucketArn::$bucketArn'"
   deploy-alwan:
     name: Deploy Alwan
