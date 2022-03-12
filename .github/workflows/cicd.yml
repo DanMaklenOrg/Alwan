@@ -38,14 +38,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Deploy Infrastructure
-        run: |
-          cdk deploy \
-            --app=Alwan.Infra \
-            --require-approval never \
-            --outputs-file cdk.out/outputs.json \
-            -c Name="Alwan" \
-            -c DomainName="danmaklen.com" \
-            -c CertificateArn="${{secrets.CertificateArn}}"
+        run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
       - run: "echo 'Reminder: add CNAME record to your domain $domainName with value $edgeDomain'"
       - run: "echo '::setOutputs name=bucketArn::$bucketArn'"
   deploy-alwan:
