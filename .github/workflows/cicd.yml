@@ -36,6 +36,10 @@ jobs:
     steps:
       - name: Deploy Infrastructure
         uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
+        with:
+          name: Alwan
+          domainName: danmaklen.com
+          certificateArn: ${{CERTIFICATEARN}}
 
   deploy-alwan:
     name: Deploy Alwan
