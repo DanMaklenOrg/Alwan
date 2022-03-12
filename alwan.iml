@@ -12,6 +12,7 @@
       <excludePattern pattern="generated_plugin_registrant.dart" />
       <excludePattern pattern="*.iml" />
       <excludePattern pattern=".metadata" />
+      <excludePattern pattern=".flutter-plugins*" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
