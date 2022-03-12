@@ -42,7 +42,7 @@ jobs:
           cdk deploy \
             --app=Alwan.Infra \
             --require-approval never \
-            --outputs-file $outputFile \
+            --outputs-file cdk.out/outputs.json \
             -c Name="Alwan" \
             -c DomainName="danmaklen.com" \
             -c CertificateArn="${{secrets.CertificateArn}}"
