@@ -53,6 +53,7 @@ jobs:
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
         working-directory: Alwan.Infra
+      - run: "cat cdk.out/outputs.json"
       - run: "echo \"Reminder: add CNAME record with value $(jq \".[].edge-distribute-endpoint\" cdk.out/outputs.json)\""
       - id: bucketArnPrint
         run: "echo '::setOutputs name=bucketArn::$(jq \".[].bucket-arn\" cdk.out/outputs.json)'"
