@@ -41,6 +41,9 @@ jobs:
     #    needs: build
     outputs:
       bucketArn: ${{ steps.bucketArnPrint.outputs.bucketArn }}
+    defaults:
+      run:
+        working-directory: Alwan.Infra
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -52,11 +55,10 @@ jobs:
         run: apt-get install -y jq
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
-        working-directory: Alwan.Infra
-      - run: "cat Alwan.Infra/cdk.out/outputs.json"
-      - run: "echo \"Reminder: add CNAME record with value $(jq \".[].edge-distribute-endpoint\" Alwan.Infra/cdk.out/outputs.json)\""
+      - run: "cat cdk.out/outputs.json"
+      - run: "echo \"Reminder: add CNAME record with value $(jq \".[].edge-distribute-endpoint\" cdk.out/outputs.json)\""
       - id: bucketArnPrint
-        run: "echo \"::setOutputs name=bucketArn::$(jq \".[].bucket-arn\" Alwan.Infra/cdk.out/outputs.json)\""
+        run: "echo \"::setOutputs name=bucketArn::$(jq \".[].bucket-arn\" cdk.out/outputs.json)\""
 
   deploy-alwan:
     name: Deploy Alwan
