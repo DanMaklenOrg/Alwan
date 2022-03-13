@@ -55,9 +55,9 @@ jobs:
         run: apt-get install -y jq
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
-      - run: "echo \"Reminder: add CNAME record with value $(jq '.[].edgedistributeendpoint' < cdk.out/outputs.json)\""
+      - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgedistributeendpoint' < cdk.out/outputs.json)
       - id: bucketArnPrint
-        run: "echo \"::setOutputs name=bucketArn::$(jq '.[].bucketarn' cdk.out/outputs.json)\""
+        run: echo ::set-output name=bucketArn::$(jq '.[].bucketarn' cdk.out/outputs.json)
 
   deploy-alwan:
     name: Deploy Alwan
