@@ -38,17 +38,25 @@ jobs:
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/dotnet/sdk:6.0
     #    if: github.ref == 'refs/heads/master'
-#    needs: build
+    #    needs: build
+    outputs:
+      bucketArn: ${{ steps.bucketArnPrint.outputs.bucketArn }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+      - name: Update apt-get
+        run: apt-get -y update
       - name: Setup CDK
-        run: apt-get -y update && apt-get -y install zip unzip && apt-get install -y nodejs && apt-get install -y npm && npm install -g aws-cdk
+        run: apt-get install -y nodejs && apt-get install -y npm && npm install -g aws-cdk
+      - name: Setup JQ
+        run: apt-get install -y jq
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
         working-directory: Alwan.Infra
-      - run: "echo 'Reminder: add CNAME record to your domain $domainName with value $edgeDomain'"
-      - run: "echo '::setOutputs name=bucketArn::$bucketArn'"
+      - run: "echo \"Reminder: add CNAME record with value $(jq \".[].edge-distribute-endpoint\" cdk.out/outputs.json)\""
+      - id: bucketArnPrint
+        run: "echo '::setOutputs name=bucketArn::$(jq \".[].bucket-arn\" cdk.out/outputs.json)'"
+
   deploy-alwan:
     name: Deploy Alwan
     runs-on: ubuntu-latest
@@ -61,5 +69,6 @@ jobs:
           name: alwanReleaseBuildArtifact
           path: build/web
       - run: ls
+      - run: echo ${{ needs.deploy-infra.outputs.bucketArn }}
       - name: Deploy Alwan
         run: echo "Hello World"
