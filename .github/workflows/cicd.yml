@@ -40,7 +40,7 @@ jobs:
 #    if: github.ref == 'refs/heads/master'
     needs: build
     outputs:
-      bucketArn: ${{ steps.bucketArnPrint.outputs.bucketArn }}
+      bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
     defaults:
       run:
         working-directory: Alwan.Infra
@@ -55,9 +55,9 @@ jobs:
         run: apt-get install -y jq
       - name: Deploy Infrastructure
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
-      - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgedistributeendpoint' < cdk.out/outputs.json)
-      - id: bucketArnPrint
-        run: echo ::set-output name=bucketArn::$(jq -r '.[].bucketarn' cdk.out/outputs.json)
+      - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgeDistributeEndpoint' < cdk.out/outputs.json)
+      - id: bucketNamePrint
+        run: echo ::set-output name=bucketName::$(jq -r '.[].bucketName' cdk.out/outputs.json)
 
   deploy-alwan:
     name: Deploy Alwan
@@ -69,6 +69,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
-      - run: echo ${{ needs.deploy-infra.outputs.bucketArn }}
+      - run: echo ${{ needs.deploy-infra.outputs.bucketName }}
       - name: Deploy Alwan To S3
-        run: aws s3 sync . s3://${{ needs.deploy-infra.outputs.bucketArn }} --delete
+        run: aws s3 sync . ${{ needs.deploy-infra.outputs.bucketName }} --delete

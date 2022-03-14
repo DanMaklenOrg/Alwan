@@ -35,15 +35,15 @@ internal class SinglePageApplicationStack : Stack
             Certificate = certificate,
         });
 
-        CfnOutput _ = new CfnOutput(this, "bucket-arn", new CfnOutputProps
+        CfnOutput _ = new CfnOutput(this, "bucketName", new CfnOutputProps
         {
-            ExportName = "bucket-arn",
-            Value = bucket.BucketArn,
+            ExportName = "bucketName",
+            Value = bucket.BucketName,
         });
 
-        CfnOutput __ = new CfnOutput(this, "edge-distribute-endpoint", new CfnOutputProps
+        CfnOutput __ = new CfnOutput(this, "edgeDistributeEndpoint", new CfnOutputProps
         {
-            ExportName = "edge-distribute-endpoint",
+            ExportName = "edgeDistributeEndpoint",
             Value = edgeDistribution.DistributionDomainName,
         });
     }
