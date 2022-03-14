@@ -71,4 +71,4 @@ jobs:
           name: alwanReleaseBuildArtifact
       - run: echo ${{ needs.deploy-infra.outputs.bucketName }}
       - name: Deploy Alwan To S3
-        run: aws s3 sync . ${{ needs.deploy-infra.outputs.bucketName }} --delete
+        run: aws s3 sync . s3://${{ needs.deploy-infra.outputs.bucketName }} --delete
