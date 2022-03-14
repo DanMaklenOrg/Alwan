@@ -7,13 +7,12 @@
       <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/alwan" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludePattern pattern=".packages" />
       <excludePattern pattern="generated_plugin_registrant.dart" />
-      <excludePattern pattern=".*" />
       <excludePattern pattern="*.iml" />
+      <excludePattern pattern=".metadata" />
+      <excludePattern pattern=".flutter-plugins*" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

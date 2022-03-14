@@ -1,6 +1,7 @@
 **/workspace.xml
 **/misc.xml
 **/modules.xml
+**/aws.xml
 
 libraries/
 shelf/

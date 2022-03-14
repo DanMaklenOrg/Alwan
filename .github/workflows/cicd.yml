@@ -1,0 +1,74 @@
+name: CICD
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ SECRETS.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: "eu-west-1"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.x'
+          channel: 'stable'
+          cache: true
+      - name: Using Flutter Version
+        run: flutter --version
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Build Release
+        run: flutter build web --release
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: alwanReleaseBuildArtifact
+          path: build/web
+
+  deploy-infra:
+    name: Deploy Infrastructure
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/dotnet/sdk:6.0
+#    if: github.ref == 'refs/heads/master'
+    needs: build
+    outputs:
+      bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
+    defaults:
+      run:
+        working-directory: Alwan.Infra
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Update apt-get
+        run: apt-get -y update
+      - name: Setup CDK
+        run: apt-get install -y nodejs && apt-get install -y npm && npm install -g aws-cdk
+      - name: Setup JQ
+        run: apt-get install -y jq
+      - name: Deploy Infrastructure
+        run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
+      - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgeDistributeEndpoint' < cdk.out/outputs.json)
+      - id: bucketNamePrint
+        run: echo ::set-output name=bucketName::$(jq -r '.[].bucketName' cdk.out/outputs.json)
+
+  deploy-alwan:
+    name: Deploy Alwan
+    runs-on: ubuntu-latest
+#    if: github.ref == 'refs/heads/master'
+    needs: deploy-infra
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: alwanReleaseBuildArtifact
+      - run: echo ${{ needs.deploy-infra.outputs.bucketName }}
+      - name: Deploy Alwan To S3
+        run: aws s3 sync . s3://${{ needs.deploy-infra.outputs.bucketName }} --delete

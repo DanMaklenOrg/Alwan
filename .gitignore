@@ -6,3 +6,6 @@
 **/generated_plugin_registrant.dart
 
 /build/
+bin/
+obj/
+cdk.out/
