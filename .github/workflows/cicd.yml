@@ -37,8 +37,8 @@ jobs:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/dotnet/sdk:6.0
-    #    if: github.ref == 'refs/heads/master'
-    #    needs: build
+#    if: github.ref == 'refs/heads/master'
+    needs: build
     outputs:
       bucketArn: ${{ steps.bucketArnPrint.outputs.bucketArn }}
     defaults:
@@ -57,7 +57,7 @@ jobs:
         run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
       - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgedistributeendpoint' < cdk.out/outputs.json)
       - id: bucketArnPrint
-        run: echo ::set-output name=bucketArn::$(jq '.[].bucketarn' cdk.out/outputs.json)
+        run: echo ::set-output name=bucketArn::$(jq -r '.[].bucketarn' cdk.out/outputs.json)
 
   deploy-alwan:
     name: Deploy Alwan
