@@ -69,8 +69,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
-          path: build/web
       - run: ls
       - run: echo ${{ needs.deploy-infra.outputs.bucketArn }}
-      - name: Deploy Alwan
-        run: echo "Hello World"
+#      - name: Deploy Alwan To S3
+#        run: aws s3 sync build/web ${{ needs.deploy-infra.outputs.bucketArn }} --delete
