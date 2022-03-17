@@ -13,11 +13,14 @@ env:
 jobs:
   testDeployAction:
     name: Deploy SPA
-    uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
-    with:
-      name: "test"
-      domainName: "test"
-      certificateArn: "test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
+        with:
+          name: "test"
+          domainName: "test"
+          certificateArn: "test"
 
   build:
     name: Build
