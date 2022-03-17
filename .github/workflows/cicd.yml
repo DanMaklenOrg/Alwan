@@ -21,8 +21,8 @@ jobs:
           name: "Alwan"
           domainName: "danmaklen.com"
           certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
-          awsAccessKeyId: $AWS_ACCESS_KEY_ID
-          awsSecretAccessKey: $AWS_SECRET_ACCESS_KEY
+          awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           awsRegion: $AWS_DEFAULT_REGION
 
   build:
