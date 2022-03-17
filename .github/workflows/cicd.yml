@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ SECRETS.AWS_SECRET_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: "eu-west-1"
 
 jobs:
@@ -21,6 +21,9 @@ jobs:
           name: "Alwan"
           domainName: "danmaklen.com"
           certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
+          awsAccessKeyId: $AWS_ACCESS_KEY_ID
+          awsSecretAccessKey: $AWS_SECRET_ACCESS_KEY
+          awsRegion: $AWS_DEFAULT_REGION
 
   build:
     name: Build
