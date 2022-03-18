@@ -36,24 +36,22 @@ jobs:
   deploy-infra:
     name: Deploy SPA Infrastructure
     runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     outputs:
       bucketName: ${{ steps.deploySapInfra.outputs.bucketName }}
     steps:
       - name: Deploy SAP Infra
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@FoxSAP
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
         id: deploySapInfra
         with:
           name: "Alwan"
           domainName: "danmaklen.com"
           certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
-      - id: bucketNamePrint
-        run: echo ::set-output name=bucketName::${{ steps.deploySapInfra.outputs.bucketName }}
 
   deploy-alwan:
     name: Deploy Alwan
     runs-on: ubuntu-latest
-#    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs:
       - build
       - deploy-infra
@@ -62,6 +60,5 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
-      - run: echo ${{ needs.deploy-infra.outputs.bucketName }}
       - name: Deploy Alwan To S3
         run: aws s3 sync . s3://${{ needs.deploy-infra.outputs.bucketName }} --delete
