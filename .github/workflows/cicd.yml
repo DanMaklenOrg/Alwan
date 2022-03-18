@@ -37,7 +37,6 @@ jobs:
     name: Deploy SPA Infrastructure
     runs-on: ubuntu-latest
 #    if: github.ref == 'refs/heads/master'
-    needs: build
     steps:
       - name: Deploy SAP Infra
         uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
@@ -52,7 +51,9 @@ jobs:
     name: Deploy Alwan
     runs-on: ubuntu-latest
 #    if: github.ref == 'refs/heads/master'
-    needs: deploy-infra
+    needs:
+      - build
+      - deploy-infra
     steps:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
