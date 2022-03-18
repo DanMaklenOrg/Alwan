@@ -48,7 +48,7 @@ jobs:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/dotnet/sdk:6.0
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs: build
     outputs:
       bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
@@ -73,7 +73,7 @@ jobs:
   deploy-alwan:
     name: Deploy Alwan
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs: deploy-infra
     steps:
       - name: Download Build Artifacts
