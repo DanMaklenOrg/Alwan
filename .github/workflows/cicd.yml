@@ -11,17 +11,6 @@ env:
   AWS_DEFAULT_REGION: "eu-west-1"
 
 jobs:
-  testDeployAction:
-    name: Deploy SPA
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@TestEnviromentVariables
-        with:
-          name: "Alwan"
-          domainName: "danmaklen.com"
-          certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
-
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -45,30 +34,19 @@ jobs:
           path: build/web
 
   deploy-infra:
-    name: Deploy Infrastructure
+    name: Deploy SPA Infrastructure
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/dotnet/sdk:6.0
 #    if: github.ref == 'refs/heads/master'
     needs: build
-    outputs:
-      bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
-    defaults:
-      run:
-        working-directory: Alwan.Infra
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-      - name: Update apt-get
-        run: apt-get -y update
-      - name: Setup CDK
-        run: apt-get install -y nodejs && apt-get install -y npm && npm install -g aws-cdk
-      - name: Setup JQ
-        run: apt-get install -y jq
-      - name: Deploy Infrastructure
-        run: cdk deploy --require-approval never --outputs-file cdk.out/outputs.json
-      - run: echo Reminder!! Add CNAME record with value $(jq '.[].edgeDistributeEndpoint' < cdk.out/outputs.json)
-      - id: bucketNamePrint
-        run: echo ::set-output name=bucketName::$(jq -r '.[].bucketName' cdk.out/outputs.json)
+      - name: Deploy SAP Infra
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
+        with:
+          name: "Alwan"
+          domainName: "danmaklen.com"
+          certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
+#    outputs:
+#      bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
 
   deploy-alwan:
     name: Deploy Alwan
