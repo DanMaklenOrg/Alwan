@@ -41,7 +41,7 @@ jobs:
       bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
     steps:
       - name: Deploy SAP Infra
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
+        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@FoxSAP
         id: deploySapInfra
         with:
           name: "Alwan"
