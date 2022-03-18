@@ -48,7 +48,7 @@ jobs:
           domainName: "danmaklen.com"
           certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
       - id: bucketNamePrint
-        run: echo ::set-output name=bucketName::{{ $.deploySapInfra.outputs.bucketName }}
+        run: echo ::set-output name=bucketName::${{ steps.deploySapInfra.outputs.bucketName }}
 
   deploy-alwan:
     name: Deploy Alwan
