@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 #    if: github.ref == 'refs/heads/master'
     outputs:
-      bucketName: ${{ steps.bucketNamePrint.outputs.bucketName }}
+      bucketName: ${{ steps.deploySapInfra.outputs.bucketName }}
     steps:
       - name: Deploy SAP Infra
         uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@FoxSAP
