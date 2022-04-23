@@ -5,6 +5,7 @@ import 'package:alwan/api/dto/common/entry_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
+import 'package:alwan/ui/dialog/objectives_dialog.dart';
 import 'package:flutter/material.dart';
 
 class PikaDomainScreen extends StatefulWidget {
@@ -91,8 +92,13 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       onTap: () {
         if (entry.children.isNotEmpty) setState(() => entryPath.add(entry));
       },
-      onDoubleTap: () {
-        print(data.getEntryObjectives(entry).length);
+      onDoubleTap: () async {
+        var objectives = data.getEntryObjectives(entry);
+        if(objectives.isNotEmpty){
+          await ObjectivesDialog.show(context, entry, objectives, data);
+          await data.saveTrackedProgress();
+          setState(() {});
+        }
       },
     );
   }

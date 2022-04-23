@@ -14,13 +14,13 @@ class DomainData {
     required this.name,
     required this.rootEntry,
     required this.projects,
-    required Map<List<String>, int> trackedProgress,
+    required Map<String, int> trackedProgress,
   }) : _trackedProgress = trackedProgress;
 
   static Future<DomainData> fetchDomainData(DomainDto domain) async {
     var profile = await Services.pikaClient.getDomainProfile(domain.id);
 
-    Map<List<String>, int> trackedProgress = await _loadTrackedProgress(domain.id);
+    Map<String, int> trackedProgress = await _loadTrackedProgress(domain.id);
 
     return DomainData._(
       id: domain.id,
@@ -39,15 +39,14 @@ class DomainData {
 
   final List<ProjectDto> projects;
 
-  final Map<List<String>, int> _trackedProgress;
+  final Map<String, int> _trackedProgress;
 
   void setProgress(String entryId, String objectiveId, int value) {
-    _trackedProgress[[entryId, objectiveId]] = value;
-    _saveTrackedProgress(_trackedProgress, id);
+    _trackedProgress['$entryId-$objectiveId'] = value;
   }
 
   int getProgress(String entryId, String objectiveId) {
-    return _trackedProgress[[entryId, objectiveId]] ?? 0;
+    return _trackedProgress['$entryId-$objectiveId'] ?? 0;
   }
 
   double? getProgressRatio(EntryDto rootEntry) {
@@ -73,18 +72,17 @@ class DomainData {
     return projects.expand<ObjectiveDto>((proj) => proj.objectives).where((obj) => obj.entryIds.contains(entry.id)).toList();
   }
 
-  static Future<void> _saveTrackedProgress(Map<List<String>, int> progress, String domainId) async {
+  Future<void> saveTrackedProgress() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
-    await storage.setString(_storageKey(domainId), json.encode(progress));
+    await storage.setString(_storageKey(id), json.encode(_trackedProgress));
   }
 
-  static Future<Map<List<String>, int>> _loadTrackedProgress(String domainId) async {
+  static Future<Map<String, int>> _loadTrackedProgress(String domainId) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     String storageKey = _storageKey(domainId);
     if (!storage.containsKey(storageKey)) return {};
-    final String json = storage.getString(storageKey)!;
-    var x = jsonDecode(json);
-    return x;
+    final Map<String, int> raw = Map.castFrom(json.decode(storage.getString(storageKey)!));
+    return raw;
   }
 
   static String _storageKey(String domainId) {
