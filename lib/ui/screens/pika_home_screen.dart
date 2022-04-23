@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/services.dart';
-import 'package:alwan/ui/common/future_placeholder.dart';
+import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
 
