@@ -43,7 +43,6 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
 
   Widget _domainCard(BuildContext context, DomainDto domain) {
     return Card(
-      elevation: 10,
       child: InkWell(
           onTap: () {},
           child: Column(
