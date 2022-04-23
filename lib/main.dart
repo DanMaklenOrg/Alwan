@@ -1,5 +1,3 @@
-import 'package:alwan/api/dto/common/domain_dto.dart';
-import 'package:alwan/ui/screens/pika_domain_screen.dart';
 import 'package:alwan/ui/screens/pika_home_screen.dart';
 import 'package:flutter/material.dart';
 
