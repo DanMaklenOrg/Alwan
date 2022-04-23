@@ -1,4 +1,4 @@
-import 'package:alwan/api/dto/common/objective_dto.dart';
+import 'objective_dto.dart';
 
 class ProjectDto {
   ProjectDto.fromJson(Map<String, dynamic> json)
