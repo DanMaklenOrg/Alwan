@@ -1,5 +1,4 @@
-import 'package:alwan/pika/domain/warframe_pika_domain.dart';
-import 'package:alwan/pika_domain_screen.dart';
+import 'package:alwan/ui/screens/pika_home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,9 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Dan Maklen App',
-      home: PikaDomainScreen(domain: WarframePikaDomain(),),
+      home: PikaHomeScreen(),
     );
   }
 }
