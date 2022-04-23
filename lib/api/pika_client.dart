@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:alwan/api/Dto/domain_dto.dart';
-import 'package:alwan/api/dto/request/get_domain_profile_response_dto.dart';
 import 'package:http/http.dart' as http;
+
+import 'dto/common/domain_dto.dart';
+import 'dto/request/get_domain_profile_response_dto.dart';
 
 class PikaClient {
   PikaClient({
