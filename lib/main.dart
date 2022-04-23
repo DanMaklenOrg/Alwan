@@ -1,5 +1,6 @@
 import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/ui/screens/pika_domain_screen.dart';
+import 'package:alwan/ui/screens/pika_home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,10 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var domain = DomainDto.fromJson({'id': 'f925381e6af4402ab0aad07861e403df', 'name': 'Warframe'});
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Dan Maklen App',
-      home: PikaDomainScreen(domain: domain),
+      home: PikaHomeScreen(),
     );
   }
 }
