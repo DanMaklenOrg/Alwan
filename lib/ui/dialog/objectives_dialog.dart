@@ -54,7 +54,7 @@ class ObjectivesDialog extends StatelessWidget {
       onChanged: (val) => data.setProgress(entry.id, objective.id, val as int),
       decoration: InputDecoration(
         labelText: objective.title,
-        counterText: objective.requiredCount.toString(),
+        suffixText: '/ ${objective.requiredCount}',
       ),
     );
   }
