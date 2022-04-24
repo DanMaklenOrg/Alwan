@@ -52,6 +52,10 @@ class ObjectivesDialog extends StatelessWidget {
       max: 1.0 * objective.requiredCount,
       value: 1.0 * data.getProgress(entry.id, objective.id),
       onChanged: (val) => data.setProgress(entry.id, objective.id, val as int),
+      decoration: InputDecoration(
+        labelText: objective.title,
+        suffixText: '/ ${objective.requiredCount}',
+      ),
     );
   }
 }
