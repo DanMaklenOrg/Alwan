@@ -44,7 +44,7 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
   Widget _domainCard(BuildContext context, DomainDto domain) {
     return Card(
       child: InkWell(
-          onTap: () {},
+          onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
