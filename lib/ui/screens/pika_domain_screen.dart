@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/api/dto/common/entry_dto.dart';
+import 'package:alwan/api/dto/common/project_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
@@ -39,7 +40,37 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       title: widget.domain.name,
       body: AsyncDataBuilder<DomainData>(
         dataFuture: domainData,
-        builder: _entryListBuilder,
+        builder: (BuildContext context, DomainData data) {
+          return Row(
+            children: [
+              _projectListBuilder(context, data),
+              _entryListBuilder(context, data),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _projectListBuilder(BuildContext context, DomainData data) {
+    return SizedBox(
+      width: 400,
+      child: ListView.builder(
+        itemCount: data.projects.length,
+        itemBuilder: (context, i) => _buildProjectEntry(context, data, data.projects[i]),
+      ),
+    );
+  }
+
+  Widget _buildProjectEntry(BuildContext context, DomainData data, ProjectDto project) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(flex: 20, child: Text(project.title, textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: _buildProgress(context, data, data.getProjectProgressRatio(project))),
+        ],
       ),
     );
   }
@@ -65,12 +96,20 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         child: Row(
           children: [
             Expanded(flex: 20, child: Text(entry.title, textAlign: TextAlign.center)),
-            Expanded(flex: 2,child: _buildProgress(context, data, entry)),
+            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry))),
           ],
         ),
       ),
       onTap: () {
         if (entryPath.isNotEmpty) setState(() => entryPath.removeLast());
+      },
+      onDoubleTap: () async {
+        var objectives = data.getEntryObjectives(entry);
+        if (objectives.isNotEmpty) {
+          await ObjectivesDialog.show(context, entry, objectives, data);
+          await data.saveTrackedProgress();
+          setState(() {});
+        }
       },
     );
   }
@@ -85,7 +124,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
           children: [
             Expanded(flex: 2, child: _buildExpandIcon(context, entry)),
             Expanded(flex: 18, child: Text(entry.title, textAlign: TextAlign.left)),
-            Expanded(flex: 2, child: _buildProgress(context, data, entry)),
+            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry))),
           ],
         ),
       ),
@@ -94,7 +133,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       },
       onDoubleTap: () async {
         var objectives = data.getEntryObjectives(entry);
-        if(objectives.isNotEmpty){
+        if (objectives.isNotEmpty) {
           await ObjectivesDialog.show(context, entry, objectives, data);
           await data.saveTrackedProgress();
           setState(() {});
@@ -108,8 +147,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     return const Icon(Icons.keyboard_arrow_right);
   }
 
-  Widget _buildProgress(BuildContext context, DomainData data, EntryDto entry) {
-    double? progress = data.getProgressRatio(entry);
+  Widget _buildProgress(BuildContext context, DomainData data, double? progress) {
     if (progress == null) return Container();
     return SizedBox(
       width: 50,
