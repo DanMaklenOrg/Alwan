@@ -49,7 +49,8 @@ class DomainData {
     return _trackedProgress['$entryId-$objectiveId'] ?? 0;
   }
 
-  double? getProgressRatio(EntryDto rootEntry) {
+  double? getProgressRatio(EntryDto rootEntry, [List<ProjectDto>? projectList]) {
+    projectList ??= projects;
     int got = 0;
     int outOf = 0;
     Queue<EntryDto> queue = Queue<EntryDto>();
@@ -57,7 +58,7 @@ class DomainData {
     while (queue.isNotEmpty) {
       EntryDto entry = queue.removeFirst();
       queue.addAll(entry.children);
-      for (var objective in getEntryObjectives(entry)) {
+      for (var objective in getEntryObjectives(entry, projectList)) {
         if (objective.entryIds.contains(entry.id)) {
           got += getProgress(entry.id, objective.id);
           outOf += objective.requiredCount;
@@ -68,8 +69,13 @@ class DomainData {
     return 1.0 * got / outOf;
   }
 
-  List<ObjectiveDto> getEntryObjectives(EntryDto entry) {
-    return projects.expand<ObjectiveDto>((proj) => proj.objectives).where((obj) => obj.entryIds.contains(entry.id)).toList();
+  double? getProjectProgressRatio(ProjectDto project) {
+    return getProgressRatio(rootEntry, [project]);
+  }
+
+  List<ObjectiveDto> getEntryObjectives(EntryDto entry, [List<ProjectDto>? projectList]) {
+    projectList ??= projects;
+    return projectList.expand<ObjectiveDto>((proj) => proj.objectives).where((obj) => obj.entryIds.contains(entry.id)).toList();
   }
 
   Future<void> saveTrackedProgress() async {
