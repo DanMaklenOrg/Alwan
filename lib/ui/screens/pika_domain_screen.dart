@@ -21,6 +21,7 @@ class PikaDomainScreen extends StatefulWidget {
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
   late Future<DomainData> domainData;
   List<EntryDto> entryPath = [];
+  ProjectDto? selectedProject;
 
   @override
   void initState() {
@@ -63,15 +64,21 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Widget _buildProjectEntry(BuildContext context, DomainData data, ProjectDto project) {
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          Expanded(flex: 20, child: Text(project.title, textAlign: TextAlign.center)),
-          Expanded(flex: 2, child: _buildProgress(context, data, data.getProjectProgressRatio(project))),
-        ],
+    return InkWell(
+      child: Container(
+        height: 50,
+        color: selectedProject == project ? Colors.blue.withOpacity(0.2) : null,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: [
+            Expanded(flex: 20, child: Text(project.title, textAlign: TextAlign.center)),
+            Expanded(flex: 2, child: _buildProgress(context, data, data.getProjectProgressRatio(project))),
+          ],
+        ),
       ),
+      onTap: () {
+        setState(() => selectedProject = selectedProject == project ? null : project);
+      },
     );
   }
 
@@ -96,7 +103,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         child: Row(
           children: [
             Expanded(flex: 20, child: Text(entry.title, textAlign: TextAlign.center)),
-            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry))),
+            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry, selectedProject))),
           ],
         ),
       ),
@@ -104,7 +111,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         if (entryPath.isNotEmpty) setState(() => entryPath.removeLast());
       },
       onDoubleTap: () async {
-        var objectives = data.getEntryObjectives(entry);
+        var objectives = data.getEntryObjectives(entry, selectedProject);
         if (objectives.isNotEmpty) {
           await ObjectivesDialog.show(context, entry, objectives, data);
           await data.saveTrackedProgress();
@@ -124,7 +131,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
           children: [
             Expanded(flex: 2, child: _buildExpandIcon(context, entry)),
             Expanded(flex: 18, child: Text(entry.title, textAlign: TextAlign.left)),
-            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry))),
+            Expanded(flex: 2, child: _buildProgress(context, data, data.getProgressRatio(entry, selectedProject))),
           ],
         ),
       ),
@@ -132,7 +139,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         if (entry.children.isNotEmpty) setState(() => entryPath.add(entry));
       },
       onDoubleTap: () async {
-        var objectives = data.getEntryObjectives(entry);
+        var objectives = data.getEntryObjectives(entry, selectedProject);
         if (objectives.isNotEmpty) {
           await ObjectivesDialog.show(context, entry, objectives, data);
           await data.saveTrackedProgress();
