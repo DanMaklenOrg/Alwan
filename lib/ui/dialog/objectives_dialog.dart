@@ -26,17 +26,17 @@ class ObjectivesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
+    return AlertDialog(
       title: Text(entry.title),
-      children: [
-        ...objectives.map<Widget>((e) => _entryPadding(_buildObjectiveEntry(e))),
-        _entryPadding(_buildSubmitButton(context)),
-      ],
+      actions: [_buildSubmitButton(context)],
+      content: Container(
+        constraints: const BoxConstraints(minWidth: 300),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: objectives.map<Widget>((e) => _buildObjectiveEntry(e)).toList(),
+        ),
+      ),
     );
-  }
-
-  Widget _entryPadding(Widget child) {
-    return Padding(padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24), child: child);
   }
 
   Widget _buildSubmitButton(BuildContext context) {
