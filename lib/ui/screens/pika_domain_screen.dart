@@ -161,7 +161,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       height: 50,
       child: Stack(children: [
         Center(child: CircularProgressIndicator(value: progress, color: Colors.green, backgroundColor: Colors.black26)),
-        Center(child: Text('${(progress * 100).toStringAsFixed(0)}%', style: Theme.of(context).textTheme.bodySmall)),
+        Center(child: Text('${(progress * 100).floor()}%', style: Theme.of(context).textTheme.bodySmall)),
       ]),
     );
   }
