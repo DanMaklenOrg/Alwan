@@ -25,8 +25,7 @@ class Config {
       name: "DEV",
       color: Colors.deepPurple,
       variables: _buildConfigVariables(
-        pikaClientHost: 'localhost',
-        pikaClientPort: 55501,
+        clientHost: 'localhost',
       ),
     );
   }
@@ -34,19 +33,20 @@ class Config {
   static void _buildProductionEnvironment() {
     FlavorConfig(
       variables: _buildConfigVariables(
-        pikaClientHost: 'svc.danmaklen.com',
-        pikaClientPort: 55501,
+        clientHost: 'svc.danmaklen.com',
       ),
     );
   }
 
   static Map<String, dynamic> _buildConfigVariables({
-    required String pikaClientHost,
-    required int pikaClientPort,
+    required String clientHost,
+    int pikaClientPort = 55501,
+    int anaClientPort = 55502,
   }) {
     return {
-      'pikaClientHost': pikaClientHost,
+      'clientHost': clientHost,
       'pikaClientPort': pikaClientPort,
+      'anaClientPort': anaClientPort,
     };
   }
 }
