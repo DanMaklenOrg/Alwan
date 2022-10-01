@@ -2,6 +2,7 @@ import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/config.dart';
 import 'package:alwan/ui/screens/pika_domain_screen.dart';
 import 'package:alwan/ui/screens/pika_home_screen.dart';
+import 'package:alwan/ui/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 
@@ -25,6 +26,8 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (context) => const PikaHomeScreen());
             case '/pika/domain':
               return MaterialPageRoute(builder: (context) => PikaDomainScreen(domain: routeSettings.arguments as DomainDto));
+            case '/signup':
+              return MaterialPageRoute(builder: (context) => SignInScreen());
             default:
               return null;
           }

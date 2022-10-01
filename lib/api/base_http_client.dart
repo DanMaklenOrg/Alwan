@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:html';
 
-import 'package:alwan/auth/auth_context_provider.dart';
 import 'package:alwan/services.dart';
 import 'package:http/http.dart';
 
@@ -19,11 +17,10 @@ class BaseHttpClient {
     return Uri(scheme: 'https', host: host, port: port, path: path);
   }
 
-  Map<String, String> _headers() => Services.authContextProvider.isSignedIn
-      ? {
-          "Authorization": "Bearer ${AuthContextProvider().token}",
-        }
-      : {};
+  Map<String, String> _headers() => {
+        if (Services.authContextProvider.isSignedIn) "Authorization": "Bearer ${Services.authContextProvider.token}",
+        'Content-Type': 'application/json',
+      };
 
   void _validateResponseStatus(BaseResponse response) {
     if (response.statusCode < 200 || response.statusCode >= 400) {

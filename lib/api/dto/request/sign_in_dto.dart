@@ -4,6 +4,11 @@ class SignInRequestDto {
     required this.password,
   });
 
+  Map<String, dynamic> toJson() => {
+        'username': username,
+        'password': password,
+      };
+
   String username;
   String password;
 }
