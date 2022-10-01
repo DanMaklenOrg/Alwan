@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:alwan/api/dto/common/domain_dto.dart';
-import 'package:alwan/api/dto/common/entry_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
+import 'package:alwan/pika/pika_entry.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:alwan/ui/dialog/objectives_dialog.dart';
@@ -20,7 +20,7 @@ class PikaDomainScreen extends StatefulWidget {
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
   late Future<DomainData> domainData;
-  List<EntryDto> entryPath = [];
+  List<String> entryPath = [];
   ProjectDto? selectedProject;
 
   @override
@@ -83,7 +83,8 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Widget _entryListBuilder(BuildContext context, DomainData data) {
-    EntryDto root = entryPath.isEmpty ? data.rootEntry : entryPath.last;
+    String rootId = entryPath.isEmpty ? data.rootEntryId : entryPath.last;
+    PikaEntry root = data.entries[rootId]!;
 
     return SizedBox(
       width: 400,
@@ -94,7 +95,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     );
   }
 
-  Widget _headerEntryBuilder(BuildContext context, DomainData data, EntryDto entry) {
+  Widget _headerEntryBuilder(BuildContext context, DomainData data, PikaEntry entry) {
     return InkWell(
       child: Container(
         height: 50,
@@ -121,7 +122,9 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     );
   }
 
-  Widget _entryBuilder(BuildContext context, DomainData data, EntryDto entry) {
+  Widget _entryBuilder(BuildContext context, DomainData data, String entryId) {
+    PikaEntry entry = data.entries[entryId]!;
+
     return InkWell(
       child: Container(
         height: 50,
@@ -136,7 +139,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         ),
       ),
       onTap: () {
-        if (entry.children.isNotEmpty) setState(() => entryPath.add(entry));
+        if (entry.children.isNotEmpty) setState(() => entryPath.add(entry.id));
       },
       onDoubleTap: () async {
         var objectives = data.getEntryObjectives(entry, selectedProject);
@@ -149,7 +152,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     );
   }
 
-  Widget _buildExpandIcon(BuildContext context, EntryDto entry) {
+  Widget _buildExpandIcon(BuildContext context, PikaEntry entry) {
     if (entry.children.isEmpty) return Container();
     return const Icon(Icons.keyboard_arrow_right);
   }

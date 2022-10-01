@@ -1,6 +1,6 @@
-import 'package:alwan/api/dto/common/entry_dto.dart';
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
+import 'package:alwan/pika/pika_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 
@@ -12,7 +12,7 @@ class ObjectivesDialog extends StatelessWidget {
     required this.data,
   }) : super(key: key);
 
-  static Future<void> show(BuildContext context, EntryDto entry, List<ObjectiveDto> objectives, DomainData domainData) async {
+  static Future<void> show(BuildContext context, PikaEntry entry, List<ObjectiveDto> objectives, DomainData domainData) async {
     await showDialog(
       context: context,
       barrierDismissible: false,
@@ -20,7 +20,7 @@ class ObjectivesDialog extends StatelessWidget {
     );
   }
 
-  final EntryDto entry;
+  final PikaEntry entry;
   final DomainData data;
   final List<ObjectiveDto> objectives;
 
