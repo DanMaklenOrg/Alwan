@@ -13,8 +13,7 @@ class DomainData {
   const DomainData._({
     required this.id,
     required this.name,
-    required this.rootEntryId,
-    required this.entries,
+    required this.rootEntry,
     required this.projects,
     required Map<String, int> trackedProgress,
   }) : _trackedProgress = trackedProgress;
@@ -27,8 +26,7 @@ class DomainData {
     return DomainData._(
       id: domain.id,
       name: domain.name,
-      rootEntryId: profile.rootEntry.id,
-      entries: PikaEntry.flattenEntryDto(profile.rootEntry),
+      rootEntry: PikaEntry.fromEntryDto(profile.rootEntry),
       projects: profile.projects,
       trackedProgress: trackedProgress,
     );
@@ -38,15 +36,11 @@ class DomainData {
 
   final String name;
 
-  final String rootEntryId;
-
-  final Map<String, PikaEntry> entries;
+  final PikaEntry rootEntry;
 
   final List<ProjectDto> projects;
 
   final Map<String, int> _trackedProgress;
-
-  PikaEntry get rootEntry => entries[rootEntryId]!;
 
   void setProgress(String entryId, String objectiveId, int value) {
     _trackedProgress['$entryId-$objectiveId'] = value;
@@ -63,7 +57,7 @@ class DomainData {
     queue.add(rootEntry);
     while (queue.isNotEmpty) {
       PikaEntry entry = queue.removeFirst();
-      queue.addAll(entry.children.map((childId) => entries[childId]!));
+      queue.addAll(entry.children);
       for (var objective in getEntryObjectives(entry, project)) {
         if (objective.entryIds.contains(entry.id)) {
           got += getProgress(entry.id, objective.id);
@@ -76,7 +70,7 @@ class DomainData {
   }
 
   double? getProjectProgressRatio(ProjectDto project) {
-    return getProgressRatio(entries[rootEntryId]!, project);
+    return getProgressRatio(rootEntry, project);
   }
 
   List<ObjectiveDto> getEntryObjectives(PikaEntry entry, [ProjectDto? project]) {

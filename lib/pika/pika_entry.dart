@@ -1,28 +1,17 @@
-import 'dart:collection';
-
 import 'package:alwan/api/dto/common/entry_dto.dart';
 
 class PikaEntry {
-  PikaEntry._fromEntryDto(EntryDto dto, [EntryDto? parentDto])
+  PikaEntry.fromEntryDto(EntryDto dto)
       : id = dto.id,
         title = dto.title,
-        parentId = parentDto?.id,
-        children = dto.children.map((child) => child.id).toList();
-
-  static Map<String, PikaEntry> flattenEntryDto(EntryDto dto, [EntryDto? parentDto]) {
-    HashMap<String, PikaEntry> res = HashMap<String, PikaEntry>();
-
-    res[dto.id] = PikaEntry._fromEntryDto(dto);
-
-    for (EntryDto child in dto.children) {
-      res.addAll(flattenEntryDto(child, parentDto));
+        children = dto.children.map((child) => PikaEntry.fromEntryDto(child)).toList() {
+    for (var element in children) {
+      element.parent = this;
     }
-
-    return res;
   }
 
   final String id;
   final String title;
-  final String? parentId;
-  final List<String> children;
+  late final PikaEntry? parent;
+  final List<PikaEntry> children;
 }

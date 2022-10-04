@@ -20,7 +20,7 @@ class PikaDomainScreen extends StatefulWidget {
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
   late Future<DomainData> domainData;
-  List<String> entryPath = [];
+  List<PikaEntry> entryPath = [];
   ProjectDto? selectedProject;
 
   @override
@@ -83,8 +83,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Widget _entryListBuilder(BuildContext context, DomainData data) {
-    String rootId = entryPath.isEmpty ? data.rootEntryId : entryPath.last;
-    PikaEntry root = data.entries[rootId]!;
+    PikaEntry root = entryPath.isEmpty ? data.rootEntry : entryPath.last;
 
     return SizedBox(
       width: 400,
@@ -122,9 +121,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     );
   }
 
-  Widget _entryBuilder(BuildContext context, DomainData data, String entryId) {
-    PikaEntry entry = data.entries[entryId]!;
-
+  Widget _entryBuilder(BuildContext context, DomainData data, PikaEntry entry) {
     return InkWell(
       child: Container(
         height: 50,
@@ -139,7 +136,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
         ),
       ),
       onTap: () {
-        if (entry.children.isNotEmpty) setState(() => entryPath.add(entry.id));
+        if (entry.children.isNotEmpty) setState(() => entryPath.add(entry));
       },
       onDoubleTap: () async {
         var objectives = data.getEntryObjectives(entry, selectedProject);
