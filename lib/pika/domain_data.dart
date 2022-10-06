@@ -3,7 +3,6 @@ import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
 import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/pika_entry.dart';
-import 'package:alwan/services.dart';
 
 class DomainData {
   DomainData._({
@@ -13,16 +12,13 @@ class DomainData {
     required this.projects,
   });
 
-  static Future<DomainData> fetchDomainData(DomainDto domain) async {
-    GetDomainProfileResponseDto profile = await Services.pikaClient.getDomainProfile(domain.id);
-
-    return DomainData._(
-      id: domain.id,
-      name: domain.name,
-      rootEntry: PikaEntry.fromEntryDto(profile.rootEntry),
-      projects: profile.projects
-    );
-  }
+  DomainData.fromDomainProfile(DomainDto domain, GetDomainProfileResponseDto profile)
+      : this._(
+    id: domain.id,
+    name: domain.name,
+    rootEntry: PikaEntry.fromEntryDto(profile.rootEntry),
+    projects: profile.projects,
+  );
 
   final String id;
 
@@ -33,6 +29,14 @@ class DomainData {
   final List<ProjectDto> projects;
 
   List<ObjectiveDto> getEntryObjectives(PikaEntry entry) {
-    return projects.expand<ObjectiveDto>((proj) => proj.objectives).where((obj) => obj.entryIds.contains(entry.id)).toList();
+    return _allObjectives().where((obj) => obj.entryIds.contains(entry.id)).toList();
+  }
+
+  ObjectiveDto getObjective(String id) {
+    return _allObjectives().firstWhere((obj) => obj.id == id);
+  }
+
+  List<ObjectiveDto> _allObjectives() {
+    return projects.expand<ObjectiveDto>((proj) => proj.objectives).toList();
   }
 }

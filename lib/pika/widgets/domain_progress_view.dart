@@ -1,6 +1,8 @@
+import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/progress_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
+import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
 import 'package:alwan/pika/pika_entry.dart';
 import 'package:alwan/pika/pika_progress_tracker.dart';
@@ -10,28 +12,35 @@ import 'package:flutter/material.dart';
 import 'objectives_dialog.dart';
 
 class DomainProgressView extends StatefulWidget {
-  const DomainProgressView(this.domain, {Key? key}) : super(key: key);
+  const DomainProgressView(this.domainDto, this.profileDto, {Key? key}) : super(key: key);
 
-  final DomainData domain;
+  final DomainDto domainDto;
+  final GetDomainProfileResponseDto profileDto;
 
   @override
   State<DomainProgressView> createState() => _DomainProgressViewState();
 }
 
 class _DomainProgressViewState extends State<DomainProgressView> {
+  late DomainData domain;
   late PikaProgressTracker progressTracker;
   List<PikaEntry> entryPath = [];
+
+  void _initState(){
+    domain = DomainData.fromDomainProfile(widget.domainDto, widget.profileDto);
+    progressTracker = PikaProgressTracker(domain, widget.profileDto);
+  }
 
   @override
   void initState() {
     super.initState();
-    progressTracker = PikaProgressTracker(widget.domain);
+    _initState();
   }
 
   @override
   void didUpdateWidget(DomainProgressView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.domain.id != widget.domain.id) setState(() => progressTracker = PikaProgressTracker(widget.domain));
+    if (oldWidget.domainDto.id != widget.domainDto.id) setState(() => _initState());
   }
 
   @override
@@ -44,12 +53,13 @@ class _DomainProgressViewState extends State<DomainProgressView> {
     );
   }
 
+
   Widget _projectListBuilder() {
     return SizedBox(
       width: 400,
       child: ListView.builder(
-        itemCount: widget.domain.projects.length,
-        itemBuilder: (context, i) => _buildProjectEntry(widget.domain.projects[i]),
+        itemCount: domain.projects.length,
+        itemBuilder: (context, i) => _buildProjectEntry(domain.projects[i]),
       ),
     );
   }
@@ -80,7 +90,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
   }
 
   Widget _entryListBuilder() {
-    PikaEntry root = entryPath.isEmpty ? widget.domain.rootEntry : entryPath.last;
+    PikaEntry root = entryPath.isEmpty ? domain.rootEntry : entryPath.last;
 
     return SizedBox(
       width: 400,
@@ -108,7 +118,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
         if (entryPath.isNotEmpty) setState(() => entryPath.removeLast());
       },
       onDoubleTap: () async {
-        var objectives = widget.domain.getEntryObjectives(entry);
+        var objectives = domain.getEntryObjectives(entry);
         if (objectives.isNotEmpty) {
           await ObjectivesDialog.show(context, entry, objectives, progressTracker);
           // await widget.domain.saveTrackedProgress();
@@ -136,7 +146,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
         if (entry.children.isNotEmpty) setState(() => entryPath.add(entry));
       },
       onDoubleTap: () async {
-        var objectives = widget.domain.getEntryObjectives(entry);
+        var objectives = domain.getEntryObjectives(entry);
         if (objectives.isNotEmpty) {
           Map<ObjectiveDto, Progress> newProgress = await ObjectivesDialog.show(context, entry, objectives, progressTracker);
           for(ObjectiveDto objective in newProgress.keys){

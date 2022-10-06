@@ -1,13 +1,21 @@
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
+import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
 import 'package:alwan/pika/pika_entry.dart';
 
 class PikaProgressTracker {
-  PikaProgressTracker(this.domain);
+  PikaProgressTracker(this.domain, GetDomainProfileResponseDto profile)
+      : _entryObjectiveProgress = {
+          for (var progress in profile.progress)
+            _getEntryObjectiveProgressKey(progress.targetId, progress.objectiveId): Progress(
+              progress: progress.progress,
+              outOf: domain.getObjective(progress.objectiveId).requiredCount,
+            )
+        };
 
   final DomainData domain;
-  final Map<String, Progress> _entryObjectiveProgress = {};
+  final Map<String, Progress> _entryObjectiveProgress;
   final Map<PikaEntry, Progress> _filteredEntryProgress = {};
 
   ProjectDto? projectFilter;
@@ -64,7 +72,7 @@ class PikaProgressTracker {
     return progress;
   }
 
-  String _getEntryObjectiveProgressKey(String entryId, String objectiveId) {
+  static String _getEntryObjectiveProgressKey(String entryId, String objectiveId) {
     return '$entryId-$objectiveId';
   }
 

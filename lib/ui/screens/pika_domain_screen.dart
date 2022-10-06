@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:alwan/api/dto/common/domain_dto.dart';
-import 'package:alwan/pika/domain_data.dart';
+import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/widgets/domain_progress_view.dart';
+import 'package:alwan/services.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -17,27 +18,29 @@ class PikaDomainScreen extends StatefulWidget {
 }
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
-  late Future<DomainData> domainData;
+  late Future<GetDomainProfileResponseDto> domainProfile;
 
   @override
   void initState() {
     super.initState();
-    domainData = DomainData.fetchDomainData(widget.domain);
+    domainProfile = Services.pikaClient.getDomainProfile(widget.domain.id);
   }
 
   @override
   void didUpdateWidget(PikaDomainScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.domain.id != widget.domain.id) setState(() => domainData = DomainData.fetchDomainData(widget.domain));
+    if (oldWidget.domain.id != widget.domain.id) setState(() => domainProfile = Services.pikaClient.getDomainProfile(widget.domain.id));
   }
 
   @override
   Widget build(BuildContext context) {
     return PrimaryScaffold(
       title: widget.domain.name,
-      body: AsyncDataBuilder<DomainData>(
-        dataFuture: domainData,
-        builder: (BuildContext context, DomainData data) => DomainProgressView(data),
+      body: AsyncDataBuilder<GetDomainProfileResponseDto>(
+        dataFuture: domainProfile,
+        builder: (BuildContext context, GetDomainProfileResponseDto profileDto) {
+          return DomainProgressView(widget.domain, profileDto);
+        },
       ),
     );
   }
