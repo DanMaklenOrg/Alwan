@@ -120,8 +120,12 @@ class _DomainProgressViewState extends State<DomainProgressView> {
       onDoubleTap: () async {
         var objectives = domain.getEntryObjectives(entry);
         if (objectives.isNotEmpty) {
-          await ObjectivesDialog.show(context, entry, objectives, progressTracker);
-          // await widget.domain.saveTrackedProgress();
+          Map<ObjectiveDto, Progress> newProgress = await ObjectivesDialog.show(context, entry, objectives, progressTracker);
+          for(ObjectiveDto objective in newProgress.keys){
+            Progress progress = newProgress[objective]!;
+            progressTracker.setEntryObjectiveProgress(entry, objective, progress.progress);
+            await Services.pikaClient.putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
+          }
           setState(() {});
         }
       },
@@ -154,9 +158,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
             progressTracker.setEntryObjectiveProgress(entry, objective, progress.progress);
             await Services.pikaClient.putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
           }
-          setState(() {
-
-          });
+          setState(() {});
         }
       },
     );
