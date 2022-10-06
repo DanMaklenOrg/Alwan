@@ -97,7 +97,7 @@ class Progress {
 
   double get percentage => 1.0 * progress / outOf;
 
-  bool isValid() => outOf >= 0 && progress >= 0 && progress < outOf;
+  bool isValid() => outOf >= 0 && progress >= 0 && progress <= outOf;
 
   Progress operator +(Progress other) {
     return Progress(progress: progress + other.progress, outOf: outOf + other.outOf);
