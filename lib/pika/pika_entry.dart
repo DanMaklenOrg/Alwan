@@ -12,6 +12,6 @@ class PikaEntry {
 
   final String id;
   final String title;
-  late final PikaEntry? parent;
+  PikaEntry? parent;
   final List<PikaEntry> children;
 }

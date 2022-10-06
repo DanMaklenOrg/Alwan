@@ -31,20 +31,25 @@ class BaseHttpClient {
   Future<dynamic> get({required String path}) async {
     var response = await _client.get(_endpoint(path), headers: _headers());
     _validateResponseStatus(response);
-    return json.decode(response.body);
+    return _decodeJsonBody(response.body);
   }
 
   Future<dynamic> post({required String path, Object? body}) async {
     var requestBody = json.encode(body);
     var response = await _client.post(_endpoint(path), body: requestBody, headers: _headers());
     _validateResponseStatus(response);
-    return json.decode(response.body);
+    return _decodeJsonBody(response.body);
   }
 
   Future<dynamic> put({required String path, Object? body}) async {
     var requestBody = json.encode(body);
     var response = await _client.put(_endpoint(path), body: requestBody, headers: _headers());
     _validateResponseStatus(response);
-    return json.decode(response.body);
+    return _decodeJsonBody(response.body);
+  }
+
+  dynamic _decodeJsonBody(String body){
+    if(body.isEmpty) return {};
+    return json.decode(body);
   }
 }
