@@ -1,11 +1,8 @@
 import 'dart:async';
 
 import 'package:alwan/api/dto/common/domain_dto.dart';
-import 'package:alwan/api/dto/common/project_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
-import 'package:alwan/pika/pika_entry.dart';
 import 'package:alwan/pika/widgets/domain_progress_view.dart';
-import 'package:alwan/pika/widgets/objectives_dialog.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
