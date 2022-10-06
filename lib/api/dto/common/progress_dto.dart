@@ -1,4 +1,6 @@
 class ProgressDto {
+  ProgressDto({required this.objectiveId, required this.targetId, required this.progress});
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         'objective_id': objectiveId,
         'target_id': targetId,

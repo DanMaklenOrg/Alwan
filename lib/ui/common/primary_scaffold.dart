@@ -15,6 +15,12 @@ class PrimaryScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.login_sharp),
+            onPressed: () => Navigator.of(context).pushNamed('/signup'),
+          ),
+        ],
       ),
       body: Center(child: body),
     );

@@ -1,5 +1,5 @@
 import 'package:alwan/api/base_http_client.dart';
-import 'package:alwan/api/dto/response/sign_in_dto.dart';
+import 'package:alwan/api/dto/request/sign_in_dto.dart';
 import 'package:alwan/services.dart';
 
 class AnaClient extends BaseHttpClient{
