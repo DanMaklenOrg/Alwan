@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (context) => const PikaHomeScreen());
             case '/pika/domain':
               return MaterialPageRoute(builder: (context) => PikaDomainScreen(domain: routeSettings.arguments as DomainDto));
-            case '/signup':
+            case '/signin':
               return MaterialPageRoute(builder: (context) => const SignInScreen());
             default:
               return null;

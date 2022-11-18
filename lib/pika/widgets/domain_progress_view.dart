@@ -1,3 +1,4 @@
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/progress_dto.dart';
@@ -6,7 +7,6 @@ import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/domain_data.dart';
 import 'package:alwan/pika/pika_entry.dart';
 import 'package:alwan/pika/pika_progress_tracker.dart';
-import 'package:alwan/services.dart';
 import 'package:flutter/material.dart';
 
 import 'objectives_dialog.dart';
@@ -124,7 +124,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
           for(ObjectiveDto objective in newProgress.keys){
             Progress progress = newProgress[objective]!;
             progressTracker.setEntryObjectiveProgress(entry, objective, progress.progress);
-            await Services.pikaClient.putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
+            await ApiClient.of(context).putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
           }
           setState(() {});
         }
@@ -156,7 +156,7 @@ class _DomainProgressViewState extends State<DomainProgressView> {
           for(ObjectiveDto objective in newProgress.keys){
             Progress progress = newProgress[objective]!;
             progressTracker.setEntryObjectiveProgress(entry, objective, progress.progress);
-            await Services.pikaClient.putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
+            await ApiClient.of(context).putProgress(ProgressDto(objectiveId: objective.id, targetId: entry.id, progress: progress.progress));
           }
           setState(() {});
         }

@@ -7,5 +7,5 @@ class AuthContextProvider {
 
   void signIn(String token) => _token = token;
 
-  String get token => _token!;
+  String? get token => _token;
 }

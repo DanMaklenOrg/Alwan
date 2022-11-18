@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/common/domain_dto.dart';
 import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';
 import 'package:alwan/pika/widgets/domain_progress_view.dart';
-import 'package:alwan/services.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,13 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   @override
   void initState() {
     super.initState();
-    domainProfile = Services.pikaClient.getDomainProfile(widget.domain.id);
+    domainProfile = ApiClient.of(context).getDomainProfile(widget.domain.id);
   }
 
   @override
   void didUpdateWidget(PikaDomainScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.domain.id != widget.domain.id) setState(() => domainProfile = Services.pikaClient.getDomainProfile(widget.domain.id));
+    if (oldWidget.domain.id != widget.domain.id) setState(() => domainProfile = ApiClient.of(context).getDomainProfile(widget.domain.id));
   }
 
   @override

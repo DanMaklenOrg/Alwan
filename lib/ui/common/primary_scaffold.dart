@@ -18,7 +18,7 @@ class PrimaryScaffold extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.login_sharp),
-            onPressed: () => Navigator.of(context).pushNamed('/signup'),
+            onPressed: () => Navigator.of(context).pushNamed('/signin'),
           ),
         ],
       ),
