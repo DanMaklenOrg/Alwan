@@ -1,5 +1,5 @@
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/request/sign_in_dto.dart';
-import 'package:alwan/services.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:alwan/ui/widgets/input_text_field.dart';
 import 'package:alwan/ui/widgets/submit_form.dart';
@@ -34,8 +34,8 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
         submitActionLabel: 'Sing In',
         onFormSubmit: () async {
-          await Services.anaClient.signIn(SignInRequestDto(username: _username!, password: _password!));
-          Navigator.of(context).pop();
+          bool loginSuccessful = await ApiClient.of(context).signIn(SignInRequestDto(username: _username!, password: _password!));
+          if (loginSuccessful) Navigator.of(context).pop(loginSuccessful);
         },
       ),
     );

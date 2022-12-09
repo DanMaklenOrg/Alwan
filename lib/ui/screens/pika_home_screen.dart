@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/common/domain_dto.dart';
-import 'package:alwan/services.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
   @override
   void initState() {
     super.initState();
-    domainsFuture = Services.pikaClient.getDomainList();
+    domainsFuture = ApiClient.of(context).getDomainList();
   }
 
   @override
