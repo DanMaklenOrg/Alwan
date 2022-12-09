@@ -28,6 +28,7 @@ class ApiClient {
       port: _anaPort,
       path: 'api/auth/signin',
       body: requestDto,
+      authToken: false,
     );
     var response = await _callApi(request: request, redirectToLoginOn401: false);
     var responseDto = SignInResponseDto.fromJson(response.body);
@@ -41,7 +42,6 @@ class ApiClient {
       host: _host,
       port: _pikaPort,
       path: 'api/domain',
-      authToken: Services.authContextProvider.token,
     );
     var response = await _callApi(request: request);
     return response.body.map<DomainDto>((e) => DomainDto.fromJson(e)).toList();
@@ -53,7 +53,6 @@ class ApiClient {
       host: _host,
       port: _pikaPort,
       path: 'api/domain/$domainId/profile',
-      authToken: Services.authContextProvider.token,
     );
     var response = await _callApi(request: request);
     return GetDomainProfileResponseDto.fromJson(response.body);
@@ -66,7 +65,6 @@ class ApiClient {
       port: _pikaPort,
       path: 'api/progress',
       body: requestDto,
-      authToken: Services.authContextProvider.token,
     );
     await _callApi(request: request);
   }
@@ -79,6 +77,7 @@ class ApiClient {
     bool shouldRetry = false;
 
     do {
+      shouldRetry = false;
       response = await _client.callApi(request);
       if (response.statusCode != 200) shouldRetry = await _handleResponseStatusCode(response, redirectToLoginOn401);
     } while (shouldRetry);

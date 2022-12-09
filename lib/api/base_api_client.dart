@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:alwan/services.dart';
 import 'package:http/http.dart';
 
 enum HttpMethod {
@@ -15,13 +16,13 @@ class ApiRequest {
     required int port,
     required String path,
     this.body,
-    this.authToken,
+    this.authToken = true,
   }) : uri = Uri(scheme: 'https', host: host, port: port, path: path);
 
   HttpMethod httpMethod;
   Uri uri;
   Object? body;
-  String? authToken;
+  bool authToken;
 }
 
 class ApiResponse {
@@ -53,7 +54,7 @@ class BaseApiClient {
   }
 
   Map<String, String> _headers(ApiRequest request) => {
-        if (request.authToken != null) "Authorization": "Bearer ${request.authToken}",
+        if (request.authToken) "Authorization": "Bearer ${Services.authContextProvider.token}",
         'Content-Type': 'application/json',
       };
 }
