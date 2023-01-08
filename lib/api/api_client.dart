@@ -36,6 +36,18 @@ class ApiClient {
     return response.statusCode == 200;
   }
 
+  Future<DomainDto> addDomain(String name) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.post,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/domain',
+      queryParameters: {"domainName": name},
+    );
+    var response = await _callApi(request: request);
+    return DomainDto.fromJson(response.body);
+  }
+
   Future<List<DomainDto>> getDomainList() async {
     var request = ApiRequest(
       httpMethod: HttpMethod.get,
