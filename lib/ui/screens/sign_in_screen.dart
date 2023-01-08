@@ -20,6 +20,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return PrimaryScaffold(
       title: 'Sign In',
+      showSignInAction: false,
       body: SubmitForm(
         formFields: [
           InputTextField(
@@ -35,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
         submitActionLabel: 'Sing In',
         onFormSubmit: () async {
           bool loginSuccessful = await ApiClient.of(context).signIn(SignInRequestDto(username: _username!, password: _password!));
-          if (loginSuccessful) Navigator.of(context).pop(loginSuccessful);
+          if (loginSuccessful) Navigator.of(context).pushNamed('/pika');
         },
       ),
     );

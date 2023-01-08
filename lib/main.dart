@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return FlavorBanner(
       child: MaterialApp(
         title: 'Dan Maklen App',
-        initialRoute: '/pika',
+        initialRoute: '/signin',
         onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
             case '/pika':

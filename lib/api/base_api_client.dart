@@ -17,7 +17,8 @@ class ApiRequest {
     required String path,
     this.body,
     this.authToken = true,
-  }) : uri = Uri(scheme: 'https', host: host, port: port, path: path);
+    Map<String, dynamic>? queryParameters,
+  }) : uri = Uri(scheme: 'https', host: host, port: port, path: path, queryParameters: queryParameters);
 
   HttpMethod httpMethod;
   Uri uri;

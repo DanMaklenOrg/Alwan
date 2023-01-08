@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/common/domain_dto.dart';
+import 'package:alwan/pika/widgets/new_domain_dialog.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,8 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
   Widget _domainListBuilder(BuildContext context, List<DomainDto> domainList) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 250),
-      itemCount: domainList.length,
-      itemBuilder: (context, i) => _domainCard(context, domainList[i]),
+      itemCount: domainList.length + 1,
+      itemBuilder: (context, i) => i == domainList.length ? _newDomainCard(context) : _domainCard(context, domainList[i]),
     );
   }
 
@@ -47,10 +48,23 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
           onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(domain.name, style: Theme.of(context).textTheme.headlineSmall),
-            ],
+            children: [Text(domain.name, style: Theme.of(context).textTheme.headlineSmall)],
           )),
+    );
+  }
+
+  Widget _newDomainCard(context) {
+    return Card(
+      child: InkWell(
+        onTap: () async {
+          String domainName = await NewDomainDialog.show(context);
+          await ApiClient.of(context).addDomain(domainName);
+          setState(() {
+            domainsFuture = ApiClient.of(context).getDomainList();
+          });
+        },
+        child: const Icon(Icons.add, size: 150, color: Colors.green),
+      ),
     );
   }
 }
