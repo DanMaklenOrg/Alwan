@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto/common/domain_dto.dart';
+import 'package:alwan/pika/models/domain.dart';
 import 'package:alwan/pika/widgets/new_domain_dialog.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
 import 'package:alwan/ui/common/primary_scaffold.dart';
@@ -44,12 +45,25 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
 
   Widget _domainCard(BuildContext context, DomainDto domain) {
     return Card(
-      child: InkWell(
-          onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text(domain.name, style: Theme.of(context).textTheme.headlineSmall)],
-          )),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          InkWell(
+            onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(domain.name, style: Theme.of(context).textTheme.headlineSmall),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => Navigator.of(context).pushNamed('/pika/edit/entity', arguments: Domain.fromDto(domain)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
