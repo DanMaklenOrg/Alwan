@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'base_api_client.dart';
 import 'dto/common/domain_dto.dart';
+import 'dto/common/entity_dto.dart';
 import 'dto/common/progress_dto.dart';
 import 'dto/request/sign_in_dto.dart';
 import 'dto/response/get_domain_profile_response_dto.dart';
@@ -21,6 +22,7 @@ class ApiClient {
   final int _pikaPort;
   final int _anaPort;
 
+  // Auth
   Future<bool> signIn(SignInRequestDto requestDto) async {
     var request = ApiRequest(
       httpMethod: HttpMethod.post,
@@ -36,6 +38,7 @@ class ApiClient {
     return response.statusCode == 200;
   }
 
+  // Pika - Domain
   Future<DomainDto> addDomain(String name) async {
     var request = ApiRequest(
       httpMethod: HttpMethod.post,
@@ -59,6 +62,36 @@ class ApiClient {
     return response.body.map<DomainDto>((e) => DomainDto.fromJson(e)).toList();
   }
 
+  // Pika - Entity
+  Future<List<EntityDto>> getEntityList(String domainId) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.get,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/entity',
+      queryParameters: {'domainId': domainId},
+    );
+    var response = await _callApi(request: request);
+    return response.body.map<EntityDto>((e) => EntityDto.fromJson(e)).toList();
+  }
+
+  Future<EntityDto> addEntity(String domainId, String name, String? parentId) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.post,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/entity',
+      queryParameters: {
+        'domainId': domainId,
+        'name': name,
+        if(parentId != null) 'parentId': parentId
+      },
+    );
+    var response = await _callApi(request: request);
+    return EntityDto.fromJson(response.body);
+  }
+
+  // ...
   Future<GetDomainProfileResponseDto> getDomainProfile(String domainId) async {
     var request = ApiRequest(
       httpMethod: HttpMethod.get,
