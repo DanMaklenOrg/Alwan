@@ -1,4 +1,4 @@
-import 'package:alwan/api/dto/common/entity_dto.dart';
+import 'package:alwan/api/dto/response/entity_dto.dart';
 
 class Entity {
   Entity.fromDto(EntityDto dto)
