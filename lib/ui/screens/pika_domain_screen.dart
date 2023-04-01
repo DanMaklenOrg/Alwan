@@ -43,8 +43,9 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
 
   Future<bool> _loadDomainData() async {
     List<Achievement> achievements = (await ApiClient.of(context).getAchievements(widget.domain.id)).map(Achievement.fromDto).toList();
+    List<Achievement> unlockedAchievements = (await ApiClient.of(context).getUnlockedAchievements(widget.domain.id)).map(Achievement.fromDto).toList();
     domain = Domain(id: widget.domain.id, name: widget.domain.name, achievements: achievements);
-    progress = DomainProgress(domain);
+    progress = DomainProgress(domain, unlockedAchievement: unlockedAchievements);
     return true;
   }
 }
