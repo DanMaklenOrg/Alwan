@@ -101,6 +101,28 @@ class ApiClient {
     return response.body.map<AchievementDto>((e) => AchievementDto.fromJson(e)).toList();
   }
 
+  Future<List<AchievementDto>> getUnlockedAchievements(String domainId) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.get,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/achievement/unlocked',
+      queryParameters: {'domainId': domainId},
+    );
+    var response = await _callApi(request: request);
+    return response.body.map<AchievementDto>((e) => AchievementDto.fromJson(e)).toList();
+  }
+
+  Future putUnlockAchievement(String achievementId) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.put,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/achievement/$achievementId/unlock',
+    );
+    await _callApi(request: request);
+  }
+
   // ...
   Future<GetDomainProfileResponseDto> getDomainProfile(String domainId) async {
     var request = ApiRequest(

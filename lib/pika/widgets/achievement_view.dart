@@ -1,3 +1,4 @@
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/pika/models/domain.dart';
 import 'package:alwan/pika/models/domain_progress.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +28,15 @@ class _AchievementViewState extends State<AchievementView> {
     return CheckboxListTile(
       title: Text(achievement.name),
       value: widget.progress.isAchievementUnlocked(achievement),
-      onChanged: (val) => setState(() => setAchievementLockState(achievement, val!)),
+      onChanged: (val) => setAchievementLockState(achievement, val!),
     );
   }
 
   void setAchievementLockState(Achievement achievement, bool state) {
     if (state) {
+      ApiClient.of(context).putUnlockAchievement(achievement.id);
       widget.progress.unlockAchievement(achievement);
-    } else {
-      widget.progress.lockAchievement(achievement);
+      setState(() {});
     }
   }
 }
