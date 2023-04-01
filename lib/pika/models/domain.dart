@@ -1,10 +1,9 @@
-import 'package:alwan/api/dto/common/domain_dto.dart';
+import 'package:alwan/pika/models/achievement.dart';
 
 class Domain {
-  Domain({required this.id, required this.name});
-
-  Domain.fromDto(DomainDto dto) : this(id: dto.id, name: dto.name);
+  const Domain({required this.id, required this.name, required this.achievements});
 
   final String id;
   final String name;
+  final List<Achievement> achievements;
 }

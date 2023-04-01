@@ -1,4 +1,4 @@
-import 'package:alwan/api/dto/common/domain_dto.dart';
+import 'package:alwan/api/dto/response/domain_dto.dart';
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
 import 'package:alwan/api/dto/response/get_domain_profile_response_dto.dart';

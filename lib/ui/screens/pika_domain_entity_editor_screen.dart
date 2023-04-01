@@ -1,5 +1,5 @@
 import 'package:alwan/api/api_client.dart';
-import 'package:alwan/api/dto/common/entity_dto.dart';
+import 'package:alwan/api/dto/response/entity_dto.dart';
 import 'package:alwan/pika/models/domain.dart';
 import 'package:alwan/pika/models/entity.dart';
 import 'package:alwan/pika/widgets/new_entity_dialog.dart';
@@ -47,7 +47,7 @@ class _PikaDomainEntityEditorScreenState extends State<PikaDomainEntityEditorScr
   }
 
   Future<void> _loadEntities() async {
-    List<EntityDto> entityList = await ApiClient.of(context).getEntityList(widget.domain.id);
+    List<EntityDto> entityList = await ApiClient.of(context).getEntities(widget.domain.id);
     setState(() => entities = {for (EntityDto entity in entityList) entity.id: Entity.fromDto(entity)});
   }
 

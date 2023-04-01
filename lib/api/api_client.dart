@@ -3,10 +3,11 @@ import 'package:alwan/services.dart';
 import 'package:flutter/material.dart';
 
 import 'base_api_client.dart';
-import 'dto/common/domain_dto.dart';
-import 'dto/common/entity_dto.dart';
 import 'dto/common/progress_dto.dart';
 import 'dto/request/sign_in_dto.dart';
+import 'dto/response/achievement_dto.dart';
+import 'dto/response/domain_dto.dart';
+import 'dto/response/entity_dto.dart';
 import 'dto/response/get_domain_profile_response_dto.dart';
 
 class ApiClient {
@@ -63,7 +64,7 @@ class ApiClient {
   }
 
   // Pika - Entity
-  Future<List<EntityDto>> getEntityList(String domainId) async {
+  Future<List<EntityDto>> getEntities(String domainId) async {
     var request = ApiRequest(
       httpMethod: HttpMethod.get,
       host: _host,
@@ -81,14 +82,23 @@ class ApiClient {
       host: _host,
       port: _pikaPort,
       path: 'api/entity',
-      queryParameters: {
-        'domainId': domainId,
-        'name': name,
-        if(parentId != null) 'parentId': parentId
-      },
+      queryParameters: {'domainId': domainId, 'name': name, if (parentId != null) 'parentId': parentId},
     );
     var response = await _callApi(request: request);
     return EntityDto.fromJson(response.body);
+  }
+
+  // Pika - Achievement
+  Future<List<AchievementDto>> getAchievements(String domainId) async {
+    var request = ApiRequest(
+      httpMethod: HttpMethod.get,
+      host: _host,
+      port: _pikaPort,
+      path: 'api/achievement',
+      queryParameters: {'domainId': domainId},
+    );
+    var response = await _callApi(request: request);
+    return response.body.map<AchievementDto>((e) => AchievementDto.fromJson(e)).toList();
   }
 
   // ...

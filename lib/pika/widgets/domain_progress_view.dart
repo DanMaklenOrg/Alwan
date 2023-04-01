@@ -1,5 +1,5 @@
 import 'package:alwan/api/api_client.dart';
-import 'package:alwan/api/dto/common/domain_dto.dart';
+import 'package:alwan/api/dto/response/domain_dto.dart';
 import 'package:alwan/api/dto/common/objective_dto.dart';
 import 'package:alwan/api/dto/common/progress_dto.dart';
 import 'package:alwan/api/dto/common/project_dto.dart';
