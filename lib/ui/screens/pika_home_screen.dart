@@ -51,7 +51,7 @@ class _PikaHomeScreenState extends State<PikaHomeScreen> {
             onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
             child: Align(
               alignment: Alignment.center,
-              child: Text(domain.name, style: Theme.of(context).textTheme.headlineSmall),
+              child: Text(domain.name, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
             ),
           ),
           // Align(
