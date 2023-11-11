@@ -1,24 +1,26 @@
 name: alwan
 description: danmaklen.com UI.
 
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.13
-  http: ^0.13.4
-  flutter_spinbox: ^0.8.0
+  flutter_spinbox: ^0.13.1
   flutter_flavor: ^3.0.3
+  dio: ^5.3.3
+  get_it: ^7.6.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
