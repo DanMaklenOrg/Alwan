@@ -1,5 +1,5 @@
 import 'package:alwan/api/dto/response/domain_dto.dart';
-import 'package:alwan/config.dart';
+import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/screens/pika_domain_screen.dart';
 import 'package:alwan/ui/screens/pika_home_screen.dart';
 import 'package:alwan/ui/screens/sign_in_screen.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 
 void main() {
-  Config.buildConfig(const String.fromEnvironment('FLAVOR'));
+  ServiceCollection.registerServices();
   runApp(const MyApp());
 }
 
