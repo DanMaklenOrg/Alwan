@@ -7,7 +7,7 @@ class ApiClient {
   ApiClient(this._dio);
 
   Future<SignInResponseDto> signIn(SignInRequestDto requestDto) async {
-    var response = await _dio.post('/ana/auth/signIn', data: requestDto.toJson());
+    var response = await _dio.post('/ana/auth/sign-in', data: requestDto.toJson());
     return SignInResponseDto.fromJson(response.data);
   }
 }
