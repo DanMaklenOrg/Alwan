@@ -1,82 +1,42 @@
 import 'dart:async';
 
 import 'package:alwan/api/api_client.dart';
-import 'package:alwan/api/dto/response/domain_dto.dart';
-import 'package:alwan/pika/widgets/new_domain_dialog.dart';
+import 'package:alwan/api/dto.dart';
+import 'package:alwan/service_provider.dart';
+import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/common/async_data_builder.dart';
-import 'package:alwan/ui/common/primary_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class PikaHomeScreen extends StatefulWidget {
-  const PikaHomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<PikaHomeScreen> createState() => _PikaHomeScreenState();
-}
-
-class _PikaHomeScreenState extends State<PikaHomeScreen> {
-  late Future<List<DomainDto>> domainsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    domainsFuture = ApiClient.of(context).getDomainList();
-  }
+class PikaHomeScreen extends StatelessWidget {
+  const PikaHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryScaffold(
+    return BaseScreenLayout(
       title: 'Pika',
-      body: AsyncDataBuilder<List<DomainDto>>(
-        dataFuture: domainsFuture,
-        builder: _domainListBuilder,
+      body: AsyncDataBuilder<List<GameDto>>(
+        fetcher: serviceProvider.get<ApiClient>().getAllGames,
+        builder: _buildGrid,
       ),
     );
   }
 
-  Widget _domainListBuilder(BuildContext context, List<DomainDto> domainList) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 250),
-      itemCount: domainList.length + 1,
-      itemBuilder: (context, i) => i == domainList.length ? _newDomainCard(context) : _domainCard(context, domainList[i]),
+  Widget _buildGrid(BuildContext context, List<GameDto> gameList) {
+    return GridView.extent(
+      maxCrossAxisExtent: 250,
+      children: gameList.map((e) => _gameCard(context, e)).toList(),
     );
   }
 
-  Widget _domainCard(BuildContext context, DomainDto domain) {
+  Widget _gameCard(BuildContext context, GameDto game) {
     return Card(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          InkWell(
-            onTap: () => Navigator.of(context).pushNamed('/pika/domain', arguments: domain),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(domain.name, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
-            ),
-          ),
-          // Align(
-          //   alignment: Alignment.topRight,
-          //   child: IconButton(
-          //     icon: const Icon(Icons.edit),
-          //     onPressed: () => Navigator.of(context).pushNamed('/pika/edit/entity', arguments: domain),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  Widget _newDomainCard(context) {
-    return Card(
-      child: InkWell(
-        onTap: () async {
-          String domainName = await NewDomainDialog.show(context);
-          await ApiClient.of(context).addDomain(domainName);
-          setState(() {
-            domainsFuture = ApiClient.of(context).getDomainList();
-          });
-        },
-        child: const Icon(Icons.add, size: 150, color: Colors.green),
+      child: GestureDetector(
+        onTap: () => context.go("/pika/${game.id}"),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(game.name, style: Theme.of(context).textTheme.headlineSmall),
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
-import 'package:alwan/building_blocks/base_screen_layout.dart';
+import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,8 +10,8 @@ class HomeScreen extends StatelessWidget {
     return BaseScreenLayout(
         title: 'Home',
         body: ElevatedButton(
-          onPressed: () {},
-          child: const Text('Hello World!'),
+          onPressed: () => context.go('/pika'),
+          child: const Text('Go To Pika!'),
         ));
   }
 }

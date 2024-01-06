@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:alwan/ui/screens/pika_home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import 'app_state.dart';
@@ -15,7 +16,8 @@ final router = GoRouter(
 
 var _routes = [
   GoRoute(path: '/', builder: (_, __) => const HomeScreen(), routes: [
-    GoRoute(path: 'sign-in', builder: (_, __) => SignInScreen()),
+    GoRoute(path: 'sign-in', builder: (_, __) => const SignInScreen()),
+    GoRoute(path: 'pika', builder: (_, __) => const PikaHomeScreen())
   ])
 ];
 
