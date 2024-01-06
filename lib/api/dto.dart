@@ -20,3 +20,14 @@ final class SignInResponseDto {
 
   final String token;
 }
+
+final class GameDto {
+  GameDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        name = json['name'] as String,
+        version = json['version'] as String;
+
+  final String id;
+  final String name;
+  final String version;
+}
