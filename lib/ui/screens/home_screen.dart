@@ -2,7 +2,7 @@ import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatelessWidget {
+final class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override

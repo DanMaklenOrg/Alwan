@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppState extends ChangeNotifier {
+final class AppState extends ChangeNotifier {
   AppState() {
     auth.addListener(notifyListeners);
   }

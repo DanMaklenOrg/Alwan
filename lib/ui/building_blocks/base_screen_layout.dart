@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BaseScreenLayout extends StatelessWidget {
-  const BaseScreenLayout({
-    super.key,
-    required this.title,
-    required this.body
-  });
+  const BaseScreenLayout({super.key, required this.title, required this.body});
 
   final String title;
   final Widget body;

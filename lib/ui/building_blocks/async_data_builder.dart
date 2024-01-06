@@ -27,7 +27,7 @@ class _AsyncDataBuilderState<T> extends State<AsyncDataBuilder<T>> {
     return FutureBuilder<T>(
       future: _dataFuture,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) return const CircularProgressIndicator();
+        if (snapshot.connectionState != ConnectionState.done) return const Center(child: CircularProgressIndicator());
         return widget.builder(context, snapshot.data as T);
       },
     );
