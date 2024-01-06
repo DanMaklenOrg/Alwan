@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
 import 'package:alwan/service_provider.dart';
