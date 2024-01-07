@@ -5,6 +5,9 @@ import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
 import 'package:flutter/material.dart';
 
+import 'entity_list_view.dart';
+import 'entity_view.dart';
+
 final class PikaGameScreen extends StatefulWidget {
   const PikaGameScreen({super.key, required this.gameId});
 
@@ -20,13 +23,13 @@ class _PikaGameScreenState extends State<PikaGameScreen> {
   @override
   Widget build(BuildContext context) {
     return AsyncDataBuilder<GameDto>(
-      fetcher: () async => await serviceProvider.get<ApiClient>().getGame(widget.gameId),
+      fetcher: () => serviceProvider.get<ApiClient>().getGame(widget.gameId),
       builder: (context, game) => BaseScreenLayout(
         title: game.name,
         body: Row(
           children: [
             Expanded(
-              child: GameEntityList(
+              child: EntityListView(
                 game: game,
                 selectedEntity: selectedEntity,
                 onSelection: (entity) => setState(() => selectedEntity = entity),
@@ -37,37 +40,5 @@ class _PikaGameScreenState extends State<PikaGameScreen> {
         ),
       ),
     );
-  }
-}
-
-final class GameEntityList extends StatelessWidget {
-  const GameEntityList({super.key, required this.game, required this.selectedEntity, required this.onSelection});
-
-  final GameDto game;
-  final EntityDto? selectedEntity;
-  final void Function(EntityDto) onSelection;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: game.entities.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(game.entities[index].name),
-            selected: game.entities[index].id == selectedEntity?.id,
-            onTap: () => onSelection(game.entities[index]),
-          );
-        });
-  }
-}
-
-final class EntityView extends StatelessWidget {
-  const EntityView({super.key, required this.entity});
-
-  final EntityDto entity;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(entity.name);
   }
 }

@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'app_state.dart';
 import 'service_provider.dart';
 import 'ui/screens/home_screen.dart';
-import 'ui/screens/pika_game_screen.dart';
-import 'ui/screens/pika_home_screen.dart';
+import 'ui/pika/pika_game_screen.dart';
+import 'ui/pika/pika_home_screen.dart';
 import 'ui/screens/sign_in_screen.dart';
 
 final router = GoRouter(
