@@ -36,7 +36,7 @@ final class EntityView extends StatelessWidget {
 }
 
 class _BooleanStatTile extends StatelessWidget {
-  _BooleanStatTile(this.stat, {super.key}) : assert(stat.type == StatTypeEnumDto.boolean);
+  _BooleanStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.boolean);
 
   final EntityStatsDto stat;
 
@@ -50,7 +50,7 @@ class _BooleanStatTile extends StatelessWidget {
 }
 
 class _IntegerRangeStatTile extends StatelessWidget {
-  _IntegerRangeStatTile(this.stat, {super.key}) : assert(stat.type == StatTypeEnumDto.integerRange);
+  _IntegerRangeStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.integerRange);
 
   final EntityStatsDto stat;
 
