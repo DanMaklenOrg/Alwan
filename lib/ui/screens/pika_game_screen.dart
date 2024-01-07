@@ -15,7 +15,7 @@ final class PikaGameScreen extends StatefulWidget {
 }
 
 class _PikaGameScreenState extends State<PikaGameScreen> {
-  GameEntityDto? selectedEntity;
+  EntityDto? selectedEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _PikaGameScreenState extends State<PikaGameScreen> {
                 onSelection: (entity) => setState(() => selectedEntity = entity),
               ),
             ),
-            if (selectedEntity != null) Expanded(child: GameEntityView(entity: selectedEntity!)),
+            if (selectedEntity != null) Expanded(child: EntityView(entity: selectedEntity!)),
           ],
         ),
       ),
@@ -44,8 +44,8 @@ final class GameEntityList extends StatelessWidget {
   const GameEntityList({super.key, required this.game, required this.selectedEntity, required this.onSelection});
 
   final GameDto game;
-  final GameEntityDto? selectedEntity;
-  final void Function(GameEntityDto) onSelection;
+  final EntityDto? selectedEntity;
+  final void Function(EntityDto) onSelection;
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +61,10 @@ final class GameEntityList extends StatelessWidget {
   }
 }
 
-final class GameEntityView extends StatelessWidget {
-  const GameEntityView({super.key, required this.entity});
+final class EntityView extends StatelessWidget {
+  const EntityView({super.key, required this.entity});
 
-  final GameEntityDto entity;
+  final EntityDto entity;
 
   @override
   Widget build(BuildContext context) {
