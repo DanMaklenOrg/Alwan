@@ -37,16 +37,16 @@ final class GameDto {
       : id = json['id'] as String,
         name = json['name'] as String,
         version = json['version'] as String,
-        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList();
+        entities = (json['entities'] as List).map((e) => GameEntityDto.fromJson(e)).toList();
 
   final String id;
   final String name;
   final String version;
-  final List<EntityDto> entities;
+  final List<GameEntityDto> entities;
 }
 
-final class EntityDto {
-  EntityDto.fromJson(Map<String, dynamic> json)
+final class GameEntityDto {
+  GameEntityDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String;
 
