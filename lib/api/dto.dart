@@ -21,8 +21,8 @@ final class SignInResponseDto {
   final String token;
 }
 
-final class GameDto {
-  GameDto.fromJson(Map<String, dynamic> json)
+final class GameSummaryDto {
+  GameSummaryDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
         version = json['version'] as String;
@@ -30,4 +30,26 @@ final class GameDto {
   final String id;
   final String name;
   final String version;
+}
+
+final class GameDto {
+  GameDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        name = json['name'] as String,
+        version = json['version'] as String,
+        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList();
+
+  final String id;
+  final String name;
+  final String version;
+  final List<EntityDto> entities;
+}
+
+final class EntityDto {
+  EntityDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        name = json['name'] as String;
+
+  final String id;
+  final String name;
 }

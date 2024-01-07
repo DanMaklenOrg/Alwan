@@ -11,8 +11,13 @@ class ApiClient {
     return SignInResponseDto.fromJson(response.data);
   }
 
-  Future<List<GameDto>> getAllGames() async {
+  Future<GameDto> getGame(String gameId) async {
+    var response = await _dio.get('/pika/game/$gameId');
+    return GameDto.fromJson(response.data);
+  }
+
+  Future<List<GameSummaryDto>> getAllGames() async {
     var response = await _dio.get('/pika/game/all');
-    return (response.data as List).map((e) => GameDto.fromJson(e)).toList();
+    return (response.data as List).map((e) => GameSummaryDto.fromJson(e)).toList();
   }
 }
