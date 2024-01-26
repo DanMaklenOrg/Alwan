@@ -8,6 +8,7 @@ void main() {
   ServiceCollection.registerServices();
   usePathUrlStrategy();
   runApp(MaterialApp.router(
+    theme: ThemeData.dark(useMaterial3: true),
     title: 'Dan Maklen App',
     routerConfig: router,
   ));
