@@ -83,3 +83,34 @@ enum StatTypeEnumDto {
     };
   }
 }
+
+final class UserStatsDto {
+  UserStatsDto({required this.entityStats});
+
+  Map<String, dynamic> toJson() => {
+        'entity_stats': entityStats.map((e) => e.toJson()).toList(),
+      };
+
+  UserStatsDto.fromJson(Map<String, dynamic> json) : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStat.fromJson(e)).toList();
+
+  final List<UserEntityStat> entityStats;
+}
+
+final class UserEntityStat {
+  UserEntityStat({required this.entityId, required this.statId, required this.value});
+
+  Map<String, dynamic> toJson() => {
+        'entity_id': entityId,
+        'stat_id': statId,
+        'value': value,
+      };
+
+  UserEntityStat.fromJson(Map<String, dynamic> json)
+      : entityId = json['entity_id'],
+        statId = json['stat_id'],
+        value = json['value'];
+
+  final String entityId;
+  final String statId;
+  final int value;
+}

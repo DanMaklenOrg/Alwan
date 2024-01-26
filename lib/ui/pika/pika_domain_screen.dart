@@ -75,8 +75,10 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Future<PikaState> _fetchData() async {
-    DomainDto baseDomainDto = await serviceProvider.get<ApiClient>().getDomain('_');
-    DomainDto domainDto = await serviceProvider.get<ApiClient>().getDomain(widget.domainId);
-    return PikaState.fromDto(domainDto, baseDomainDto);
+    var client = serviceProvider.get<ApiClient>();
+    DomainDto baseDomainDto = await client.getDomain('_');
+    DomainDto domainDto = await client.getDomain(widget.domainId);
+    UserStatsDto userStatsDto = await client.getUserStat(widget.domainId);
+    return PikaState.fromDto(domainDto, baseDomainDto, userStatsDto);
   }
 }

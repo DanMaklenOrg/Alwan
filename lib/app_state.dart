@@ -11,15 +11,15 @@ final class AppState extends ChangeNotifier {
 class AuthState extends ChangeNotifier {
   String? _token;
 
-  bool get isLoggedIn => _token != null;
+  bool get isLoggedIn => token != null;
 
   void login(String token) {
-    _token = token;
+    token = token;
     notifyListeners();
   }
 
   void logout() {
-    _token = null;
+    token = null;
     notifyListeners();
   }
 }

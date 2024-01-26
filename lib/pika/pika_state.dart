@@ -1,10 +1,12 @@
+import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
+import 'package:alwan/service_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'models.dart';
 
 class PikaState extends ChangeNotifier {
-  PikaState.fromDto(DomainDto domainDto, DomainDto baseDomainDto)
+  PikaState.fromDto(DomainDto domainDto, DomainDto baseDomainDto, UserStatsDto userStatsDto)
       : domainId = domainDto.id,
         domainName = domainDto.name {
     final flattenedDomains = [domainDto, ...domainDto.subDomains, baseDomainDto, ...baseDomainDto.subDomains];
@@ -30,6 +32,8 @@ class PikaState extends ChangeNotifier {
               stats: e.stats.map((sid) => stats[sid]!).toList(),
             ))
         .toList();
+
+    _statValues = {for (var entityStat in userStatsDto.entityStats) (entityStat.entityId, entityStat.statId): entityStat.value};
   }
 
   final String domainId;
@@ -37,8 +41,7 @@ class PikaState extends ChangeNotifier {
 
   late List<Entity> entities = [];
   late Map<String, Stat> stats = {};
-
-  final Map<(String, String), int> _statValues = {};
+  late Map<(String, String), int> _statValues = {};
 
   setStatValue(Entity entity, Stat stat, int val) {
     _statValues[(entity.id, stat.id)] = val;
@@ -49,10 +52,13 @@ class PikaState extends ChangeNotifier {
     return _statValues[(entity.id, stat.id)];
   }
 
-  void save() {}
-
   List<Entity> getEntities({bool filterCompleted = false}) {
     if (!filterCompleted) return entities;
     return entities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s) ?? 0))).toList();
+  }
+
+  Future save() async {
+    var userStatsDto = UserStatsDto(entityStats: _statValues.entries.map((e) => UserEntityStat(entityId: e.key.$1, statId: e.key.$2, value: e.value)).toList());
+    await serviceProvider.get<ApiClient>().setUserStat(domainId, userStatsDto);
   }
 }
