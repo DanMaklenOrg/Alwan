@@ -11,13 +11,13 @@ class ApiClient {
     return SignInResponseDto.fromJson(response.data);
   }
 
-  Future<GameDto> getGame(String gameId) async {
-    var response = await _dio.get('/pika/game/$gameId');
-    return GameDto.fromJson(response.data);
+  Future<DomainDto> getDomain(String domainId) async {
+    var response = await _dio.get('/pika/domain/$domainId');
+    return DomainDto.fromJson(response.data);
   }
 
-  Future<List<GameSummaryDto>> getAllGames() async {
-    var response = await _dio.get('/pika/game/all');
-    return (response.data as List).map((e) => GameSummaryDto.fromJson(e)).toList();
+  Future<List<DomainSummaryDto>> getAllDomains() async {
+    var response = await _dio.get('/pika/domain/all');
+    return (response.data as List).map((e) => DomainSummaryDto.fromJson(e)).toList();
   }
 }

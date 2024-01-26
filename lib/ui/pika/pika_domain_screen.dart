@@ -8,29 +8,29 @@ import 'package:flutter/material.dart';
 import 'entity_list_view.dart';
 import 'entity_view.dart';
 
-final class PikaGameScreen extends StatefulWidget {
-  const PikaGameScreen({super.key, required this.gameId});
+final class PikaDomainScreen extends StatefulWidget {
+  const PikaDomainScreen({super.key, required this.domainId});
 
-  final String gameId;
+  final String domainId;
 
   @override
-  State<PikaGameScreen> createState() => _PikaGameScreenState();
+  State<PikaDomainScreen> createState() => _PikaDomainScreenState();
 }
 
-class _PikaGameScreenState extends State<PikaGameScreen> {
+class _PikaDomainScreenState extends State<PikaDomainScreen> {
   EntityDto? selectedEntity;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncDataBuilder<GameDto>(
-      fetcher: () => serviceProvider.get<ApiClient>().getGame(widget.gameId),
-      builder: (context, game) => BaseScreenLayout(
-        title: game.name,
+    return AsyncDataBuilder<DomainDto>(
+      fetcher: () => serviceProvider.get<ApiClient>().getDomain(widget.domainId),
+      builder: (context, domain) => BaseScreenLayout(
+        title: domain.name,
         body: Row(
           children: [
             Expanded(
               child: EntityListView(
-                game: game,
+                domain: domain,
                 selectedEntity: selectedEntity,
                 onSelection: (entity) => setState(() => selectedEntity = entity),
               ),

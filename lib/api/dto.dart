@@ -21,43 +21,43 @@ final class SignInResponseDto {
   final String token;
 }
 
-final class GameSummaryDto {
-  GameSummaryDto.fromJson(Map<String, dynamic> json)
+final class DomainSummaryDto {
+  DomainSummaryDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
-        name = json['name'] as String,
-        version = json['version'] as String;
+        name = json['name'] as String;
 
   final String id;
   final String name;
-  final String version;
 }
 
-final class GameDto {
-  GameDto.fromJson(Map<String, dynamic> json)
+final class DomainDto {
+  DomainDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
-        version = json['version'] as String,
-        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList();
+        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
+        stats = (json['stats'] as List).map((e) => StatDto.fromJson(e)).toList(),
+        subDomains = (json['sub_domains'] as List).map((e) => DomainDto.fromJson(e)).toList();
 
   final String id;
   final String name;
-  final String version;
   final List<EntityDto> entities;
+  final List<StatDto> stats;
+  final List<DomainDto> subDomains;
 }
 
 final class EntityDto {
   EntityDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
-        stats = (json['stats'] as List).map((e) => EntityStatsDto.fromJson(e)).toList();
+        stats = json['stats'] as List<String>;
 
   final String id;
   final String name;
-  final List<EntityStatsDto> stats;
+  final List<String> stats;
 }
 
-final class EntityStatsDto {
-  EntityStatsDto.fromJson(Map<String, dynamic> json)
+final class StatDto {
+  StatDto.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         type = StatTypeEnumDto.fromString(json['type']),

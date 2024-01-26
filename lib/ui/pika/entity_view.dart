@@ -27,7 +27,7 @@ final class EntityView extends StatelessWidget {
     );
   }
 
-  Widget _buildStat(BuildContext context, EntityStatsDto stat) {
+  Widget _buildStat(BuildContext context, StatDto stat) {
     return switch (stat.type) {
       StatTypeEnumDto.boolean => _BooleanStatTile(stat),
       StatTypeEnumDto.integerRange => _IntegerRangeStatTile(stat),
@@ -38,7 +38,7 @@ final class EntityView extends StatelessWidget {
 class _BooleanStatTile extends StatelessWidget {
   _BooleanStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.boolean);
 
-  final EntityStatsDto stat;
+  final StatDto stat;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _BooleanStatTile extends StatelessWidget {
 class _IntegerRangeStatTile extends StatelessWidget {
   _IntegerRangeStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.integerRange);
 
-  final EntityStatsDto stat;
+  final StatDto stat;
 
   @override
   Widget build(BuildContext context) {

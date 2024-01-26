@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'app_state.dart';
 import 'service_provider.dart';
 import 'ui/screens/home_screen.dart';
-import 'ui/pika/pika_game_screen.dart';
+import 'ui/pika/pika_domain_screen.dart';
 import 'ui/pika/pika_home_screen.dart';
 import 'ui/screens/sign_in_screen.dart';
 
@@ -19,7 +19,7 @@ var _routes = [
   GoRoute(path: '/', builder: (_, __) => const HomeScreen(), routes: [
     GoRoute(path: 'sign-in', builder: (_, __) => const SignInScreen()),
     GoRoute(path: 'pika', builder: (_, __) => const PikaHomeScreen(), routes: [
-      GoRoute(path: ':gameId', builder: (_, state) => PikaGameScreen(gameId: state.pathParameters["gameId"]!)),
+      GoRoute(path: ':domainId', builder: (_, state) => PikaDomainScreen(domainId: state.pathParameters["domainId"]!)),
     ])
   ])
 ];

@@ -13,27 +13,27 @@ final class PikaHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreenLayout(
       title: 'Pika',
-      body: AsyncDataBuilder<List<GameSummaryDto>>(
-        fetcher: serviceProvider.get<ApiClient>().getAllGames,
+      body: AsyncDataBuilder<List<DomainSummaryDto>>(
+        fetcher: serviceProvider.get<ApiClient>().getAllDomains,
         builder: _buildGrid,
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<GameSummaryDto> gameList) {
+  Widget _buildGrid(BuildContext context, List<DomainSummaryDto> domainList) {
     return GridView.extent(
       maxCrossAxisExtent: 250,
-      children: gameList.map((e) => _gameCard(context, e)).toList(),
+      children: domainList.map((e) => _domainCard(context, e)).toList(),
     );
   }
 
-  Widget _gameCard(BuildContext context, GameSummaryDto game) {
+  Widget _domainCard(BuildContext context, DomainSummaryDto domain) {
     return GestureDetector(
-      onTap: () => context.go("/pika/${game.id}"),
+      onTap: () => context.go("/pika/${domain.id}"),
       child: Card(
         child: Align(
           alignment: Alignment.center,
-          child: Text(game.name, style: Theme.of(context).textTheme.headlineSmall),
+          child: Text(domain.name, style: Theme.of(context).textTheme.headlineSmall),
         ),
       ),
     );
