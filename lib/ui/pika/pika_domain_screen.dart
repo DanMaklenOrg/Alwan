@@ -5,6 +5,7 @@ import 'package:alwan/pika/pika_state.dart';
 import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
+import 'package:alwan/ui/building_blocks/loading_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,8 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
               value: _hideCompletedEntities,
               onChanged: (value) => setState(() => _hideCompletedEntities = value ?? false),
             )),
-        IconButton(onPressed: () => context.read<PikaState>().save(), icon: const Icon(Icons.save_outlined))
+        // IconButton(onPressed: () => context.read<PikaState>().save(), icon: const Icon(Icons.save_outlined))
+        LoadingIconButton(iconData: Icons.save_outlined, onPressed: context.read<PikaState>().save()),
       ],
     );
   }

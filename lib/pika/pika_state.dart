@@ -58,6 +58,7 @@ class PikaState extends ChangeNotifier {
   }
 
   Future save() async {
+    await Future.delayed(const Duration(seconds: 5));
     var userStatsDto = UserStatsDto(entityStats: _statValues.entries.map((e) => UserEntityStat(entityId: e.key.$1, statId: e.key.$2, value: e.value)).toList());
     await serviceProvider.get<ApiClient>().setUserStat(domainId, userStatsDto);
   }
