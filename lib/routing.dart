@@ -9,7 +9,7 @@ import 'ui/pika/pika_home_screen.dart';
 import 'ui/screens/sign_in_screen.dart';
 
 final router = GoRouter(
-  initialLocation: '/pika',
+  initialLocation: '/',
   routes: _routes,
   redirect: _redirect,
   refreshListenable: serviceProvider.get<AppState>(),

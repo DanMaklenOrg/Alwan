@@ -13,8 +13,8 @@ final class AuthState extends ChangeNotifier {
 
   bool get isLoggedIn => token != null;
 
-  void login(String token) {
-    token = token;
+  void login(String t) {
+    token = t;
     notifyListeners();
   }
 
