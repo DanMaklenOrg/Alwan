@@ -49,7 +49,7 @@ final class EntityDto {
   EntityDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
-        stats = json['stats'] as List<String>;
+        stats = (json['stats'] as List).cast<String>();
 
   final String id;
   final String name;

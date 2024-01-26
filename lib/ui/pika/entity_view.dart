@@ -1,10 +1,10 @@
-import 'package:alwan/api/dto.dart';
+import 'package:alwan/pika/models.dart';
 import 'package:flutter/material.dart';
 
 final class EntityView extends StatelessWidget {
   const EntityView({super.key, required this.entity});
 
-  final EntityDto entity;
+  final Entity entity;
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +27,18 @@ final class EntityView extends StatelessWidget {
     );
   }
 
-  Widget _buildStat(BuildContext context, StatDto stat) {
+  Widget _buildStat(BuildContext context, Stat stat) {
     return switch (stat.type) {
-      StatTypeEnumDto.boolean => _BooleanStatTile(stat),
-      StatTypeEnumDto.integerRange => _IntegerRangeStatTile(stat),
+      StatType.boolean => _BooleanStatTile(stat),
+      StatType.integerRange => _IntegerRangeStatTile(stat),
     };
   }
 }
 
 class _BooleanStatTile extends StatelessWidget {
-  _BooleanStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.boolean);
+  _BooleanStatTile(this.stat) : assert(stat.type == StatType.boolean);
 
-  final StatDto stat;
+  final Stat stat;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +50,9 @@ class _BooleanStatTile extends StatelessWidget {
 }
 
 class _IntegerRangeStatTile extends StatelessWidget {
-  _IntegerRangeStatTile(this.stat) : assert(stat.type == StatTypeEnumDto.integerRange);
+  _IntegerRangeStatTile(this.stat) : assert(stat.type == StatType.integerRange);
 
-  final StatDto stat;
+  final Stat stat;
 
   @override
   Widget build(BuildContext context) {

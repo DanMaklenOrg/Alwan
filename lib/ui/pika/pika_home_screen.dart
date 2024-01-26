@@ -23,7 +23,7 @@ final class PikaHomeScreen extends StatelessWidget {
   Widget _buildGrid(BuildContext context, List<DomainSummaryDto> domainList) {
     return GridView.extent(
       maxCrossAxisExtent: 250,
-      children: domainList.map((e) => _domainCard(context, e)).toList(),
+      children: domainList.where((e) => e.id != '_').map((e) => _domainCard(context, e)).toList(),
     );
   }
 
