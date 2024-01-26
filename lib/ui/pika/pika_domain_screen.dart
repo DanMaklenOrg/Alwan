@@ -1,7 +1,7 @@
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
-import 'package:alwan/pika/dto_parser.dart';
 import 'package:alwan/pika/models.dart';
+import 'package:alwan/pika/pika_state.dart';
 import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
@@ -24,16 +24,16 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncDataBuilder<Domain>(
+    return AsyncDataBuilder<PikaState>(
       fetcher: _fetchData,
-      builder: (context, domain) =>
+      builder: (context, state) =>
           BaseScreenLayout(
-            title: domain.name,
+            title: state.domainName,
             body: Row(
               children: [
                 Expanded(
                   child: EntityListView(
-                    entities: domain.entities,
+                    entities: state.entities,
                     selectedEntity: selectedEntity,
                     onSelection: (entity) => setState(() => selectedEntity = entity),
                   ),
@@ -45,9 +45,9 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
     );
   }
 
-  Future<Domain> _fetchData() async {
+  Future<PikaState> _fetchData() async {
     DomainDto baseDomainDto = await serviceProvider.get<ApiClient>().getDomain('_');
-    DomainDto dto = await serviceProvider.get<ApiClient>().getDomain(widget.domainId);
-    return DtoParser.parseDomainDto(dto, baseDomainDto);
+    DomainDto domainDto = await serviceProvider.get<ApiClient>().getDomain(widget.domainId);
+    return PikaState.fromDto(domainDto, baseDomainDto);
   }
 }

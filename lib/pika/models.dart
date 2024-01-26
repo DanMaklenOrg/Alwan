@@ -1,3 +1,5 @@
+import 'package:alwan/api/dto.dart';
+
 final class Domain {
   Domain({required this.id, required this.name, required this.entities});
 
@@ -15,8 +17,17 @@ final class Entity {
 }
 
 final class Stat {
-  Stat({required this.id, required this.name, required this.type, this.min, this.max})
-      : assert(type != StatType.integerRange || (min != null && max != null));
+  Stat({required this.id, required this.name, required this.type, this.min, this.max}) : assert(type != StatType.integerRange || (min != null && max != null));
+
+  Stat.fromDto(StatDto s)
+      : id = s.id,
+        name = s.name,
+        type = switch (s.type) {
+          StatTypeEnumDto.boolean => StatType.boolean,
+          StatTypeEnumDto.integerRange => StatType.integerRange,
+        },
+        min = s.min,
+        max = s.max;
 
   final String id;
   final String name;
