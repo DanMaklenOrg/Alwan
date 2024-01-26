@@ -8,8 +8,8 @@ final class AppState extends ChangeNotifier {
   final auth = AuthState();
 }
 
-class AuthState extends ChangeNotifier {
-  String? _token;
+final class AuthState extends ChangeNotifier {
+  String? token;
 
   bool get isLoggedIn => token != null;
 
