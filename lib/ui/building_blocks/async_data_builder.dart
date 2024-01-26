@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 typedef DataBuilder<T> = Widget Function(BuildContext context, T data);
 typedef DataFetcher<T> = Future<T> Function();
