@@ -6,6 +6,7 @@ import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'entity_list_view.dart';
 import 'entity_view.dart';
@@ -21,27 +22,55 @@ final class PikaDomainScreen extends StatefulWidget {
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
   Entity? selectedEntity;
+  bool _hideCompletedEntities = false;
 
   @override
   Widget build(BuildContext context) {
     return AsyncDataBuilder<PikaState>(
       fetcher: _fetchData,
-      builder: (context, state) =>
-          BaseScreenLayout(
-            title: state.domainName,
-            body: Row(
-              children: [
-                Expanded(
-                  child: EntityListView(
-                    entities: state.entities,
-                    selectedEntity: selectedEntity,
-                    onSelection: (entity) => setState(() => selectedEntity = entity),
-                  ),
-                ),
-                if (selectedEntity != null) Expanded(child: EntityView(entity: selectedEntity!)),
-              ],
-            ),
+      builder: (context, state) => ChangeNotifierProvider.value(
+        value: state,
+        builder: (context, widget) => BaseScreenLayout(
+          title: state.domainName,
+          body: Column(
+            children: [
+              _buildHeader(context),
+              Expanded(child: _buildMainView(context)),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Row _buildHeader(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+            width: 175,
+            child: CheckboxListTile(
+              title: const Text("Hide Completed"),
+              value: _hideCompletedEntities,
+              onChanged: (value) => setState(() => _hideCompletedEntities = value ?? false),
+            )),
+        IconButton(onPressed: () => context.read<PikaState>().save(), icon: const Icon(Icons.save_outlined))
+      ],
+    );
+  }
+
+  Row _buildMainView(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: EntityListView(
+            entities: context.watch<PikaState>().getEntities(filterCompleted: _hideCompletedEntities),
+            selectedEntity: selectedEntity,
+            onSelection: (entity) => setState(() => selectedEntity = entity),
+          ),
+        ),
+        if (selectedEntity != null) Expanded(child: EntityView(entity: selectedEntity!)),
+      ],
     );
   }
 

@@ -34,6 +34,13 @@ final class Stat {
   final StatType type;
   final int? min;
   final int? max;
+
+  bool isCompleted(int val) {
+    return switch (type) {
+      StatType.boolean => val == 1,
+      StatType.integerRange => val == max,
+    };
+  }
 }
 
 enum StatType { boolean, integerRange }

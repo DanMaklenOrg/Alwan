@@ -32,9 +32,27 @@ class PikaState extends ChangeNotifier {
         .toList();
   }
 
-  String domainId;
-  String domainName;
+  final String domainId;
+  final String domainName;
 
-  List<Entity> entities = [];
-  Map<String, Stat> stats = {};
+  late List<Entity> entities = [];
+  late Map<String, Stat> stats = {};
+
+  final Map<(String, String), int> _statValues = {};
+
+  setStatValue(Entity entity, Stat stat, int val) {
+    _statValues[(entity.id, stat.id)] = val;
+    notifyListeners();
+  }
+
+  int? getStatValue(Entity entity, Stat stat) {
+    return _statValues[(entity.id, stat.id)];
+  }
+
+  void save() {}
+
+  List<Entity> getEntities({bool filterCompleted = false}) {
+    if (!filterCompleted) return entities;
+    return entities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s) ?? 0))).toList();
+  }
 }
