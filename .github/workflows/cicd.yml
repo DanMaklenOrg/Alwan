@@ -1,4 +1,4 @@
-name: CICD
+name: Alwan CICD
 on:
   push:
     branches:
@@ -15,50 +15,27 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.3.x'
+          flutter-version: '3.13.x'
           channel: 'stable'
           cache: true
-      - name: Using Flutter Version
-        run: flutter --version
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-      - name: Build Release
-        run: flutter build web --release
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+      - run: flutter --version
+      - uses: actions/checkout@v3
+      - run: flutter build web --dart-define-from-file=lib/config/prod.json --release
+      - uses: actions/upload-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
           path: build/web
 
-  deploy-infra:
-    name: Deploy SPA Infrastructure
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    outputs:
-      bucketName: ${{ steps.deploySapInfra.outputs.bucketName }}
-    steps:
-      - name: Deploy SAP Infra
-        uses: DanMaklenOrg/Overlord/Infra.SinglePageApplicationWebsite@master
-        id: deploySapInfra
-        with:
-          name: "Alwan"
-          domainName: "danmaklen.com"
-          certificateArn: "arn:aws:acm:us-east-1:464787150360:certificate/81c97225-8bc4-4885-bbc8-928c9f1cc938"
-
-  deploy-alwan:
-    name: Deploy Alwan
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+#    if: github.ref == 'refs/heads/master'
     needs:
       - build
-      - deploy-infra
     steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: alwanReleaseBuildArtifact
-      - name: Deploy Alwan To S3
-        run: aws s3 sync . s3://${{ needs.deploy-infra.outputs.bucketName }} --delete
+      - run: aws s3 sync . s3://alwan --delete
