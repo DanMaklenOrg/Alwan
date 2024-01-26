@@ -1,46 +1,15 @@
-import 'package:alwan/api/dto/response/domain_dto.dart';
-import 'package:alwan/config.dart';
-import 'package:alwan/ui/screens/pika_domain_screen.dart';
-import 'package:alwan/ui/screens/pika_home_screen.dart';
-import 'package:alwan/ui/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+
+import 'service_provider.dart';
+import 'routing.dart';
 
 void main() {
-  Config.buildConfig(const String.fromEnvironment('FLAVOR'));
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FlavorBanner(
-      child: MaterialApp(
-        title: 'Dan Maklen App',
-        initialRoute: '/signin',
-        onGenerateRoute: (routeSettings) {
-          switch (routeSettings.name) {
-            case '/pika':
-              return MaterialPageRoute(builder: (context) => const PikaHomeScreen());
-            case '/pika/domain':
-              return MaterialPageRoute(builder: (context) => PikaDomainScreen(domain: routeSettings.arguments as DomainDto));
-            // case '/pika/edit/entity':
-            //   return MaterialPageRoute(builder: (context) => PikaDomainEntityEditorScreen(domain: routeSettings.arguments as DomainDto));
-            // case '/pika/edit/tag':
-            //   return MaterialPageRoute(builder: (context) => PikaDomainEntityEditorScreen(domain: routeSettings.arguments as DomainDto));
-            // case '/pika/edit/action':
-            //   return MaterialPageRoute(builder: (context) => PikaDomainEntityEditorScreen(domain: routeSettings.arguments as DomainDto));
-            // case '/pika/edit/project':
-            //   return MaterialPageRoute(builder: (context) => PikaDomainEntityEditorScreen(domain: routeSettings.arguments as DomainDto));
-            case '/signin':
-              return MaterialPageRoute(builder: (context) => const SignInScreen());
-            default:
-              return null;
-          }
-        },
-      ),
-    );
-  }
+  ServiceCollection.registerServices();
+  usePathUrlStrategy();
+  runApp(MaterialApp.router(
+    theme: ThemeData.dark(useMaterial3: true),
+    title: 'Dan Maklen App',
+    routerConfig: router,
+  ));
 }

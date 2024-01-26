@@ -1,169 +1,43 @@
-import 'package:alwan/config.dart';
-import 'package:alwan/services.dart';
-import 'package:flutter/material.dart';
-
-import 'base_api_client.dart';
-import 'dto/common/progress_dto.dart';
-import 'dto/request/sign_in_dto.dart';
-import 'dto/response/achievement_dto.dart';
-import 'dto/response/domain_dto.dart';
-import 'dto/response/entity_dto.dart';
-import 'dto/response/get_domain_profile_response_dto.dart';
+import 'package:alwan/api/dto.dart';
+import 'package:alwan/app_state.dart';
+import 'package:alwan/service_provider.dart';
+import 'package:dio/dio.dart';
 
 class ApiClient {
-  ApiClient.of(BuildContext context)
-      : _host = Config.getValue('clientHost'),
-        _pikaPort = Config.getValue('pikaClientPort'),
-        _anaPort = Config.getValue('anaClientPort'),
-        _context = context;
+  final Dio _dio;
 
-  final BaseApiClient _client = BaseApiClient();
-  final BuildContext _context;
-  final String _host;
-  final int _pikaPort;
-  final int _anaPort;
+  ApiClient(this._dio);
 
-  // Auth
-  Future<bool> signIn(SignInRequestDto requestDto) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.post,
-      host: _host,
-      port: _anaPort,
-      path: 'api/auth/signin',
-      body: requestDto,
-      authToken: false,
+  Future<SignInResponseDto> signIn(SignInRequestDto requestDto) async {
+    var response = await _dio.post('/ana/auth/sign-in', data: requestDto.toJson());
+    return SignInResponseDto.fromJson(response.data);
+  }
+
+  Future<DomainDto> getDomain(String domainId) async {
+    var response = await _dio.get('/pika/domain/$domainId');
+    return DomainDto.fromJson(response.data);
+  }
+
+  Future<List<DomainSummaryDto>> getAllDomains() async {
+    var response = await _dio.get('/pika/domain/all');
+    return (response.data as List).map((e) => DomainSummaryDto.fromJson(e)).toList();
+  }
+
+  Future<UserStatsDto> getUserStat(String domainId) async {
+    var token = serviceProvider.get<AppState>().auth.token;
+    var response = await _dio.get(
+      '/pika/domain/$domainId/stats',
+      options: Options(headers: {"Authorization": "Bearer $token"}),
+    );    return UserStatsDto.fromJson(response.data);
+  }
+
+  Future setUserStat(String domainId, UserStatsDto userStatsDto) async {
+    var token = serviceProvider.get<AppState>().auth.token;
+    var json = userStatsDto.toJson();
+    await _dio.post(
+      '/pika/domain/$domainId/stats',
+      data: json,
+      options: Options(headers: {"Authorization": "Bearer $token"}),
     );
-    var response = await _callApi(request: request, redirectToLoginOn401: false);
-    var responseDto = SignInResponseDto.fromJson(response.body);
-    Services.authContextProvider.signIn(responseDto.token);
-    return response.statusCode == 200;
-  }
-
-  // Pika - Domain
-  Future<DomainDto> addDomain(String name) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.post,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/domain',
-      queryParameters: {"domainName": name},
-    );
-    var response = await _callApi(request: request);
-    return DomainDto.fromJson(response.body);
-  }
-
-  Future<List<DomainDto>> getDomainList() async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.get,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/domain',
-    );
-    var response = await _callApi(request: request);
-    return response.body.map<DomainDto>((e) => DomainDto.fromJson(e)).toList();
-  }
-
-  // Pika - Entity
-  Future<List<EntityDto>> getEntities(String domainId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.get,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/entity',
-      queryParameters: {'domainId': domainId},
-    );
-    var response = await _callApi(request: request);
-    return response.body.map<EntityDto>((e) => EntityDto.fromJson(e)).toList();
-  }
-
-  Future<EntityDto> addEntity(String domainId, String name, String? parentId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.post,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/entity',
-      queryParameters: {'domainId': domainId, 'name': name, if (parentId != null) 'parentId': parentId},
-    );
-    var response = await _callApi(request: request);
-    return EntityDto.fromJson(response.body);
-  }
-
-  // Pika - Achievement
-  Future<List<AchievementDto>> getAchievements(String domainId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.get,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/achievement',
-      queryParameters: {'domainId': domainId},
-    );
-    var response = await _callApi(request: request);
-    return response.body.map<AchievementDto>((e) => AchievementDto.fromJson(e)).toList();
-  }
-
-  Future<List<AchievementDto>> getUnlockedAchievements(String domainId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.get,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/achievement/unlocked',
-      queryParameters: {'domainId': domainId},
-    );
-    var response = await _callApi(request: request);
-    return response.body.map<AchievementDto>((e) => AchievementDto.fromJson(e)).toList();
-  }
-
-  Future putUnlockAchievement(String achievementId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.put,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/achievement/$achievementId/unlock',
-    );
-    await _callApi(request: request);
-  }
-
-  // ...
-  Future<GetDomainProfileResponseDto> getDomainProfile(String domainId) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.get,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/domain/$domainId/profile',
-    );
-    var response = await _callApi(request: request);
-    return GetDomainProfileResponseDto.fromJson(response.body);
-  }
-
-  Future putProgress(ProgressDto requestDto) async {
-    var request = ApiRequest(
-      httpMethod: HttpMethod.put,
-      host: _host,
-      port: _pikaPort,
-      path: 'api/progress',
-      body: requestDto,
-    );
-    await _callApi(request: request);
-  }
-
-  Future<ApiResponse> _callApi({
-    required ApiRequest request,
-    bool redirectToLoginOn401 = true,
-  }) async {
-    ApiResponse response;
-    bool shouldRetry = false;
-
-    do {
-      shouldRetry = false;
-      response = await _client.callApi(request);
-      if (response.statusCode != 200) shouldRetry = await _handleResponseStatusCode(response, redirectToLoginOn401);
-    } while (shouldRetry);
-    return response;
-  }
-
-  Future<bool> _handleResponseStatusCode(ApiResponse response, bool redirectToLoginOn401) async {
-    if (redirectToLoginOn401 && response.statusCode == 401) return await Navigator.of(_context).pushNamed('/signin') as bool;
-    if (response.statusCode < 200 || response.statusCode >= 300) throw Exception("Http Status Code is not Ok. ${response.statusCode}");
-    return false;
   }
 }
