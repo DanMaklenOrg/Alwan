@@ -38,7 +38,7 @@ final class Stat {
   bool isCompleted(int val) {
     return switch (type) {
       StatType.boolean => val == 1,
-      StatType.integerRange => val == max,
+      StatType.integerRange => val == max || min == max,
     };
   }
 }
