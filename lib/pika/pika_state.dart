@@ -52,9 +52,12 @@ class PikaState extends ChangeNotifier {
     return _statValues[(entity.id, stat.id)];
   }
 
-  List<Entity> getEntities({bool filterCompleted = false}) {
-    if (!filterCompleted) return entities;
-    return entities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s) ?? 0))).toList();
+  List<Entity> getEntities({bool hideCompleted = false}) {
+    if (!hideCompleted) return entities;
+    var filteredEntities = entities;
+    if (hideCompleted) filteredEntities = filteredEntities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s) ?? 0))).toList();
+    filteredEntities.sort((a, b) => a.name.compareTo(b.name));
+    return filteredEntities;
   }
 
   Future save() async {

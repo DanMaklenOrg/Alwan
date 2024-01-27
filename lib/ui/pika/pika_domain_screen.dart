@@ -66,7 +66,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       children: [
         Expanded(
           child: EntityListView(
-            entities: context.watch<PikaState>().getEntities(filterCompleted: _hideCompletedEntities),
+            entities: context.watch<PikaState>().getEntities(hideCompleted: _hideCompletedEntities),
             selectedEntity: selectedEntity,
             onSelection: (entity) => setState(() => selectedEntity = entity),
           ),
