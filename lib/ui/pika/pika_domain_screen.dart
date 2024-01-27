@@ -23,7 +23,7 @@ final class PikaDomainScreen extends StatefulWidget {
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
   Entity? selectedEntity;
-  bool _hideCompletedEntities = false;
+  bool _hideCompletedEntities = true;
 
   @override
   Widget build(BuildContext context) {
