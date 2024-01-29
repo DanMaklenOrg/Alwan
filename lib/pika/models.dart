@@ -17,7 +17,9 @@ final class Entity {
 }
 
 final class Stat {
-  Stat({required this.id, required this.name, required this.type, this.min, this.max}) : assert(type != StatType.integerRange || (min != null && max != null));
+  Stat({required this.id, required this.name, required this.type, this.min, this.max, this.enumValues})
+      : assert(type != StatType.integerRange || (min != null && max != null)),
+        assert(type != StatType.orderedEnum || (enumValues != null && enumValues.isNotEmpty));
 
   Stat.fromDto(StatDto s)
       : id = s.id,
@@ -25,22 +27,26 @@ final class Stat {
         type = switch (s.type) {
           StatTypeEnumDto.boolean => StatType.boolean,
           StatTypeEnumDto.integerRange => StatType.integerRange,
+          StatTypeEnumDto.orderedEnum => StatType.orderedEnum,
         },
         min = s.min,
-        max = s.max;
+        max = s.max,
+        enumValues = s.enumValues;
 
   final String id;
   final String name;
   final StatType type;
   final int? min;
   final int? max;
+  final List<String>? enumValues;
 
-  bool isCompleted(int val) {
+  bool isCompleted(String? val) {
     return switch (type) {
-      StatType.boolean => val == 1,
-      StatType.integerRange => val == max || min == max,
+      StatType.boolean => val == "true",
+      StatType.integerRange => val != null && int.parse(val) == max || min == max,
+      StatType.orderedEnum => val == enumValues!.last,
     };
   }
 }
 
-enum StatType { boolean, integerRange }
+enum StatType { boolean, integerRange, orderedEnum }

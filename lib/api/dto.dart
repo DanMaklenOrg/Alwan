@@ -62,23 +62,27 @@ final class StatDto {
         name = json['name'],
         type = StatTypeEnumDto.fromString(json['type']),
         min = json['min'],
-        max = json['max'];
+        max = json['max'],
+        enumValues = (json['enum_values'] as List?)?.cast<String>();
 
   final String id;
   final String name;
   final StatTypeEnumDto type;
   final int? min;
   final int? max;
+  final List<String>? enumValues;
 }
 
 enum StatTypeEnumDto {
   boolean,
-  integerRange;
+  integerRange,
+  orderedEnum;
 
   factory StatTypeEnumDto.fromString(String str) {
     return switch (str) {
       "Boolean" => StatTypeEnumDto.boolean,
       "IntegerRange" => StatTypeEnumDto.integerRange,
+    "OrderedEnum" => StatTypeEnumDto.orderedEnum,
       _ => throw RangeError("Unable to convert $str to StatTypeEnumDto")
     };
   }
@@ -87,7 +91,8 @@ enum StatTypeEnumDto {
 final class UserStatsDto {
   UserStatsDto({required this.entityStats});
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'entity_stats': entityStats.map((e) => e.toJson()).toList(),
       };
 
@@ -99,7 +104,8 @@ final class UserStatsDto {
 final class UserEntityStat {
   UserEntityStat({required this.entityId, required this.statId, required this.value});
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'entity_id': entityId,
         'stat_id': statId,
         'value': value,
@@ -112,5 +118,5 @@ final class UserEntityStat {
 
   final String entityId;
   final String statId;
-  final int value;
+  final String value;
 }

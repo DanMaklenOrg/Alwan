@@ -14,7 +14,7 @@ final class EntityView extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(entity.name, style: Theme.of(context).textTheme.headlineMedium),
+          child: Text(entity.name, style: Theme.of(context).textTheme.headlineLarge),
         ),
         Expanded(child: _buildStatList()),
       ],
@@ -31,16 +31,22 @@ final class EntityView extends StatelessWidget {
 
   Widget _buildStat(BuildContext context, Stat stat) {
     var state = context.watch<PikaState>();
+    var statValue = state.getStatValue(entity, stat);
     return switch (stat.type) {
       StatType.boolean => _BooleanStatTile(
           stat,
-          value: state.getStatValue(entity, stat) == 1,
-          onChanged: (bool val) => state.setStatValue(entity, stat, val ? 1 : 0),
+          value: statValue == "true",
+          onChanged: (bool val) => state.setStatValue(entity, stat, val.toString()),
         ),
       StatType.integerRange => _IntegerRangeStatTile(
           stat,
-          value: state.getStatValue(entity, stat),
-          onChanged: (int val) => state.setStatValue(entity, stat, val),
+          value: statValue == null ? null : int.parse(statValue),
+          onChanged: (int val) => state.setStatValue(entity, stat, val.toString()),
+        ),
+      StatType.orderedEnum => _OrderedEnumStatTile(
+          stat,
+          value: statValue,
+          onChanged: (String val) => state.setStatValue(entity, stat, val.toString()),
         ),
     };
   }
@@ -56,9 +62,9 @@ class _BooleanStatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(stat.name),
-      trailing: Checkbox(
+    return _StatTile(
+      statName: stat.name,
+      child: Checkbox(
         value: value,
         onChanged: (val) => onChanged(val!),
       ),
@@ -77,19 +83,67 @@ class _IntegerRangeStatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(stat.name),
-      leadingAndTrailingTextStyle: Theme.of(context).textTheme.labelLarge,
-      trailing: Text("$value/${stat.max}"),
-      subtitle: Slider(
-        value: value.toDouble(),
-        onChanged: (val) => onChanged(val.toInt()),
-        min: stat.min as double,
-        max: stat.max as double,
-        divisions: (stat.max! - stat.min! + 1),
-        label: value.toString(),
+    return _StatTile(
+      statName: stat.name,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Slider(
+            value: value.toDouble(),
+            onChanged: (val) => onChanged(val.toInt()),
+            min: stat.min as double,
+            max: stat.max as double,
+            divisions: (stat.max! - stat.min! + 1),
+            label: value.toString(),
+          ),
+          Text("$value/${stat.max}", style: Theme.of(context).textTheme.labelLarge),
+        ],
+      ),
+    );
+  }
+}
 
-        // onChanged: (_) {},
+class _OrderedEnumStatTile extends StatelessWidget {
+  _OrderedEnumStatTile(this.stat, {required String? value, required this.onChanged})
+      : assert(stat.type == StatType.orderedEnum),
+        value = value ?? stat.enumValues!.first;
+
+  final Stat stat;
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _StatTile(
+      statName: stat.name,
+      child: DropdownButton<String>(
+        value: value,
+        items: stat.enumValues!.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        onChanged: (val) => onChanged(val!),
+      ),
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  const _StatTile({required this.statName, required this.child});
+
+  final String statName;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(statName, style: Theme.of(context).textTheme.titleLarge),
+          ),
+          Expanded(child: Align(alignment: Alignment.centerRight, child: child)),
+        ],
       ),
     );
   }
