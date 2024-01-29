@@ -18,9 +18,11 @@ class PikaState extends ChangeNotifier {
           type: switch (s.type) {
             StatTypeEnumDto.boolean => StatType.boolean,
             StatTypeEnumDto.integerRange => StatType.integerRange,
+            StatTypeEnumDto.orderedEnum => StatType.orderedEnum,
           },
           min: s.min,
           max: s.max,
+          enumValues: s.enumValues,
         )
     };
 
@@ -41,20 +43,20 @@ class PikaState extends ChangeNotifier {
 
   late List<Entity> entities = [];
   late Map<String, Stat> stats = {};
-  late Map<(String, String), int> _statValues = {};
+  late Map<(String, String), String> _statValues = {};
 
-  setStatValue(Entity entity, Stat stat, int val) {
+  setStatValue(Entity entity, Stat stat, String val) {
     _statValues[(entity.id, stat.id)] = val;
     notifyListeners();
   }
 
-  int? getStatValue(Entity entity, Stat stat) {
+  String? getStatValue(Entity entity, Stat stat) {
     return _statValues[(entity.id, stat.id)];
   }
 
   List<Entity> getEntities({bool hideCompleted = false}) {
     var filteredEntities = entities;
-    if (hideCompleted) filteredEntities = filteredEntities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s) ?? 0))).toList();
+    if (hideCompleted) filteredEntities = filteredEntities.where((e) => e.stats.any((s) => !s.isCompleted(getStatValue(e, s)))).toList();
     filteredEntities.sort((a, b) => a.name.compareTo(b.name));
     return filteredEntities;
   }
