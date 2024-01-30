@@ -96,13 +96,13 @@ final class UserStatsDto {
         'entity_stats': entityStats.map((e) => e.toJson()).toList(),
       };
 
-  UserStatsDto.fromJson(Map<String, dynamic> json) : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStat.fromJson(e)).toList();
+  UserStatsDto.fromJson(Map<String, dynamic> json) : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStatDto.fromJson(e)).toList();
 
-  final List<UserEntityStat> entityStats;
+  final List<UserEntityStatDto> entityStats;
 }
 
-final class UserEntityStat {
-  UserEntityStat({required this.entityId, required this.statId, required this.value});
+final class UserEntityStatDto {
+  UserEntityStatDto({required this.entityId, required this.statId, required this.value});
 
   Map<String, dynamic> toJson() =>
       {
@@ -111,7 +111,7 @@ final class UserEntityStat {
         'value': value,
       };
 
-  UserEntityStat.fromJson(Map<String, dynamic> json)
+  UserEntityStatDto.fromJson(Map<String, dynamic> json)
       : entityId = json['entity_id'],
         statId = json['stat_id'],
         value = json['value'];
