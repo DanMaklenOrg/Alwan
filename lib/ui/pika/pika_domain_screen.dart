@@ -1,7 +1,8 @@
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
+import 'package:alwan/pika/model_transformer.dart';
 import 'package:alwan/pika/models.dart';
-import 'package:alwan/pika/pika_state.dart';
+import 'package:alwan/pika/pika_context.dart';
 import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
@@ -22,17 +23,16 @@ final class PikaDomainScreen extends StatefulWidget {
 }
 
 class _PikaDomainScreenState extends State<PikaDomainScreen> {
-  Entity? selectedEntity;
-  bool _hideCompletedEntities = true;
+  Entity? _selectedEntity;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncDataBuilder<PikaState>(
+    return AsyncDataBuilder<PikaContext>(
       fetcher: _fetchData,
       builder: (context, state) => ChangeNotifierProvider.value(
         value: state,
         builder: (context, widget) => BaseScreenLayout(
-          title: state.domainName,
+          title: state.rootDomain.name,
           body: Column(
             children: [
               _buildHeader(context),
@@ -45,6 +45,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Row _buildHeader(BuildContext context) {
+    var state = context.read<PikaContext>();
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -52,11 +53,19 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
             width: 175,
             child: CheckboxListTile(
               title: const Text("Hide Completed"),
-              value: _hideCompletedEntities,
-              onChanged: (value) => setState(() => _hideCompletedEntities = value ?? false),
+              value: state.filterState.hideCompletedEntities,
+              onChanged: (value) => setState(() => state.filterState.hideCompletedEntities = value ?? false),
             )),
-        // IconButton(onPressed: () => context.read<PikaState>().save(), icon: const Icon(Icons.save_outlined))
-        LoadingIconButton(iconData: Icons.save_outlined, onPressed: context.read<PikaState>().save()),
+        DropdownButton<String>(
+          value: state.filterState.domainId,
+          items: [
+            const DropdownMenuItem<String>(value: null, child: Text('')),
+            for (var d in state.getSubDomains()) DropdownMenuItem<String>(value: d.id, child: Text(d.name)),
+          ],
+          onChanged: (val) => setState(() => state.filterState.domainId = val),
+        ),
+        const Spacer(),
+        LoadingIconButton(iconData: Icons.save_outlined, onPressed: () => _saveUserStats(state)),
       ],
     );
   }
@@ -66,21 +75,31 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
       children: [
         Expanded(
           child: EntityListView(
-            entities: context.watch<PikaState>().getEntities(hideCompleted: _hideCompletedEntities),
-            selectedEntity: selectedEntity,
-            onSelection: (entity) => setState(() => selectedEntity = entity),
+            entities: context.watch<PikaContext>().getEntities(),
+            selectedEntity: _selectedEntity,
+            onSelection: (entity) => setState(() => _selectedEntity = entity),
           ),
         ),
-        if (selectedEntity != null) Expanded(child: EntityView(entity: selectedEntity!)),
+        if (_selectedEntity != null) Expanded(child: EntityView(entity: _selectedEntity!)),
       ],
     );
   }
 
-  Future<PikaState> _fetchData() async {
+  Future<PikaContext> _fetchData() async {
     var client = serviceProvider.get<ApiClient>();
     DomainDto baseDomainDto = await client.getDomain('_');
     DomainDto domainDto = await client.getDomain(widget.domainId);
     UserStatsDto userStatsDto = await client.getUserStat(widget.domainId);
-    return PikaState.fromDto(domainDto, baseDomainDto, userStatsDto);
+    var transformer = ModelTransformer();
+    return PikaContext(
+      rootDomain: transformer.domainFromDto(domainDto),
+      baseDomain: transformer.domainFromDto(baseDomainDto),
+      userStats: transformer.fromUserStatsDto(userStatsDto),
+    );
+  }
+
+  Future _saveUserStats(PikaContext state) async {
+    var dto = ModelTransformer().toUserStatsDto(state.userStats);
+    await serviceProvider.get<ApiClient>().setUserStat(state.rootDomain.id, dto);
   }
 }
