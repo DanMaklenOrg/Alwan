@@ -11,6 +11,7 @@ class PikaContext extends ChangeNotifier {
 
     _domains = [baseDomain, ...baseDomain.subDomains, rootDomain, ...rootDomain.subDomains];
     _entities = [for (var d in _domains) ...d.entities];
+    _projects = [for (var d in _domains) ...d.projects];
     _stats = {
       for (var d in _domains)
         for (var kvp in d.stats.entries) kvp.key: kvp.value
@@ -24,6 +25,7 @@ class PikaContext extends ChangeNotifier {
 
   late List<Domain> _domains;
   late List<Entity> _entities;
+  late List<Project> _projects;
   late Map<ResourceId, Stat> _stats;
 
   List<Domain> getSubDomains() {
@@ -34,9 +36,16 @@ class PikaContext extends ChangeNotifier {
 
   List<Entity> getEntities({bool respectFilterState = true}) {
     var filteredEntities = _entities;
-    if (respectFilterState) filteredEntities = filteredEntities.where((e) => filterState.match(this, e)).toList();
+    if (respectFilterState) filteredEntities = filteredEntities.where((e) => filterState.matchEntity(this, e)).toList();
     filteredEntities.sort((a, b) => a.name.compareTo(b.name));
     return filteredEntities;
+  }
+
+  List<Project> getProjects({bool respectFilterState = true}){
+    var filteredProjects = _projects;
+    if (respectFilterState) filteredProjects = filteredProjects.where((e) => filterState.matchProject(this, e)).toList();
+    filteredProjects.sort((a, b) => a.name.compareTo(b.name));
+    return filteredProjects;
   }
 
   Stat getStat(ResourceId sid) => _stats[sid]!;

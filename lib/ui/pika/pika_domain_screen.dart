@@ -7,6 +7,7 @@ import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/base_screen_layout.dart';
 import 'package:alwan/ui/building_blocks/async_data_builder.dart';
 import 'package:alwan/ui/building_blocks/loading_icon_button.dart';
+import 'package:alwan/ui/pika/project_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,16 +72,18 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   }
 
   Row _buildMainView(BuildContext context) {
+    var pikaContext = context.watch<PikaContext>();
     return Row(
       children: [
         Expanded(
           child: EntityListView(
-            entities: context.watch<PikaContext>().getEntities(),
+            entities: pikaContext.getEntities(),
             selectedEntity: _selectedEntity,
             onSelection: (entity) => setState(() => _selectedEntity = entity),
           ),
         ),
-        if (_selectedEntity != null) Expanded(child: EntityView(entity: _selectedEntity!)),
+        Expanded(child: _selectedEntity != null ? EntityView(entity: _selectedEntity!) : Container()),
+        Expanded(child: ProjectListView(projects: pikaContext.getProjects())),
       ],
     );
   }

@@ -7,13 +7,27 @@ final class Domain {
     this.stats = const {},
     this.entities = const [],
     this.subDomains = const [],
+    this.projects = const [],
   });
 
   final String id;
   final String name;
   final Map<ResourceId, Stat> stats;
   final List<Entity> entities;
+  final List<Project> projects;
   final List<Domain> subDomains;
+}
+
+final class Project {
+  Project({required this.id, required this.name});
+
+  final ResourceId id;
+  final String name;
+
+  bool isCompleted(PikaContext context) => context.userStats.isProjectCompleted(this);
+
+  @override
+  String toString() => id.toString();
 }
 
 final class Entity {
@@ -47,13 +61,11 @@ final class Stat {
   final int? max;
   final List<String>? enumValues;
 
-  bool isCompleted(String? val) {
-    return switch (type) {
-      StatType.boolean => val == "true",
-      StatType.integerRange => val != null && int.parse(val) == max || min == max,
-      StatType.orderedEnum => val == enumValues!.last,
-    };
-  }
+  bool isCompleted(String? val) => switch (type) {
+        StatType.boolean => val == "true",
+        StatType.integerRange => val != null && int.parse(val) == max || min == max,
+        StatType.orderedEnum => val == enumValues!.last,
+      };
 
   @override
   String toString() => id.toString();
@@ -74,7 +86,7 @@ final class ResourceId {
   String get fullyQualifiedId => "$domainId/$id";
 
   @override
-  bool operator==(Object other) => other is ResourceId && id == other.id && domainId == other.domainId;
+  bool operator ==(Object other) => other is ResourceId && id == other.id && domainId == other.domainId;
 
   @override
   int get hashCode => Object.hash(id, domainId);
