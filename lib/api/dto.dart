@@ -34,15 +34,26 @@ final class DomainDto {
   DomainDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
+        projects = (json['projects'] as List).map((e) => ProjectDto.fromJson(e)).toList(),
         entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
         stats = (json['stats'] as List).map((e) => StatDto.fromJson(e)).toList(),
         subDomains = (json['sub_domains'] as List).map((e) => DomainDto.fromJson(e)).toList();
 
   final String id;
   final String name;
+  final List<ProjectDto> projects;
   final List<EntityDto> entities;
   final List<StatDto> stats;
   final List<DomainDto> subDomains;
+}
+
+final class ProjectDto {
+  ProjectDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        name = json['name'] as String;
+
+  final String id;
+  final String name;
 }
 
 final class EntityDto {
@@ -82,23 +93,27 @@ enum StatTypeEnumDto {
     return switch (str) {
       "Boolean" => StatTypeEnumDto.boolean,
       "IntegerRange" => StatTypeEnumDto.integerRange,
-    "OrderedEnum" => StatTypeEnumDto.orderedEnum,
+      "OrderedEnum" => StatTypeEnumDto.orderedEnum,
       _ => throw RangeError("Unable to convert $str to StatTypeEnumDto")
     };
   }
 }
 
 final class UserStatsDto {
-  UserStatsDto({required this.entityStats});
+  UserStatsDto({required this.entityStats, required this.completedProjectIds});
 
   Map<String, dynamic> toJson() =>
       {
         'entity_stats': entityStats.map((e) => e.toJson()).toList(),
+        'completed_project_ids': completedProjectIds,
       };
 
-  UserStatsDto.fromJson(Map<String, dynamic> json) : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStatDto.fromJson(e)).toList();
+  UserStatsDto.fromJson(Map<String, dynamic> json)
+      : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStatDto.fromJson(e)).toList(),
+        completedProjectIds = (json['completed_project_ids'] as List).cast<String>();
 
   final List<UserEntityStatDto> entityStats;
+  final List<String> completedProjectIds;
 }
 
 final class UserEntityStatDto {

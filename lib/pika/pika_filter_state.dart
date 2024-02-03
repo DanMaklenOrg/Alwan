@@ -23,9 +23,15 @@ class PikaFilterState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool match(PikaContext context, Entity entity) {
+  bool matchEntity(PikaContext context, Entity entity) {
     if (_domainId != null && entity.id.domainId != _domainId) return false;
     if (_hideCompletedEntities && entity.isCompleted(context)) return false;
+    return true;
+  }
+
+  bool matchProject(PikaContext context, Project project) {
+    if (_domainId != null && project.id.domainId != _domainId) return false;
+    if (_hideCompletedEntities && project.isCompleted(context)) return false;
     return true;
   }
 }
