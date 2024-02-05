@@ -34,4 +34,9 @@ class PikaFilterState extends ChangeNotifier {
     if (_hideCompletedEntities && project.isCompleted(context)) return false;
     return true;
   }
+
+  bool matchDomain(PikaContext context, Domain domain) {
+    if (_hideCompletedEntities && domain.isCompleted(context)) return false;
+    return true;
+  }
 }

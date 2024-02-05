@@ -28,9 +28,10 @@ class PikaContext extends ChangeNotifier {
   late List<Project> _projects;
   late Map<ResourceId, Stat> _stats;
 
-  List<Domain> getSubDomains() {
+  List<Domain> getSubDomains({bool respectFilterState = true}) {
     var filteredDomains = [rootDomain, ...rootDomain.subDomains];
-    filteredDomains.sort((a, b) => a.id.compareTo(b.id));
+    if (respectFilterState) filteredDomains = filteredDomains.where((e) => filterState.matchDomain(this, e)).toList();
+    filteredDomains.sort((a, b) => a.id.compareTo(b.name));
     return filteredDomains;
   }
 

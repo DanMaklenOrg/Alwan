@@ -1,6 +1,10 @@
 import 'package:alwan/pika/pika_context.dart';
 
-final class Domain {
+abstract interface class ICompletable {
+  bool isCompleted(PikaContext context);
+}
+
+final class Domain implements ICompletable {
   Domain({
     required this.id,
     required this.name,
@@ -16,27 +20,36 @@ final class Domain {
   final List<Entity> entities;
   final List<Project> projects;
   final List<Domain> subDomains;
+
+  @override
+  bool isCompleted(PikaContext context) =>
+      entities.every((e) => e.isCompleted(context)) && projects.every((p) => p.isCompleted(context)) && subDomains.every((d) => d.isCompleted(context));
+
+  @override
+  String toString() => id.toString();
 }
 
-final class Project {
+final class Project implements ICompletable {
   Project({required this.id, required this.name});
 
   final ResourceId id;
   final String name;
 
+  @override
   bool isCompleted(PikaContext context) => context.userStats.isProjectCompleted(this);
 
   @override
   String toString() => id.toString();
 }
 
-final class Entity {
+final class Entity extends ICompletable {
   Entity({required this.id, required this.name, required this.stats});
 
   final ResourceId id;
   final String name;
   final List<ResourceId> stats;
 
+  @override
   bool isCompleted(PikaContext context) {
     return stats.every((sid) {
       var stat = context.getStat(sid);
