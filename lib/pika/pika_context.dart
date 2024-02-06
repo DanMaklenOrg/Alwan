@@ -31,7 +31,7 @@ class PikaContext extends ChangeNotifier {
   List<Domain> getSubDomains({bool respectFilterState = true}) {
     var filteredDomains = [rootDomain, ...rootDomain.subDomains];
     if (respectFilterState) filteredDomains = filteredDomains.where((e) => filterState.matchDomain(this, e)).toList();
-    filteredDomains.sort((a, b) => a.id.compareTo(b.name));
+    filteredDomains.sort((a, b) => a.name.compareTo(b.name));
     return filteredDomains;
   }
 
