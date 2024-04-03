@@ -3,10 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'models.dart';
 
 class UserStats extends ChangeNotifier {
-  UserStats(this._rawDict, this._completedProject);
+  UserStats(this.rootDomainId, List<UserEntityStat> userStats, List<ResourceId> completedProjects)
+      : _rawDict = {for (var s in userStats) (s.entityId, s.statId): s.value},
+        _completedProject = Set<ResourceId>.from(completedProjects);
 
+
+  final String rootDomainId;
   final Map<(ResourceId, ResourceId), String> _rawDict;
-
   final Set<ResourceId> _completedProject;
 
   setStatValue(Entity entity, Stat stat, String val) {
@@ -29,9 +32,22 @@ class UserStats extends ChangeNotifier {
     notifyListeners();
   }
 
-  Iterable<UserEntityStat> get entityStatList => _rawDict.entries.map((e) => UserEntityStat(entityId: e.key.$1, statId: e.key.$2, value: e.value));
+  bool isEntityCompleted(Entity entity){
+    return entity.stats.every((s) => isEntityStatCompleted(entity, s));
+  }
 
-  Set<ResourceId> get completedProjects => _completedProject;
+  bool isEntityStatCompleted(Entity e, Stat s){
+    var val = getStatValue(e, s);
+    return switch (s.type) {
+      StatType.boolean => val == "true",
+      StatType.integerRange => val != null && int.parse(val) == s.max || s.min == s.max,
+      StatType.orderedEnum => val == s.enumValues!.last,
+    };
+  }
+
+  Iterable<UserEntityStat> getEntityStatList() => _rawDict.entries.map((e) => UserEntityStat(entityId: e.key.$1, statId: e.key.$2, value: e.value));
+
+  List<ResourceId> getCompletedProjectList() => _completedProject.toList();
 }
 
 class UserEntityStat {

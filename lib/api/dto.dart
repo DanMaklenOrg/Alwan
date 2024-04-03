@@ -36,6 +36,7 @@ final class DomainDto {
         name = json['name'] as String,
         projects = (json['projects'] as List).map((e) => ProjectDto.fromJson(e)).toList(),
         entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
+        classes = (json['classes'] as List).map((e) => ClassDto.fromJson(e)).toList(),
         stats = (json['stats'] as List).map((e) => StatDto.fromJson(e)).toList(),
         subDomains = (json['sub_domains'] as List).map((e) => DomainDto.fromJson(e)).toList();
 
@@ -43,6 +44,7 @@ final class DomainDto {
   final String name;
   final List<ProjectDto> projects;
   final List<EntityDto> entities;
+  final List<ClassDto> classes;
   final List<StatDto> stats;
   final List<DomainDto> subDomains;
 }
@@ -60,10 +62,21 @@ final class EntityDto {
   EntityDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
-        stats = (json['stats'] as List).cast<String>();
+        stats = (json['stats'] as List).cast<String>(),
+        classes = (json['classes'] as List).cast<String>();
 
   final String id;
   final String name;
+  final List<String> stats;
+  final List<String> classes;
+}
+
+final class ClassDto {
+  ClassDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        stats = (json['stats'] as List).cast<String>();
+
+  final String id;
   final List<String> stats;
 }
 

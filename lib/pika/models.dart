@@ -1,88 +1,71 @@
-import 'package:alwan/pika/pika_context.dart';
+abstract class Resource {
+  Resource({required this.id});
 
-abstract interface class ICompletable {
-  bool isCompleted(PikaContext context);
+  final ResourceId id;
 }
 
-final class Domain implements ICompletable {
+abstract class NamedResource extends Resource {
+  NamedResource({required super.id, required this.name});
+
+  final String name;
+}
+
+final class Domain {
   Domain({
     required this.id,
     required this.name,
-    this.stats = const {},
-    this.entities = const [],
-    this.subDomains = const [],
-    this.projects = const [],
   });
 
   final String id;
   final String name;
-  final Map<ResourceId, Stat> stats;
-  final List<Entity> entities;
-  final List<Project> projects;
-  final List<Domain> subDomains;
-
-  @override
-  bool isCompleted(PikaContext context) =>
-      entities.every((e) => e.isCompleted(context)) && projects.every((p) => p.isCompleted(context)) && subDomains.every((d) => d.isCompleted(context));
 
   @override
   String toString() => id.toString();
 }
 
-final class Project implements ICompletable {
-  Project({required this.id, required this.name});
-
-  final ResourceId id;
-  final String name;
-
-  @override
-  bool isCompleted(PikaContext context) => context.userStats.isProjectCompleted(this);
+final class Project extends NamedResource {
+  Project({required super.id, required super.name});
 
   @override
   String toString() => id.toString();
 }
 
-final class Entity extends ICompletable {
-  Entity({required this.id, required this.name, required this.stats});
+final class Entity extends NamedResource {
+  Entity({required super.id, required super.name, List<Stat> stats = const [], this.classes = const []}) : _stats = stats;
 
-  final ResourceId id;
-  final String name;
-  final List<ResourceId> stats;
+  final List<Stat> _stats;
+  final List<Class> classes;
 
-  @override
-  bool isCompleted(PikaContext context) {
-    return stats.every((sid) {
-      var stat = context.getStat(sid);
-      var statValue = context.userStats.getStatValue(this, stat);
-      return stat.isCompleted(statValue);
-    });
-  }
+  List<Stat> get stats => [..._stats, ...classes.expand((c) => c.stats)];
 
   @override
   String toString() => id.toString();
 }
 
-final class Stat {
-  Stat({required this.id, required this.name, required this.type, this.min, this.max, this.enumValues})
+final class Class extends Resource {
+  Class({required super.id, required this.stats});
+
+  final List<Stat> stats;
+
+  @override
+  String toString() => id.toString();
+}
+
+final class Stat extends NamedResource {
+  Stat({required super.id, required super.name, required this.type, this.min, this.max, this.enumValues})
       : assert(type != StatType.integerRange || (min != null && max != null)),
         assert(type != StatType.orderedEnum || (enumValues != null && enumValues.isNotEmpty));
 
-  final ResourceId id;
-  final String name;
   final StatType type;
   final int? min;
   final int? max;
   final List<String>? enumValues;
 
-  bool isCompleted(String? val) => switch (type) {
-        StatType.boolean => val == "true",
-        StatType.integerRange => val != null && int.parse(val) == max || min == max,
-        StatType.orderedEnum => val == enumValues!.last,
-      };
-
   @override
   String toString() => id.toString();
 }
+
+enum StatType { boolean, integerRange, orderedEnum }
 
 final class ResourceId {
   ResourceId({required this.id, required this.domainId});
@@ -107,5 +90,3 @@ final class ResourceId {
   @override
   String toString() => fullyQualifiedId;
 }
-
-enum StatType { boolean, integerRange, orderedEnum }
