@@ -1,5 +1,5 @@
 import 'package:alwan/pika/models.dart';
-import 'package:alwan/pika/pika_context.dart';
+import 'package:alwan/pika/user_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,25 +29,24 @@ final class EntityView extends StatelessWidget {
     );
   }
 
-  Widget _buildStat(BuildContext context, ResourceId statId) {
-    var state = context.watch<PikaContext>();
-    var stat = state.getStat(statId);
-    var statValue = state.userStats.getStatValue(entity, stat);
+  Widget _buildStat(BuildContext context, Stat stat) {
+    var userStats = context.watch<UserStats>();
+    var statValue = userStats.getStatValue(entity, stat);
     return switch (stat.type) {
       StatType.boolean => _BooleanStatTile(
           stat,
           value: statValue == "true",
-          onChanged: (bool val) => state.userStats.setStatValue(entity, stat, val.toString()),
+          onChanged: (bool val) => userStats.setStatValue(entity, stat, val.toString()),
         ),
       StatType.integerRange => _IntegerRangeStatTile(
           stat,
           value: statValue == null ? null : int.parse(statValue),
-          onChanged: (int val) => state.userStats.setStatValue(entity, stat, val.toString()),
+          onChanged: (int val) => userStats.setStatValue(entity, stat, val.toString()),
         ),
       StatType.orderedEnum => _OrderedEnumStatTile(
           stat,
           value: statValue,
-          onChanged: (String val) => state.userStats.setStatValue(entity, stat, val.toString()),
+          onChanged: (String val) => userStats.setStatValue(entity, stat, val.toString()),
         ),
     };
   }
