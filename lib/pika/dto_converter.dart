@@ -32,11 +32,14 @@ class DtoConverter {
   }
 
   Entity fromEntityDto(EntityDto dto) {
+    var classList = [for (var cid in dto.classes) _container!.classes[ResourceId.fromString(cid)]!];
+    var statSet = {for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!};
+    statSet.addAll(classList.expand((c) => c.stats));
     return Entity(
       id: ResourceId.fromString(dto.id),
       name: dto.name,
-      stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!],
-      classes: [for (var cid in dto.classes) _container!.classes[ResourceId.fromString(cid)]!]
+      stats: statSet.toList(),
+      classes: classList,
     );
   }
 
