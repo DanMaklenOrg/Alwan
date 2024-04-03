@@ -1,14 +1,25 @@
-abstract class Resource {
+abstract class Resource implements Comparable<Resource> {
   Resource({required this.id});
 
   final ResourceId id;
+
+  @override
+  String toString() => id.toString();
+
+  @override
+  int compareTo(Resource other) => id.compareTo(other.id);
 }
 
 abstract class NamedResource extends Resource {
   NamedResource({required super.id, required this.name});
 
   final String name;
-}
+
+  @override
+  int compareTo(Resource other) {
+    if(other is! NamedResource) return super.compareTo(other);
+    return name.compareTo(other.name);
+  }}
 
 final class Domain {
   Domain({
@@ -25,30 +36,19 @@ final class Domain {
 
 final class Project extends NamedResource {
   Project({required super.id, required super.name});
-
-  @override
-  String toString() => id.toString();
 }
 
 final class Entity extends NamedResource {
-  Entity({required super.id, required super.name, List<Stat> stats = const [], this.classes = const []}) : _stats = stats;
+  Entity({required super.id, required super.name, this.stats = const [], this.classes = const []});
 
-  final List<Stat> _stats;
+  final List<Stat> stats;
   final List<Class> classes;
-
-  List<Stat> get stats => [..._stats, ...classes.expand((c) => c.stats)];
-
-  @override
-  String toString() => id.toString();
 }
 
 final class Class extends Resource {
   Class({required super.id, required this.stats});
 
   final List<Stat> stats;
-
-  @override
-  String toString() => id.toString();
 }
 
 final class Stat extends NamedResource {
@@ -60,14 +60,11 @@ final class Stat extends NamedResource {
   final int? min;
   final int? max;
   final List<String>? enumValues;
-
-  @override
-  String toString() => id.toString();
 }
 
 enum StatType { boolean, integerRange, orderedEnum }
 
-final class ResourceId {
+final class ResourceId implements Comparable<ResourceId> {
   ResourceId({required this.id, required this.domainId});
 
   factory ResourceId.fromString(String str) {
@@ -89,4 +86,7 @@ final class ResourceId {
 
   @override
   String toString() => fullyQualifiedId;
+
+  @override
+  int compareTo(ResourceId other) => fullyQualifiedId.compareTo(other.fullyQualifiedId);
 }
