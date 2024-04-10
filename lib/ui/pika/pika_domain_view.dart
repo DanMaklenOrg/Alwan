@@ -54,16 +54,24 @@ class _PikaDomainViewState extends State<PikaDomainView> {
           width: 175,
           child: CheckboxListTile(
             title: const Text("Hide Completed"),
-            value: filterState.hideCompletedEntities,
-            onChanged: (value) => setState(() => filterState.hideCompletedEntities = value ?? false),
+            value: filterState.hideCompletedEntities.value,
+            onChanged: (value) => setState(() => filterState.hideCompletedEntities.value = value ?? false),
           )),
       DropdownButton<String>(
-        value: filterState.domainId,
+        value: filterState.domainId.value,
         items: [
           const DropdownMenuItem<String>(value: null, child: Text('')),
           for (var d in container.domains) DropdownMenuItem<String>(value: d.id, child: Text(d.name)),
         ],
-        onChanged: (val) => setState(() => filterState.domainId = val),
+        onChanged: (val) => setState(() => filterState.domainId.value = val),
+      ),
+      DropdownButton<Tag>(
+        value: filterState.tag.value,
+        items: [
+          const DropdownMenuItem<Tag>(value: null, child: Text('')),
+          for (var t in container.tags.toResourceList()) DropdownMenuItem<Tag>(value: t, child: Text(t.name)),
+        ],
+        onChanged: (val) => setState(() => filterState.tag.value = val),
       ),
     ];
   }

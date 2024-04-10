@@ -4,6 +4,12 @@ abstract class Resource implements Comparable<Resource> {
   final ResourceId id;
 
   @override
+  bool operator ==(Object other) => other is Resource && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
   String toString() => id.toString();
 
   @override
@@ -38,17 +44,23 @@ final class Project extends NamedResource {
   Project({required super.id, required super.name});
 }
 
+final class Tag extends NamedResource {
+  Tag({required super.id, required super.name});
+}
+
 final class Entity extends NamedResource {
-  Entity({required super.id, required super.name, this.stats = const [], this.classes = const []});
+  Entity({required super.id, required super.name, this.stats = const [], this.classes = const [], this.tags = const []});
 
   final List<Stat> stats;
   final List<Class> classes;
+  final List<Tag> tags;
 }
 
 final class Class extends Resource {
-  Class({required super.id, required this.stats});
+  Class({required super.id, this.stats = const [], this.tags = const []});
 
   final List<Stat> stats;
+  final List<Tag> tags;
 }
 
 final class Stat extends NamedResource {
