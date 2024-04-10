@@ -34,18 +34,20 @@ final class DomainDto {
   DomainDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
-        projects = (json['projects'] as List).map((e) => ProjectDto.fromJson(e)).toList(),
-        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
-        classes = (json['classes'] as List).map((e) => ClassDto.fromJson(e)).toList(),
         stats = (json['stats'] as List).map((e) => StatDto.fromJson(e)).toList(),
+        tags = (json['tags'] as List).map((e) => TagDto.fromJson(e)).toList(),
+        classes = (json['classes'] as List).map((e) => ClassDto.fromJson(e)).toList(),
+        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
+        projects = (json['projects'] as List).map((e) => ProjectDto.fromJson(e)).toList(),
         subDomains = (json['sub_domains'] as List).map((e) => DomainDto.fromJson(e)).toList();
 
   final String id;
   final String name;
+  final List<StatDto> stats;
+  final List<ClassDto> classes;
+  final List<TagDto> tags;
   final List<ProjectDto> projects;
   final List<EntityDto> entities;
-  final List<ClassDto> classes;
-  final List<StatDto> stats;
   final List<DomainDto> subDomains;
 }
 
@@ -58,26 +60,39 @@ final class ProjectDto {
   final String name;
 }
 
+final class TagDto {
+  TagDto.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        name = json['name'] as String;
+
+  final String id;
+  final String name;
+}
+
 final class EntityDto {
   EntityDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         name = json['name'] as String,
         stats = (json['stats'] as List).cast<String>(),
-        classes = (json['classes'] as List).cast<String>();
+        classes = (json['classes'] as List).cast<String>(),
+        tags = (json['tags'] as List).cast<String>();
 
   final String id;
   final String name;
   final List<String> stats;
   final List<String> classes;
+  final List<String> tags;
 }
 
 final class ClassDto {
   ClassDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
-        stats = (json['stats'] as List).cast<String>();
+        stats = (json['stats'] as List).cast<String>(),
+        tags = (json['tags'] as List).cast<String>();
 
   final String id;
   final List<String> stats;
+  final List<String> tags;
 }
 
 final class StatDto {
@@ -115,8 +130,7 @@ enum StatTypeEnumDto {
 final class UserStatsDto {
   UserStatsDto({required this.entityStats, required this.completedProjectIds});
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'entity_stats': entityStats.map((e) => e.toJson()).toList(),
         'completed_project_ids': completedProjectIds,
       };
@@ -132,8 +146,7 @@ final class UserStatsDto {
 final class UserEntityStatDto {
   UserEntityStatDto({required this.entityId, required this.statId, required this.value});
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'entity_id': entityId,
         'stat_id': statId,
         'value': value,

@@ -28,18 +28,26 @@ class DtoConverter {
     return Class(
       id: ResourceId.fromString(dto.id),
       stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!],
+      tags: [for (var tid in dto.tags) _container!.tags[ResourceId.fromString(tid)]!],
     );
+  }
+
+  Tag fromTagDto(TagDto dto) {
+    return Tag(id: ResourceId.fromString(dto.id), name: dto.name);
   }
 
   Entity fromEntityDto(EntityDto dto) {
     var classList = [for (var cid in dto.classes) _container!.classes[ResourceId.fromString(cid)]!];
     var statSet = {for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!};
     statSet.addAll(classList.expand((c) => c.stats));
+    var tagSet = {for (var tid in dto.tags) _container!.tags[ResourceId.fromString(tid)]!};
+    tagSet.addAll(classList.expand((c) => c.tags));
     return Entity(
       id: ResourceId.fromString(dto.id),
       name: dto.name,
       stats: statSet.toList(),
       classes: classList,
+      tags: tagSet.toList(),
     );
   }
 
