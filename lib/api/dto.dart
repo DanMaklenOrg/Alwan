@@ -54,10 +54,32 @@ final class DomainDto {
 final class ProjectDto {
   ProjectDto.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
-        name = json['name'] as String;
+        title = json['title'] as String,
+        objectives = (json['objectives'] as List).map((e) => ObjectiveDto.fromJson(e)).toList();
 
   final String id;
-  final String name;
+  final String title;
+  final List<ObjectiveDto> objectives;
+}
+
+final class ObjectiveDto {
+  ObjectiveDto.fromJson(Map<String, dynamic> json)
+      : title = json['title'] as String,
+        requirements = (json['requirements'] as List).map((e) => ObjectiveRequirementDto.fromJson(e)).toList();
+
+  final String title;
+  final List<ObjectiveRequirementDto> requirements;
+}
+
+final class ObjectiveRequirementDto {
+  ObjectiveRequirementDto.fromJson(Map<String, dynamic> json)
+      : $class = json['class'] as String,
+        stat = json['stat'] as String,
+        min = json['min'] as int;
+
+  final String $class;
+  final String stat;
+  final int min;
 }
 
 final class TagDto {

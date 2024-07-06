@@ -23,9 +23,10 @@ abstract class NamedResource extends Resource {
 
   @override
   int compareTo(Resource other) {
-    if(other is! NamedResource) return super.compareTo(other);
+    if (other is! NamedResource) return super.compareTo(other);
     return name.compareTo(other.name);
-  }}
+  }
+}
 
 final class Domain {
   Domain({
@@ -41,7 +42,24 @@ final class Domain {
 }
 
 final class Project extends NamedResource {
-  Project({required super.id, required super.name});
+  Project({required super.id, required super.name, required this.objectives});
+
+  List<Objective> objectives;
+}
+
+final class Objective {
+  Objective({required this.title, required this.requirements});
+
+  final String title;
+  final List<ObjectiveRequirement> requirements;
+}
+
+final class ObjectiveRequirement {
+  ObjectiveRequirement({required this.$class, required this.stat, required this.min});
+
+  final Class $class;
+  final Stat stat;
+  final int min;
 }
 
 final class Tag extends NamedResource {
