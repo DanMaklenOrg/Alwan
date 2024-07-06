@@ -24,7 +24,7 @@ final class EntityView extends StatelessWidget {
   Widget _buildStatList() {
     return ListView.separated(
       itemCount: entity.stats.length,
-      itemBuilder: (_, index) => _buildStat(_, entity.stats[index]),
+      itemBuilder: (context, index) => _buildStat(context, entity.stats[index]),
       separatorBuilder: (_, __) => const Divider(),
     );
   }
