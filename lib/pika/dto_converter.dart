@@ -52,7 +52,24 @@ class DtoConverter {
   }
 
   Project fromProjectDto(ProjectDto dto) {
-    return Project(id: ResourceId.fromString(dto.id), name: dto.name);
+    return Project(
+      id: ResourceId.fromString(dto.id),
+      name: dto.title,
+      objectives: [
+        for (var o in dto.objectives)
+          Objective(
+            title: o.title,
+            requirements: [
+              for (var r in o.requirements)
+                ObjectiveRequirement(
+                  $class: _container!.classes[ResourceId.fromString(r.$class)]!,
+                  stat: _container!.stats[ResourceId.fromString(r.stat)]!,
+                  min: r.min,
+                )
+            ],
+          )
+      ],
+    );
   }
 
   Domain fromDomainDto(DomainDto dto) {
