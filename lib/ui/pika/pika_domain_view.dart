@@ -24,6 +24,7 @@ class PikaDomainView extends StatefulWidget {
 
 class _PikaDomainViewState extends State<PikaDomainView> {
   Project? _selectedProject;
+  Objective? _selectedObjective;
   Entity? _selectedEntity;
 
   @override
@@ -78,36 +79,45 @@ class _PikaDomainViewState extends State<PikaDomainView> {
   }
 
   Row _buildMainView() {
-    var container = context.read<PikaContainer>();
-    var filterState = context.watch<PikaFilterState>();
-    var userStats = context.watch<UserStats>();
     return Row(
       children: [
-        Expanded(child: _buildProjectColumn(filterState.filterProject(container.projects.toResourceList(), userStats))),
-        Expanded(
-          child: NamedResourceListView<Entity>(
-            resourceList: filterState.filterEntity(container.entities.toResourceList(), userStats),
-            selectedResource: _selectedEntity,
-            onSelection: (entity) => setState(() => _selectedEntity = entity),
-          ),
-        ),
+        Expanded(child: _buildProjectColumn()),
+        Expanded(child: _buildEntityList()),
         Expanded(child: _selectedEntity != null ? EntityView(entity: _selectedEntity!) : Container()),
       ],
     );
   }
 
-  Widget _buildProjectColumn(List<Project> projects) {
+  Widget _buildProjectColumn() {
+    var container = context.read<PikaContainer>();
+    var filterState = context.watch<PikaFilterState>();
+    var userStats = context.watch<UserStats>();
     var list = NamedResourceListView<Project>(
-      resourceList: projects,
+      resourceList: filterState.filterProject(container.projects.toResourceList(), userStats),
       selectedResource: _selectedProject,
-      onSelection: (project) => setState(() => _selectedProject = project),
+      onSelection: (project) => setState(() {
+        if (project == null) _selectedObjective = null;
+        _selectedProject = project;
+      }),
     );
     if (_selectedProject == null) return list;
     return Column(
       children: [
         Expanded(child: list),
-        Expanded(child: ProjectView(project: _selectedProject!)),
+        Expanded(child: ProjectView(project: _selectedProject!, onSelection: (o) => setState(() => _selectedObjective = o))),
       ],
+    );
+  }
+
+  Widget _buildEntityList() {
+    var container = context.read<PikaContainer>();
+    var filterState = context.watch<PikaFilterState>();
+    var userStats = context.watch<UserStats>();
+    var entityList = _selectedObjective == null ? container.entities.toResourceList() : container.getEntitiesByClassList(_selectedObjective!.allRequirementClasses);
+    return NamedResourceListView<Entity>(
+      resourceList: filterState.filterEntity(entityList, userStats),
+      selectedResource: _selectedEntity,
+      onSelection: (entity) => setState(() => _selectedEntity = entity),
     );
   }
 

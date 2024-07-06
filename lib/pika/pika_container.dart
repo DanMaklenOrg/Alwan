@@ -19,6 +19,10 @@ final class PikaContainer {
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
   final ResourceMap<Project> projects;
+
+  List<Entity> getEntitiesByClassList(List<Class> classList){
+    return entities.toResourceList().where((e) => e.classes.any((element) => classList.contains(element))).toList();
+  }
 }
 
 final class PikaContainerBuilder {

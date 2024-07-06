@@ -52,6 +52,9 @@ final class Objective {
 
   final String title;
   final List<ObjectiveRequirement> requirements;
+
+  List<Class> get allRequirementClasses => requirements.map((e) => e.$class).toList();
+  List<Stat> get allRequirementStats => requirements.map((e) => e.stat).toList();
 }
 
 final class ObjectiveRequirement {

@@ -2,9 +2,10 @@ import 'package:alwan/pika/models.dart';
 import 'package:flutter/material.dart';
 
 final class ProjectView extends StatelessWidget {
-  const ProjectView({super.key, required this.project});
+  const ProjectView({super.key, required this.project, required this.onSelection});
 
   final Project project;
+  final void Function(Objective) onSelection;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,9 @@ final class ProjectView extends StatelessWidget {
   }
 
   Widget _buildObjective(BuildContext context, Objective objective) {
-    return Text(objective.title);
+    return ListTile(
+      title: Text(objective.title),
+      onTap: () => onSelection(objective),
+    );
   }
 }
