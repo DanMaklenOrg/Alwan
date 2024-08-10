@@ -21,7 +21,6 @@ class PikaFilterState extends ChangeNotifier {
   List<Project> filterProject(List<Project> projectList, UserStats userStats) {
     return projectList.where((p) {
       if (domainId.value != null && p.id.domainId != domainId.value) return false;
-      if (hideCompletedEntities.value && userStats.isProjectCompleted(p)) return false;
       return true;
     }).toList();
   }

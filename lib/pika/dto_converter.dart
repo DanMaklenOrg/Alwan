@@ -27,6 +27,7 @@ class DtoConverter {
   Class fromClassDto(ClassDto dto) {
     return Class(
       id: ResourceId.fromString(dto.id),
+      name: dto.name,
       stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid.id)]!],
     );
   }
@@ -45,12 +46,13 @@ class DtoConverter {
 
   Project fromProjectDto(ProjectDto dto) {
     return Project(
-      id: ResourceId.fromString("_/dummy"),
-      name: dto.title,
+      id: ResourceId.fromString(dto.id),
+      name: dto.name,
       objectives: [
         for (var o in dto.objectives)
           Objective(
-            title: o.title,
+            id: ResourceId.fromString(o.id),
+            name: o.name,
             requirements: [
               for (var r in o.requirements)
                 ObjectiveRequirement(
@@ -65,7 +67,7 @@ class DtoConverter {
   }
 
   Domain fromDomainDto(DomainDto dto) {
-    return Domain(id: dto.id, name: dto.name);
+    return Domain(id: ResourceId.fromString(dto.id), name: dto.name);
   }
 
   UserEntityStat fromUserEntityStatDto(UserEntityStatDto dto) {

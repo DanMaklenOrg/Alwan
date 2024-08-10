@@ -10,13 +10,13 @@ final class PikaContainer {
         stats = {},
         classes = {},
         entities = {},
-        projects = {};
+        projects = [];
 
   final List<Domain> domains;
   final ResourceMap<Stat> stats;
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
-  final ResourceMap<Project> projects;
+  final List<Project> projects;
 
   List<Entity> getEntitiesByClassList(List<Class> classList){
     return entities.toResourceList().where((e) => e.classes.any((element) => classList.contains(element))).toList();
@@ -44,11 +44,8 @@ final class PikaContainerBuilder {
     DtoConverter converter = DtoConverter(container);
     container.stats.addResourceList(_statsDto.map(converter.fromStatDto));
     container.classes.addResourceList(_classesDto.map(converter.fromClassDto));
-
     container.entities.addResourceList(_entitiesDto.map(converter.fromEntityDto));
-
-    container.projects.addResourceList(_projectsDto.map(converter.fromProjectDto));
-
+    container.projects.addAll(_projectsDto.map(converter.fromProjectDto));
     container.domains.addAll(_domains.map(converter.fromDomainDto));
     container.domains.sort((a, b) => a.name.compareTo(b.name));
     return container;
