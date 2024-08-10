@@ -27,33 +27,31 @@ class DtoConverter {
   Class fromClassDto(ClassDto dto) {
     return Class(
       id: ResourceId.fromString(dto.id),
-      stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!],
-      tags: [for (var tid in dto.tags) _container!.tags[ResourceId.fromString(tid)]!],
+      stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid.id)]!],
+      tags: [],
     );
   }
 
-  Tag fromTagDto(TagDto dto) {
-    return Tag(id: ResourceId.fromString(dto.id), name: dto.name);
+  Tag fromTagDto() {
+    return Tag(id: ResourceId.fromString("_/dummy"), name: "Dummy");
   }
 
   Entity fromEntityDto(EntityDto dto) {
-    var classList = [for (var cid in dto.classes) _container!.classes[ResourceId.fromString(cid)]!];
-    var statSet = {for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid)]!};
+    var classList = [_container!.classes[ResourceId.fromString(dto.$class)]!];
+    var statSet = {for (var sid in dto.stats) _container.stats[ResourceId.fromString(sid.id)]!};
     statSet.addAll(classList.expand((c) => c.stats));
-    var tagSet = {for (var tid in dto.tags) _container!.tags[ResourceId.fromString(tid)]!};
-    tagSet.addAll(classList.expand((c) => c.tags));
     return Entity(
       id: ResourceId.fromString(dto.id),
       name: dto.name,
       stats: statSet.toList(),
       classes: classList,
-      tags: tagSet.toList(),
+      tags: [],
     );
   }
 
   Project fromProjectDto(ProjectDto dto) {
     return Project(
-      id: ResourceId.fromString(dto.id),
+      id: ResourceId.fromString("_/dummy"),
       name: dto.title,
       objectives: [
         for (var o in dto.objectives)
@@ -63,7 +61,7 @@ class DtoConverter {
               for (var r in o.requirements)
                 ObjectiveRequirement(
                   $class: _container!.classes[ResourceId.fromString(r.$class)]!,
-                  stat: _container!.stats[ResourceId.fromString(r.stat)]!,
+                  stat: _container.stats[ResourceId.fromString(r.stat)]!,
                   min: r.min,
                 )
             ],

@@ -1,130 +1,127 @@
-final class SignInRequestDto {
-  const SignInRequestDto({
-    required this.username,
-    required this.password,
-  });
+import 'package:json_annotation/json_annotation.dart';
 
-  Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'password': password,
-    };
-  }
+part 'dto.g.dart';
+
+@JsonSerializable()
+final class SignInRequestDto {
+  const SignInRequestDto({required this.username, required this.password});
+
+  factory SignInRequestDto.fromJson(Map<String, dynamic> json) => _$SignInRequestDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignInRequestDtoToJson(this);
 
   final String username;
   final String password;
 }
 
+@JsonSerializable()
 final class SignInResponseDto {
-  SignInResponseDto.fromJson(Map<String, dynamic> json) : token = json['token'] as String;
+  SignInResponseDto({required this.token});
+
+  factory SignInResponseDto.fromJson(Map<String, dynamic> json) => _$SignInResponseDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignInResponseDtoToJson(this);
 
   final String token;
 }
 
+@JsonSerializable()
 final class DomainSummaryDto {
-  DomainSummaryDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        name = json['name'] as String;
+  DomainSummaryDto({required this.id, required this.name});
+
+  factory DomainSummaryDto.fromJson(Map<String, dynamic> json) => _$DomainSummaryDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DomainSummaryDtoToJson(this);
 
   final String id;
   final String name;
 }
 
+@JsonSerializable()
 final class DomainDto {
-  DomainDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        name = json['name'] as String,
-        stats = (json['stats'] as List).map((e) => StatDto.fromJson(e)).toList(),
-        tags = (json['tags'] as List).map((e) => TagDto.fromJson(e)).toList(),
-        classes = (json['classes'] as List).map((e) => ClassDto.fromJson(e)).toList(),
-        entities = (json['entities'] as List).map((e) => EntityDto.fromJson(e)).toList(),
-        projects = (json['projects'] as List).map((e) => ProjectDto.fromJson(e)).toList(),
-        subDomains = (json['sub_domains'] as List).map((e) => DomainDto.fromJson(e)).toList();
+  DomainDto({required this.id, required this.name, required this.projects, required this.classes, required this.entities});
+
+  factory DomainDto.fromJson(Map<String, dynamic> json) => _$DomainDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DomainDtoToJson(this);
 
   final String id;
   final String name;
-  final List<StatDto> stats;
-  final List<ClassDto> classes;
-  final List<TagDto> tags;
   final List<ProjectDto> projects;
+  final List<ClassDto> classes;
   final List<EntityDto> entities;
-  final List<DomainDto> subDomains;
 }
 
+@JsonSerializable()
 final class ProjectDto {
-  ProjectDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        title = json['title'] as String,
-        objectives = (json['objectives'] as List).map((e) => ObjectiveDto.fromJson(e)).toList();
+  ProjectDto({required this.title, required this.objectives});
 
-  final String id;
+  factory ProjectDto.fromJson(Map<String, dynamic> json) => _$ProjectDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProjectDtoToJson(this);
+
   final String title;
   final List<ObjectiveDto> objectives;
 }
 
+@JsonSerializable()
 final class ObjectiveDto {
-  ObjectiveDto.fromJson(Map<String, dynamic> json)
-      : title = json['title'] as String,
-        requirements = (json['requirements'] as List).map((e) => ObjectiveRequirementDto.fromJson(e)).toList();
+  ObjectiveDto({required this.title, required this.requirements});
+
+  factory ObjectiveDto.fromJson(Map<String, dynamic> json) => _$ObjectiveDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObjectiveDtoToJson(this);
 
   final String title;
   final List<ObjectiveRequirementDto> requirements;
 }
 
+@JsonSerializable()
 final class ObjectiveRequirementDto {
-  ObjectiveRequirementDto.fromJson(Map<String, dynamic> json)
-      : $class = json['class'] as String,
-        stat = json['stat'] as String,
-        min = json['min'] as int;
+  ObjectiveRequirementDto({required this.$class, required this.stat, required this.min});
+
+  factory ObjectiveRequirementDto.fromJson(Map<String, dynamic> json) => _$ObjectiveRequirementDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ObjectiveRequirementDtoToJson(this);
 
   final String $class;
   final String stat;
   final int min;
 }
 
-final class TagDto {
-  TagDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        name = json['name'] as String;
-
-  final String id;
-  final String name;
-}
-
-final class EntityDto {
-  EntityDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        name = json['name'] as String,
-        stats = (json['stats'] as List).cast<String>(),
-        classes = (json['classes'] as List).cast<String>(),
-        tags = (json['tags'] as List).cast<String>();
-
-  final String id;
-  final String name;
-  final List<String> stats;
-  final List<String> classes;
-  final List<String> tags;
-}
-
+@JsonSerializable()
 final class ClassDto {
-  ClassDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        stats = (json['stats'] as List).cast<String>(),
-        tags = (json['tags'] as List).cast<String>();
+  ClassDto({required this.id, required this.stats});
+
+  factory ClassDto.fromJson(Map<String, dynamic> json) => _$ClassDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ClassDtoToJson(this);
 
   final String id;
-  final List<String> stats;
-  final List<String> tags;
+  final List<StatDto> stats;
 }
 
+@JsonSerializable()
+final class EntityDto {
+  EntityDto({required this.id, required this.name, required this.$class, required this.stats});
+
+  factory EntityDto.fromJson(Map<String, dynamic> json) => _$EntityDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EntityDtoToJson(this);
+
+  final String id;
+  final String name;
+  final String $class;
+  final List<StatDto> stats;
+}
+
+@JsonSerializable()
 final class StatDto {
-  StatDto.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        type = StatTypeEnumDto.fromString(json['type']),
-        min = json['min'],
-        max = json['max'],
-        enumValues = (json['enum_values'] as List?)?.cast<String>();
+  StatDto({required this.id, required this.name, required this.type, required this.min, required this.max, required this.enumValues});
+
+  factory StatDto.fromJson(Map<String, dynamic> json) => _$StatDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StatDtoToJson(this);
 
   final String id;
   final String name;
@@ -134,50 +131,31 @@ final class StatDto {
   final List<String>? enumValues;
 }
 
+@JsonEnum(fieldRename: FieldRename.pascal)
 enum StatTypeEnumDto {
   boolean,
   integerRange,
   orderedEnum;
-
-  factory StatTypeEnumDto.fromString(String str) {
-    return switch (str) {
-      "Boolean" => StatTypeEnumDto.boolean,
-      "IntegerRange" => StatTypeEnumDto.integerRange,
-      "OrderedEnum" => StatTypeEnumDto.orderedEnum,
-      _ => throw RangeError("Unable to convert $str to StatTypeEnumDto")
-    };
-  }
 }
 
+@JsonSerializable()
 final class UserStatsDto {
-  UserStatsDto({required this.entityStats, required this.completedProjectIds});
+  UserStatsDto({required this.entityStats});
 
-  Map<String, dynamic> toJson() => {
-        'entity_stats': entityStats.map((e) => e.toJson()).toList(),
-        'completed_project_ids': completedProjectIds,
-      };
+  factory UserStatsDto.fromJson(Map<String, dynamic> json) => _$UserStatsDtoFromJson(json);
 
-  UserStatsDto.fromJson(Map<String, dynamic> json)
-      : entityStats = (json['entity_stats'] as List).map((e) => UserEntityStatDto.fromJson(e)).toList(),
-        completedProjectIds = (json['completed_project_ids'] as List).cast<String>();
+  Map<String, dynamic> toJson() => _$UserStatsDtoToJson(this);
 
   final List<UserEntityStatDto> entityStats;
-  final List<String> completedProjectIds;
 }
 
+@JsonSerializable()
 final class UserEntityStatDto {
   UserEntityStatDto({required this.entityId, required this.statId, required this.value});
 
-  Map<String, dynamic> toJson() => {
-        'entity_id': entityId,
-        'stat_id': statId,
-        'value': value,
-      };
+  factory UserEntityStatDto.fromJson(Map<String, dynamic> json) => _$UserEntityStatDtoFromJson(json);
 
-  UserEntityStatDto.fromJson(Map<String, dynamic> json)
-      : entityId = json['entity_id'],
-        statId = json['stat_id'],
-        value = json['value'];
+  Map<String, dynamic> toJson() => _$UserEntityStatDtoToJson(this);
 
   final String entityId;
   final String statId;

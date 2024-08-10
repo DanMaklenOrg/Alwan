@@ -125,8 +125,7 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var userStats = context.read<UserStats>();
     var converter = DtoConverter();
     var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
-    var projects = userStats.getCompletedProjectList().map((e) => e.fullyQualifiedId).toList();
-    var dto = UserStatsDto(entityStats: entityStats, completedProjectIds: projects);
+    var dto = UserStatsDto(entityStats: entityStats);
     await serviceProvider.get<ApiClient>().setUserStat(userStats.rootDomainId, dto);
   }
 }

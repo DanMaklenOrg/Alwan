@@ -1,7 +1,6 @@
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
 import 'package:alwan/pika/dto_converter.dart';
-import 'package:alwan/pika/models.dart';
 import 'package:alwan/pika/pika_container.dart';
 import 'package:alwan/pika/user_stats.dart';
 import 'package:alwan/service_provider.dart';
@@ -59,8 +58,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   UserStats _buildUserStats(_PikaData data) {
     var converter = DtoConverter();
     var entityStatsList = data.userStats.entityStats.map(converter.fromUserEntityStatDto).toList();
-    var completedProjects = data.userStats.completedProjectIds.map(ResourceId.fromString).toList();
-    return UserStats(data.rootDomain.id, entityStatsList, completedProjects);
+    return UserStats(data.rootDomain.id, entityStatsList, []);
   }
 }
 
