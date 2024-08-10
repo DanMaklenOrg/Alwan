@@ -12,18 +12,18 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  shared_preferences: ^2.0.13
-  flutter_spinbox: ^0.13.1
   dio: ^5.3.3
   get_it: ^7.6.4
   go_router: ^14.2.0
   provider: ^6.1.1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.1
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true
