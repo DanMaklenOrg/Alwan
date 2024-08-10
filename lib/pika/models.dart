@@ -1,28 +1,19 @@
 final class ResourceId implements Comparable<ResourceId> {
-  ResourceId({required this.id, required this.domainId});
-
-  factory ResourceId.fromString(String str) {
-    var segments = str.split('/');
-    assert(segments.length == 2);
-    return ResourceId(id: segments[1], domainId: segments[0]);
-  }
+  ResourceId({required this.id});
 
   final String id;
-  final String domainId;
-
-  String get fullyQualifiedId => "$domainId/$id";
 
   @override
-  bool operator ==(Object other) => other is ResourceId && id == other.id && domainId == other.domainId;
+  bool operator ==(Object other) => other is ResourceId && id == other.id;
 
   @override
-  int get hashCode => Object.hash(id, domainId);
+  int get hashCode => id.hashCode;
 
   @override
-  String toString() => fullyQualifiedId;
+  String toString() => id;
 
   @override
-  int compareTo(ResourceId other) => fullyQualifiedId.compareTo(other.fullyQualifiedId);
+  int compareTo(ResourceId other) => id.compareTo(other.id);
 }
 
 abstract class PikaResource implements Comparable<PikaResource> {

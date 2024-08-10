@@ -49,24 +49,16 @@ class _PikaDomainViewState extends State<PikaDomainView> {
   }
 
   List<Widget> _filters() {
-    var container = context.read<PikaContainer>();
     var filterState = context.watch<PikaFilterState>();
     return [
       SizedBox(
-          width: 175,
-          child: CheckboxListTile(
-            title: const Text("Hide Completed"),
-            value: filterState.hideCompletedEntities.value,
-            onChanged: (value) => setState(() => filterState.hideCompletedEntities.value = value ?? false),
-          )),
-      DropdownButton<String>(
-        value: filterState.domainId.value,
-        items: [
-          const DropdownMenuItem<String>(value: null, child: Text('')),
-          for (var d in container.domains) DropdownMenuItem<String>(value: d.id.toString(), child: Text(d.name)),
-        ],
-        onChanged: (val) => setState(() => filterState.domainId.value = val),
-      )
+        width: 175,
+        child: CheckboxListTile(
+          title: const Text("Hide Completed"),
+          value: filterState.hideCompletedEntities.value,
+          onChanged: (value) => setState(() => filterState.hideCompletedEntities.value = value ?? false),
+        ),
+      ),
     ];
   }
 
@@ -105,7 +97,8 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var container = context.read<PikaContainer>();
     var filterState = context.watch<PikaFilterState>();
     var userStats = context.watch<UserStats>();
-    var entityList = _selectedObjective == null ? container.entities.toResourceList() : container.getEntitiesByClassList(_selectedObjective!.allRequirementClasses);
+    var entityList =
+        _selectedObjective == null ? container.entities.toResourceList() : container.getEntitiesByClassList(_selectedObjective!.allRequirementClasses);
     return PikaResourceListView<Entity>(
       resourceList: filterState.filterEntity(entityList, userStats),
       selectedResource: _selectedEntity,

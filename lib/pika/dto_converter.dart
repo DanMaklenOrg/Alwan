@@ -11,7 +11,7 @@ class DtoConverter {
 
   Stat fromStatDto(StatDto dto) {
     return Stat(
-      id: ResourceId.fromString(dto.id),
+      id: ResourceId(id: dto.id),
       name: dto.name,
       type: switch (dto.type) {
         StatTypeEnumDto.boolean => StatType.boolean,
@@ -26,18 +26,18 @@ class DtoConverter {
 
   Class fromClassDto(ClassDto dto) {
     return Class(
-      id: ResourceId.fromString(dto.id),
+      id: ResourceId(id: dto.id),
       name: dto.name,
-      stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid.id)]!],
+      stats: [for (var sid in dto.stats) _container!.stats[ResourceId(id: sid.id)]!],
     );
   }
 
   Entity fromEntityDto(EntityDto dto) {
-    var classList = [_container!.classes[ResourceId.fromString(dto.$class)]!];
-    var statSet = {for (var sid in dto.stats) _container.stats[ResourceId.fromString(sid.id)]!};
+    var classList = [_container!.classes[ResourceId(id: dto.$class)]!];
+    var statSet = {for (var sid in dto.stats) _container.stats[ResourceId(id: sid.id)]!};
     statSet.addAll(classList.expand((c) => c.stats));
     return Entity(
-      id: ResourceId.fromString(dto.id),
+      id: ResourceId(id: dto.id),
       name: dto.name,
       stats: statSet.toList(),
       classes: classList,
@@ -46,18 +46,18 @@ class DtoConverter {
 
   Project fromProjectDto(ProjectDto dto) {
     return Project(
-      id: ResourceId.fromString(dto.id),
+      id: ResourceId(id: dto.id),
       name: dto.name,
       objectives: [
         for (var o in dto.objectives)
           Objective(
-            id: ResourceId.fromString(o.id),
+            id: ResourceId(id: o.id),
             name: o.name,
             requirements: [
               for (var r in o.requirements)
                 ObjectiveRequirement(
-                  $class: _container!.classes[ResourceId.fromString(r.$class)]!,
-                  stat: _container.stats[ResourceId.fromString(r.stat)]!,
+                  $class: _container!.classes[ResourceId(id: r.$class)]!,
+                  stat: _container.stats[ResourceId(id: r.stat)]!,
                   min: r.min,
                 )
             ],
@@ -67,21 +67,21 @@ class DtoConverter {
   }
 
   Domain fromDomainDto(DomainDto dto) {
-    return Domain(id: ResourceId.fromString(dto.id), name: dto.name);
+    return Domain(id: ResourceId(id: dto.id), name: dto.name);
   }
 
   UserEntityStat fromUserEntityStatDto(UserEntityStatDto dto) {
     return UserEntityStat(
-      entityId: ResourceId.fromString(dto.entityId),
-      statId: ResourceId.fromString(dto.statId),
+      entityId: ResourceId(id: dto.entityId),
+      statId: ResourceId(id: dto.statId),
       value: dto.value,
     );
   }
 
   UserEntityStatDto toEntityUserStatDto(UserEntityStat stat) {
     return UserEntityStatDto(
-      entityId: stat.entityId.fullyQualifiedId,
-      statId: stat.statId.fullyQualifiedId,
+      entityId: stat.entityId.toString(),
+      statId: stat.statId.toString(),
       value: stat.value,
     );
   }
