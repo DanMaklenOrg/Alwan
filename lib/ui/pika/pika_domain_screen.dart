@@ -42,7 +42,6 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   Future<_PikaData> _fetchData() async {
     var client = serviceProvider.get<ApiClient>();
     return _PikaData(
-      baseDomain: await client.getDomain('_'),
       rootDomain: await client.getDomain(widget.domainId),
       userStats: await client.getUserStat(widget.domainId),
     );
@@ -50,7 +49,6 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
 
   PikaContainer _buildContainer(_PikaData data) {
     var builder = PikaContainerBuilder();
-    builder.loadDomain(data.baseDomain, listDomain: false);
     builder.loadDomain(data.rootDomain);
     return builder.build();
   }
@@ -63,9 +61,8 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
 }
 
 class _PikaData {
-  _PikaData({required this.baseDomain, required this.rootDomain, required this.userStats});
+  _PikaData({required this.rootDomain, required this.userStats});
 
-  final DomainDto baseDomain;
   final DomainDto rootDomain;
   final UserStatsDto userStats;
 }
