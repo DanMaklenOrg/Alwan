@@ -12,7 +12,7 @@ import 'package:alwan/ui/pika/project_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'named_resource_list_view.dart';
+import 'pika_resource_list_view.dart';
 import 'entity_view.dart';
 
 class PikaDomainView extends StatefulWidget {
@@ -63,7 +63,7 @@ class _PikaDomainViewState extends State<PikaDomainView> {
         value: filterState.domainId.value,
         items: [
           const DropdownMenuItem<String>(value: null, child: Text('')),
-          for (var d in container.domains) DropdownMenuItem<String>(value: d.id, child: Text(d.name)),
+          for (var d in container.domains) DropdownMenuItem<String>(value: d.id.toString(), child: Text(d.name)),
         ],
         onChanged: (val) => setState(() => filterState.domainId.value = val),
       )
@@ -84,8 +84,8 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var container = context.read<PikaContainer>();
     var filterState = context.watch<PikaFilterState>();
     var userStats = context.watch<UserStats>();
-    var list = NamedResourceListView<Project>(
-      resourceList: filterState.filterProject(container.projects.toResourceList(), userStats),
+    var list = PikaResourceListView<Project>(
+      resourceList: filterState.filterProject(container.projects, userStats),
       selectedResource: _selectedProject,
       onSelection: (project) => setState(() {
         if (project == null) _selectedObjective = null;
@@ -106,7 +106,7 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var filterState = context.watch<PikaFilterState>();
     var userStats = context.watch<UserStats>();
     var entityList = _selectedObjective == null ? container.entities.toResourceList() : container.getEntitiesByClassList(_selectedObjective!.allRequirementClasses);
-    return NamedResourceListView<Entity>(
+    return PikaResourceListView<Entity>(
       resourceList: filterState.filterEntity(entityList, userStats),
       selectedResource: _selectedEntity,
       onSelection: (entity) => setState(() => _selectedEntity = entity),

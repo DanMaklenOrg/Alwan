@@ -58,7 +58,7 @@ class _PikaDomainScreenState extends State<PikaDomainScreen> {
   UserStats _buildUserStats(_PikaData data) {
     var converter = DtoConverter();
     var entityStatsList = data.userStats.entityStats.map(converter.fromUserEntityStatDto).toList();
-    return UserStats(data.rootDomain.id, entityStatsList, []);
+    return UserStats(data.rootDomain.id, entityStatsList);
   }
 }
 

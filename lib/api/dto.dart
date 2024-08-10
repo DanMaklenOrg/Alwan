@@ -54,25 +54,27 @@ final class DomainDto {
 
 @JsonSerializable()
 final class ProjectDto {
-  ProjectDto({required this.title, required this.objectives});
+  ProjectDto({required this.id, required this.name, required this.objectives});
 
   factory ProjectDto.fromJson(Map<String, dynamic> json) => _$ProjectDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProjectDtoToJson(this);
 
-  final String title;
+  final String id;
+  final String name;
   final List<ObjectiveDto> objectives;
 }
 
 @JsonSerializable()
 final class ObjectiveDto {
-  ObjectiveDto({required this.title, required this.requirements});
+  ObjectiveDto({required this.id, required this.name, required this.requirements});
 
   factory ObjectiveDto.fromJson(Map<String, dynamic> json) => _$ObjectiveDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ObjectiveDtoToJson(this);
 
-  final String title;
+  final String id;
+  final String name;
   final List<ObjectiveRequirementDto> requirements;
 }
 
@@ -91,13 +93,14 @@ final class ObjectiveRequirementDto {
 
 @JsonSerializable()
 final class ClassDto {
-  ClassDto({required this.id, required this.stats});
+  ClassDto({required this.id, required this.name, required this.stats});
 
   factory ClassDto.fromJson(Map<String, dynamic> json) => _$ClassDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ClassDtoToJson(this);
 
   final String id;
+  final String name;
   final List<StatDto> stats;
 }
 

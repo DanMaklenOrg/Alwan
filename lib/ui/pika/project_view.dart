@@ -30,7 +30,7 @@ final class ProjectView extends StatelessWidget {
 
   Widget _buildObjective(BuildContext context, Objective objective) {
     return ListTile(
-      title: Text(objective.title),
+      title: Text(objective.name),
       onTap: () => onSelection(objective),
     );
   }
