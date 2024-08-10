@@ -22,6 +22,7 @@ jobs:
           cache: true
       - run: flutter --version
       - uses: actions/checkout@v3
+      - run: flutter pub get
       - run: flutter build web --dart-define-from-file=lib/config/prod.json --release
       - uses: actions/upload-artifact@v3
         with:
