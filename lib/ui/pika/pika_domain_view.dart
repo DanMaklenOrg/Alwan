@@ -66,15 +66,7 @@ class _PikaDomainViewState extends State<PikaDomainView> {
           for (var d in container.domains) DropdownMenuItem<String>(value: d.id, child: Text(d.name)),
         ],
         onChanged: (val) => setState(() => filterState.domainId.value = val),
-      ),
-      DropdownButton<Tag>(
-        value: filterState.tag.value,
-        items: [
-          const DropdownMenuItem<Tag>(value: null, child: Text('')),
-          for (var t in container.tags.toResourceList()) DropdownMenuItem<Tag>(value: t, child: Text(t.name)),
-        ],
-        onChanged: (val) => setState(() => filterState.tag.value = val),
-      ),
+      )
     ];
   }
 

@@ -65,23 +65,17 @@ final class ObjectiveRequirement {
   final int min;
 }
 
-final class Tag extends NamedResource {
-  Tag({required super.id, required super.name});
-}
-
 final class Entity extends NamedResource {
-  Entity({required super.id, required super.name, this.stats = const [], this.classes = const [], this.tags = const []});
+  Entity({required super.id, required super.name, this.stats = const [], this.classes = const []});
 
   final List<Stat> stats;
   final List<Class> classes;
-  final List<Tag> tags;
 }
 
 final class Class extends Resource {
-  Class({required super.id, this.stats = const [], this.tags = const []});
+  Class({required super.id, this.stats = const []});
 
   final List<Stat> stats;
-  final List<Tag> tags;
 }
 
 final class Stat extends NamedResource {

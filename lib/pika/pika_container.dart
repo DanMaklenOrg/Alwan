@@ -8,14 +8,12 @@ final class PikaContainer {
   PikaContainer.empty()
       : domains = [],
         stats = {},
-        tags = {},
         classes = {},
         entities = {},
         projects = {};
 
   final List<Domain> domains;
   final ResourceMap<Stat> stats;
-  final ResourceMap<Tag> tags;
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
   final ResourceMap<Project> projects;
