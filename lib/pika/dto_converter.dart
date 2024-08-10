@@ -28,12 +28,7 @@ class DtoConverter {
     return Class(
       id: ResourceId.fromString(dto.id),
       stats: [for (var sid in dto.stats) _container!.stats[ResourceId.fromString(sid.id)]!],
-      tags: [],
     );
-  }
-
-  Tag fromTagDto() {
-    return Tag(id: ResourceId.fromString("_/dummy"), name: "Dummy");
   }
 
   Entity fromEntityDto(EntityDto dto) {
@@ -45,7 +40,6 @@ class DtoConverter {
       name: dto.name,
       stats: statSet.toList(),
       classes: classList,
-      tags: [],
     );
   }
 
