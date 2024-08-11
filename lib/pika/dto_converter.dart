@@ -28,19 +28,17 @@ class DtoConverter {
     return Class(
       id: ResourceId(id: dto.id),
       name: dto.name,
-      stats: [for (var sid in dto.stats) _container!.stats[ResourceId(id: sid.id)]!],
+      stats: [for (var s in dto.stats) fromStatDto(s)],
     );
   }
 
   Entity fromEntityDto(EntityDto dto) {
-    var classList = [_container!.classes[ResourceId(id: dto.$class)]!];
-    var statSet = {for (var sid in dto.stats) _container.stats[ResourceId(id: sid.id)]!};
-    statSet.addAll(classList.expand((c) => c.stats));
+    var $class = _container!.classes[ResourceId(id: dto.$class)]!;
     return Entity(
       id: ResourceId(id: dto.id),
       name: dto.name,
-      stats: statSet.toList(),
-      classes: classList,
+      $class: $class,
+      stats: [for (var s in dto.stats) fromStatDto(s)],
     );
   }
 
@@ -56,8 +54,8 @@ class DtoConverter {
             requirements: [
               for (var r in o.requirements)
                 ObjectiveRequirement(
-                  $class: _container!.classes[ResourceId(id: r.$class)]!,
-                  stat: _container.stats[ResourceId(id: r.stat)]!,
+                  $class: ResourceId(id: r.$class),
+                  stat: ResourceId(id: r.stat),
                   min: r.min,
                 )
             ],

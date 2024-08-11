@@ -6,19 +6,19 @@ import 'models.dart';
 
 final class PikaContainer {
   PikaContainer.empty()
-      : stats = {},
-        classes = {},
+      : classes = {},
         entities = {},
         projects = [];
 
   late final Domain domain;
-  final ResourceMap<Stat> stats;
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
   final List<Project> projects;
 
-  List<Entity> getEntitiesByClassList(List<Class> classList) {
-    return entities.toResourceList().where((e) => e.classes.any((element) => classList.contains(element))).toList();
+  List<Entity> getEntitiesMatchingObjective(Objective? objective) {
+    if (objective == null) return entities.toResourceList();
+    var acceptedClassList = [for (var r in objective.requirements) r.$class];
+    return entities.toResourceList().where((e) => acceptedClassList.contains(e.$class.id)).toList();
   }
 }
 
@@ -26,7 +26,6 @@ final class PikaContainerBuilder {
   final PikaContainer container = PikaContainer.empty();
 
   late final DomainDto _domain;
-  final List<StatDto> _statsDto = [];
   final List<ClassDto> _classesDto = [];
   final List<EntityDto> _entitiesDto = [];
   final List<ProjectDto> _projectsDto = [];
@@ -41,7 +40,6 @@ final class PikaContainerBuilder {
 
   PikaContainer build() {
     DtoConverter converter = DtoConverter(container);
-    container.stats.addResourceList(_statsDto.map(converter.fromStatDto));
     container.classes.addResourceList(_classesDto.map(converter.fromClassDto));
     container.entities.addResourceList(_entitiesDto.map(converter.fromEntityDto));
     container.projects.addAll(_projectsDto.map(converter.fromProjectDto));

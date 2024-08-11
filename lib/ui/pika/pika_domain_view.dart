@@ -3,7 +3,6 @@ import 'package:alwan/api/dto.dart';
 import 'package:alwan/pika/dto_converter.dart';
 import 'package:alwan/pika/models.dart';
 import 'package:alwan/pika/pika_container.dart';
-import 'package:alwan/pika/resource_map.dart';
 import 'package:alwan/pika/user_stats.dart';
 import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/loading_icon_button.dart';
@@ -80,7 +79,8 @@ class _PikaDomainViewState extends State<PikaDomainView> {
       resourceList: filterState.filterProject(container.projects, userStats),
       selectedResource: _selectedProject,
       onSelection: (project) => setState(() {
-        if (project == null) _selectedObjective = null;
+        _selectedEntity = null;
+        _selectedObjective = null;
         _selectedProject = project;
       }),
     );
@@ -88,7 +88,15 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     return Column(
       children: [
         Expanded(child: list),
-        Expanded(child: ProjectView(project: _selectedProject!, onSelection: (o) => setState(() => _selectedObjective = o))),
+        Expanded(
+            child: ProjectView(
+          project: _selectedProject!,
+          selectedObjective: _selectedObjective,
+          onSelection: (o) => setState(() {
+            _selectedEntity = null;
+            _selectedObjective = o;
+          }),
+        )),
       ],
     );
   }
@@ -97,8 +105,7 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var container = context.read<PikaContainer>();
     var filterState = context.watch<PikaFilterState>();
     var userStats = context.watch<UserStats>();
-    var entityList =
-        _selectedObjective == null ? container.entities.toResourceList() : container.getEntitiesByClassList(_selectedObjective!.allRequirementClasses);
+    var entityList = container.getEntitiesMatchingObjective(_selectedObjective);
     return PikaResourceListView<Entity>(
       resourceList: filterState.filterEntity(entityList, userStats),
       selectedResource: _selectedEntity,
