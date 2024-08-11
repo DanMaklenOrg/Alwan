@@ -2,7 +2,9 @@ import 'package:alwan/pika/models.dart';
 import 'package:flutter/material.dart';
 
 final class PikaResourceListView<T extends PikaResource> extends StatelessWidget {
-  const PikaResourceListView({super.key, required this.resourceList, required this.selectedResource, required this.onSelection});
+  PikaResourceListView({super.key, required this.resourceList, required this.selectedResource, required this.onSelection}) {
+    resourceList.sort();
+  }
 
   final List<T> resourceList;
   final T? selectedResource;

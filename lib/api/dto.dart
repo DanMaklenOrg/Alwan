@@ -86,6 +86,7 @@ final class ObjectiveRequirementDto {
 
   Map<String, dynamic> toJson() => _$ObjectiveRequirementDtoToJson(this);
 
+  @JsonKey(name: 'class')
   final String $class;
   final String stat;
   final int min;
@@ -114,6 +115,7 @@ final class EntityDto {
 
   final String id;
   final String name;
+  @JsonKey(name: 'class')
   final String $class;
   final List<StatDto> stats;
 }

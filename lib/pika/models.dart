@@ -29,7 +29,7 @@ abstract class PikaResource implements Comparable<PikaResource> {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => id.toString();
+  String toString() => "$id ($name)";
 
   @override
   int compareTo(PikaResource other) => name.compareTo(other.name);
@@ -49,25 +49,23 @@ final class Objective extends PikaResource {
   Objective({required super.id, required super.name, required this.requirements});
 
   final List<ObjectiveRequirement> requirements;
-
-  List<Class> get allRequirementClasses => requirements.map((e) => e.$class).toList();
-
-  List<Stat> get allRequirementStats => requirements.map((e) => e.stat).toList();
 }
 
 final class ObjectiveRequirement {
   ObjectiveRequirement({required this.$class, required this.stat, required this.min});
 
-  final Class $class;
-  final Stat stat;
+  final ResourceId $class;
+  final ResourceId stat;
   final int min;
 }
 
 final class Entity extends PikaResource {
-  Entity({required super.id, required super.name, this.stats = const [], this.classes = const []});
+  Entity({required super.id, required super.name, required this.$class, this.stats = const []});
 
+  final Class $class;
   final List<Stat> stats;
-  final List<Class> classes;
+
+  List<Stat> get allStats => stats.followedBy($class.stats).toList();
 }
 
 final class Class extends PikaResource {

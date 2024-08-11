@@ -20,7 +20,7 @@ class UserStats extends ChangeNotifier {
   }
 
   bool isEntityCompleted(Entity entity){
-    return entity.stats.every((s) => isEntityStatCompleted(entity, s));
+    return entity.allStats.every((s) => isEntityStatCompleted(entity, s));
   }
 
   bool isEntityStatCompleted(Entity e, Stat s){
