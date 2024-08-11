@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import 'app_state.dart';
@@ -24,9 +25,16 @@ var _routes = [
   ])
 ];
 
-FutureOr<String?> _redirect(context, state) {
+FutureOr<String?> _redirect(BuildContext context, GoRouterState state) {
   final appState = serviceProvider.get<AppState>();
-  if (!appState.auth.isLoggedIn) return '/sign-in';
-  if (state.matchedLocation == '/sign-in') return '/';
+  var loc = state.matchedLocation;
+
+  // Login
+  var isLoggedIn = appState.auth.isLoggedIn;
+  var isOnSignInPage = loc == '/sign-in';
+  if (!isLoggedIn && !isOnSignInPage) return '/sign-in?next=$loc';
+  if (isLoggedIn && isOnSignInPage) return state.uri.queryParameters['next'] ?? '/';
+
+  // Terminate Redirect
   return null;
 }
