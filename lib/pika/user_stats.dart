@@ -27,7 +27,7 @@ class UserStats extends ChangeNotifier {
     var val = getStatValue(e, s);
     return switch (s.type) {
       StatType.boolean => val == "true",
-      StatType.integerRange => val != null && int.parse(val) == s.max || s.min == s.max,
+      StatType.integerRange => val != null && int.parse(val) == s.max!.getValueForEntity(e) || s.min!.getValueForEntity(e) == s.max!.getValueForEntity(e),
       StatType.orderedEnum => val == s.enumValues!.last,
     };
   }

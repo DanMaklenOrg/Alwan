@@ -59,19 +59,30 @@ final class ObjectiveRequirement {
   final int min;
 }
 
+final class Class extends PikaResource {
+  Class({required super.id, required super.name, this.attributes = const [], this.stats = const []});
+
+  final List<Attribute> attributes;
+  final List<Stat> stats;
+}
+
 final class Entity extends PikaResource {
-  Entity({required super.id, required super.name, required this.$class, this.stats = const []});
+  Entity({required super.id, required super.name, required this.$class, this.attributes = const [], this.stats = const []});
 
   final Class $class;
+  final List<Attribute> attributes;
   final List<Stat> stats;
 
   List<Stat> get allStats => stats.followedBy($class.stats).toList();
+
+  int getAttributeValue(ResourceId id) => attributes.followedBy($class.attributes).firstWhere((a) => a.id == id).value;
 }
 
-final class Class extends PikaResource {
-  Class({required super.id, required super.name, this.stats = const []});
+final class Attribute {
+  Attribute({required this.id, required this.value});
 
-  final List<Stat> stats;
+  final ResourceId id;
+  final int value;
 }
 
 final class Stat extends PikaResource {
@@ -80,9 +91,21 @@ final class Stat extends PikaResource {
         assert(type != StatType.orderedEnum || (enumValues != null && enumValues.isNotEmpty));
 
   final StatType type;
-  final int? min;
-  final int? max;
+  final IntOrAttribute? min;
+  final IntOrAttribute? max;
   final List<String>? enumValues;
+}
+
+final class IntOrAttribute {
+  IntOrAttribute({this.constValue, this.attributeId}) : assert(constValue != null || attributeId != null);
+
+  final int? constValue;
+  final ResourceId? attributeId;
+
+  int getValueForEntity(Entity e) {
+    if (constValue != null) return constValue!;
+    return e.getAttributeValue(attributeId!);
+  }
 }
 
 enum StatType { boolean, integerRange, orderedEnum }
