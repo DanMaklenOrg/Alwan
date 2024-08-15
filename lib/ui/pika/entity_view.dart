@@ -40,6 +40,7 @@ final class EntityView extends StatelessWidget {
         ),
       StatType.integerRange => _IntegerRangeStatTile(
           stat,
+          entity,
           value: statValue == null ? null : int.parse(statValue),
           onChanged: (int val) => userStats.setStatValue(entity, stat, val.toString()),
         ),
@@ -73,16 +74,19 @@ class _BooleanStatTile extends StatelessWidget {
 }
 
 class _IntegerRangeStatTile extends StatelessWidget {
-  _IntegerRangeStatTile(this.stat, {required int? value, required this.onChanged})
+  _IntegerRangeStatTile(this.stat, this.entity, {required int? value, required this.onChanged})
       : assert(stat.type == StatType.integerRange),
-        value = value ?? stat.min!;
+        value = value ?? (stat.min?.getValueForEntity(entity))!;
 
+  final Entity entity;
   final Stat stat;
   final int value;
   final ValueChanged<int> onChanged;
 
   @override
   Widget build(BuildContext context) {
+    var statMin = stat.min!.getValueForEntity(entity);
+    var statMax = stat.max!.getValueForEntity(entity);
     return _StatTile(
       statName: stat.name,
       child: Row(
@@ -91,12 +95,12 @@ class _IntegerRangeStatTile extends StatelessWidget {
           Slider(
             value: value.toDouble(),
             onChanged: (val) => onChanged(val.toInt()),
-            min: stat.min as double,
-            max: stat.max as double,
-            divisions: (stat.max! - stat.min! + 1),
+            min: statMin as double,
+            max: statMax as double,
+            divisions: (statMax - statMin + 1),
             label: value.toString(),
           ),
-          Text("$value/${stat.max}", style: Theme.of(context).textTheme.labelLarge),
+          Text("$value/${statMax}", style: Theme.of(context).textTheme.labelLarge),
         ],
       ),
     );

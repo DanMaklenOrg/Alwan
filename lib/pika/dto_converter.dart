@@ -18,9 +18,17 @@ class DtoConverter {
         StatTypeEnumDto.integerRange => StatType.integerRange,
         StatTypeEnumDto.orderedEnum => StatType.orderedEnum,
       },
-      min: dto.min,
-      max: dto.max,
+      min: fromIntOrAttributeDto(dto.min),
+      max: fromIntOrAttributeDto(dto.max),
       enumValues: dto.enumValues,
+    );
+  }
+
+  IntOrAttribute? fromIntOrAttributeDto(IntOrAttributeDto? dto) {
+    if (dto == null) return null;
+    return IntOrAttribute(
+      constValue: dto.constValue,
+      attributeId: dto.attributeId == null ? null : ResourceId(id: dto.attributeId!),
     );
   }
 
@@ -28,6 +36,7 @@ class DtoConverter {
     return Class(
       id: ResourceId(id: dto.id),
       name: dto.name,
+      attributes: [for (var a in dto.attributes) fromAttributeDto(a)],
       stats: [for (var s in dto.stats) fromStatDto(s)],
     );
   }
@@ -38,8 +47,13 @@ class DtoConverter {
       id: ResourceId(id: dto.id),
       name: dto.name,
       $class: $class,
+      attributes: [for (var a in dto.attributes) fromAttributeDto(a)],
       stats: [for (var s in dto.stats) fromStatDto(s)],
     );
+  }
+
+  Attribute fromAttributeDto(AttributeDto dto) {
+    return Attribute(id: ResourceId(id: dto.id), value: dto.value);
   }
 
   Project fromProjectDto(ProjectDto dto) {

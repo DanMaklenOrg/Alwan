@@ -94,7 +94,7 @@ final class ObjectiveRequirementDto {
 
 @JsonSerializable()
 final class ClassDto {
-  ClassDto({required this.id, required this.name, required this.stats});
+  ClassDto({required this.id, required this.name, required this.attributes, required this.stats});
 
   factory ClassDto.fromJson(Map<String, dynamic> json) => _$ClassDtoFromJson(json);
 
@@ -102,12 +102,13 @@ final class ClassDto {
 
   final String id;
   final String name;
+  final List<AttributeDto> attributes;
   final List<StatDto> stats;
 }
 
 @JsonSerializable()
 final class EntityDto {
-  EntityDto({required this.id, required this.name, required this.$class, required this.stats});
+  EntityDto({required this.id, required this.name, required this.$class, required this.attributes, required this.stats});
 
   factory EntityDto.fromJson(Map<String, dynamic> json) => _$EntityDtoFromJson(json);
 
@@ -117,7 +118,20 @@ final class EntityDto {
   final String name;
   @JsonKey(name: 'class')
   final String $class;
+  final List<AttributeDto> attributes;
   final List<StatDto> stats;
+}
+
+@JsonSerializable()
+final class AttributeDto {
+  AttributeDto({required this.id, required this.value});
+
+  factory AttributeDto.fromJson(Map<String, dynamic> json) => _$AttributeDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AttributeDtoToJson(this);
+
+  final String id;
+  final int value;
 }
 
 @JsonSerializable()
@@ -131,9 +145,22 @@ final class StatDto {
   final String id;
   final String name;
   final StatTypeEnumDto type;
-  final int? min;
-  final int? max;
+  final IntOrAttributeDto? min;
+  final IntOrAttributeDto? max;
   final List<String>? enumValues;
+}
+
+@JsonSerializable()
+final class IntOrAttributeDto {
+  IntOrAttributeDto({this.constValue, this.attributeId})
+    : assert(constValue != null || attributeId != null);
+
+  factory IntOrAttributeDto.fromJson(Map<String, dynamic> json) => _$IntOrAttributeDtoFromJson(json);
+
+  Map<String, dynamic> toJson() => _$IntOrAttributeDtoToJson(this);
+
+  final int? constValue;
+  final String? attributeId;
 }
 
 @JsonEnum(fieldRename: FieldRename.pascal)
