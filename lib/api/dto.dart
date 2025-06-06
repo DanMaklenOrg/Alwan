@@ -26,24 +26,24 @@ final class SignInResponseDto {
 }
 
 @JsonSerializable()
-final class DomainSummaryDto {
-  DomainSummaryDto({required this.id, required this.name});
+final class GameSummaryDto {
+  GameSummaryDto({required this.id, required this.name});
 
-  factory DomainSummaryDto.fromJson(Map<String, dynamic> json) => _$DomainSummaryDtoFromJson(json);
+  factory GameSummaryDto.fromJson(Map<String, dynamic> json) => _$GameSummaryDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DomainSummaryDtoToJson(this);
+  Map<String, dynamic> toJson() => _$GameSummaryDtoToJson(this);
 
   final String id;
   final String name;
 }
 
 @JsonSerializable()
-final class DomainDto {
-  DomainDto({required this.id, required this.name, required this.projects, required this.classes, required this.entities});
+final class GameDto {
+  GameDto({required this.id, required this.name, required this.projects, required this.classes, required this.entities});
 
-  factory DomainDto.fromJson(Map<String, dynamic> json) => _$DomainDtoFromJson(json);
+  factory GameDto.fromJson(Map<String, dynamic> json) => _$GameDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DomainDtoToJson(this);
+  Map<String, dynamic> toJson() => _$GameDtoToJson(this);
 
   final String id;
   final String name;

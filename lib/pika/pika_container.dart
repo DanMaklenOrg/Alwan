@@ -10,7 +10,7 @@ final class PikaContainer {
         entities = {},
         projects = [];
 
-  late final Domain domain;
+  late final Game game;
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
   final List<Project> projects;
@@ -25,17 +25,17 @@ final class PikaContainer {
 final class PikaContainerBuilder {
   final PikaContainer container = PikaContainer.empty();
 
-  late final DomainDto _domain;
+  late final GameDto _game;
   final List<ClassDto> _classesDto = [];
   final List<EntityDto> _entitiesDto = [];
   final List<ProjectDto> _projectsDto = [];
 
-  void loadDomain(DomainDto domain, {bool listDomain = true}) {
-    final domainList = [domain];
-    _classesDto.addAll(domainList.expand((d) => d.classes));
-    _entitiesDto.addAll(domainList.expand((d) => d.entities));
-    _projectsDto.addAll(domainList.expand((d) => d.projects));
-    _domain = domain;
+  void loadGame(GameDto game, {bool listGame = true}) {
+    final gameList = [game];
+    _classesDto.addAll(gameList.expand((d) => d.classes));
+    _entitiesDto.addAll(gameList.expand((d) => d.entities));
+    _projectsDto.addAll(gameList.expand((d) => d.projects));
+    _game = game;
   }
 
   PikaContainer build() {
@@ -43,7 +43,7 @@ final class PikaContainerBuilder {
     container.classes.addResourceList(_classesDto.map(converter.fromClassDto));
     container.entities.addResourceList(_entitiesDto.map(converter.fromEntityDto));
     container.projects.addAll(_projectsDto.map(converter.fromProjectDto));
-    container.domain = converter.fromDomainDto(_domain);
+    container.game = converter.fromGameDto(_game);
     return container;
   }
 }

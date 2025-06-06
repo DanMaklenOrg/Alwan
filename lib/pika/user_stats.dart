@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'models.dart';
 
 class UserStats extends ChangeNotifier {
-  UserStats(this.rootDomainId, List<UserEntityStat> userStats)
+  UserStats(this.rootGameId, List<UserEntityStat> userStats)
       : _rawDict = {for (var s in userStats) (s.entityId, s.statId): s.value};
 
 
-  final String rootDomainId;
+  final String rootGameId;
   final Map<(ResourceId, ResourceId), String> _rawDict;
 
   setStatValue(Entity entity, Stat stat, String val) {

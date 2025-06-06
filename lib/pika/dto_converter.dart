@@ -78,8 +78,8 @@ class DtoConverter {
     );
   }
 
-  Domain fromDomainDto(DomainDto dto) {
-    return Domain(id: ResourceId(id: dto.id), name: dto.name);
+  Game fromGameDto(GameDto dto) {
+    return Game(id: ResourceId(id: dto.id), name: dto.name);
   }
 
   UserEntityStat fromUserEntityStatDto(UserEntityStatDto dto) {
