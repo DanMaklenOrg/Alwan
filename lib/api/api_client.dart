@@ -13,29 +13,29 @@ class ApiClient {
     return SignInResponseDto.fromJson(response.data);
   }
 
-  Future<DomainDto> getDomain(String domainId) async {
-    var response = await _dio.get('/pika/domain/$domainId');
-    return DomainDto.fromJson(response.data);
+  Future<GameDto> getGame(String gameId) async {
+    var response = await _dio.get('/pika/game/$gameId');
+    return GameDto.fromJson(response.data);
   }
 
-  Future<List<DomainSummaryDto>> getAllDomains() async {
-    var response = await _dio.get('/pika/domain/all');
-    return (response.data as List).map((e) => DomainSummaryDto.fromJson(e)).toList();
+  Future<List<GameSummaryDto>> getAllGames() async {
+    var response = await _dio.get('/pika/game/all');
+    return (response.data as List).map((e) => GameSummaryDto.fromJson(e)).toList();
   }
 
-  Future<UserStatsDto> getUserStat(String domainId) async {
+  Future<UserStatsDto> getUserStat(String gameId) async {
     var token = serviceProvider.get<AppState>().auth.token;
     var response = await _dio.get(
-      '/pika/domain/$domainId/stats',
+      '/pika/game/$gameId/stats',
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );    return UserStatsDto.fromJson(response.data);
   }
 
-  Future setUserStat(String domainId, UserStatsDto userStatsDto) async {
+  Future setUserStat(String gameId, UserStatsDto userStatsDto) async {
     var token = serviceProvider.get<AppState>().auth.token;
     var json = userStatsDto.toJson();
     await _dio.post(
-      '/pika/domain/$domainId/stats',
+      '/pika/game/$gameId/stats',
       data: json,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );

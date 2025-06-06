@@ -14,14 +14,14 @@ import 'package:provider/provider.dart';
 import 'pika_resource_list_view.dart';
 import 'entity_view.dart';
 
-class PikaDomainView extends StatefulWidget {
-  const PikaDomainView({super.key});
+class PikaGameView extends StatefulWidget {
+  const PikaGameView({super.key});
 
   @override
-  State<PikaDomainView> createState() => _PikaDomainViewState();
+  State<PikaGameView> createState() => _PikaGameViewState();
 }
 
-class _PikaDomainViewState extends State<PikaDomainView> {
+class _PikaGameViewState extends State<PikaGameView> {
   Project? _selectedProject;
   Objective? _selectedObjective;
   Entity? _selectedEntity;
@@ -118,6 +118,6 @@ class _PikaDomainViewState extends State<PikaDomainView> {
     var converter = DtoConverter();
     var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
     var dto = UserStatsDto(entityStats: entityStats);
-    await serviceProvider.get<ApiClient>().setUserStat(userStats.rootDomainId, dto);
+    await serviceProvider.get<ApiClient>().setUserStat(userStats.rootGameId, dto);
   }
 }

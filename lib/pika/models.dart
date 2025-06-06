@@ -35,8 +35,8 @@ abstract class PikaResource implements Comparable<PikaResource> {
   int compareTo(PikaResource other) => name.compareTo(other.name);
 }
 
-final class Domain extends PikaResource {
-  Domain({required super.id, required super.name});
+final class Game extends PikaResource {
+  Game({required super.id, required super.name});
 }
 
 final class Project extends PikaResource {
