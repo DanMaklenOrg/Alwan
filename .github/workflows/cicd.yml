@@ -27,7 +27,7 @@ jobs:
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build web --dart-define-from-file=lib/config/prod.json --release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: alwanReleaseBuildArtifact
           path: build/web
@@ -39,7 +39,7 @@ jobs:
     needs:
       - build
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: alwanReleaseBuildArtifact
       - run: aws s3 sync . s3://alwan --delete
