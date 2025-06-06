@@ -8,12 +8,12 @@ final class PikaContainer {
   PikaContainer.empty()
       : classes = {},
         entities = {},
-        projects = [];
+        achievements = [];
 
   late final Game game;
   final ResourceMap<Class> classes;
   final ResourceMap<Entity> entities;
-  final List<Project> projects;
+  final List<Achievement> achievements;
 
   List<Entity> getEntitiesMatchingObjective(Objective? objective) {
     if (objective == null) return entities.toResourceList();
@@ -28,13 +28,13 @@ final class PikaContainerBuilder {
   late final GameDto _game;
   final List<ClassDto> _classesDto = [];
   final List<EntityDto> _entitiesDto = [];
-  final List<ProjectDto> _projectsDto = [];
+  final List<AchievementDto> _achievementDto = [];
 
   void loadGame(GameDto game, {bool listGame = true}) {
     final gameList = [game];
     _classesDto.addAll(gameList.expand((d) => d.classes));
     _entitiesDto.addAll(gameList.expand((d) => d.entities));
-    _projectsDto.addAll(gameList.expand((d) => d.projects));
+    _achievementDto.addAll(gameList.expand((d) => d.achievements));
     _game = game;
   }
 
@@ -42,7 +42,7 @@ final class PikaContainerBuilder {
     DtoConverter converter = DtoConverter(container);
     container.classes.addResourceList(_classesDto.map(converter.fromClassDto));
     container.entities.addResourceList(_entitiesDto.map(converter.fromEntityDto));
-    container.projects.addAll(_projectsDto.map(converter.fromProjectDto));
+    container.achievements.addAll(_achievementDto.map(converter.fromAchievementDto));
     container.game = converter.fromGameDto(_game);
     return container;
   }
