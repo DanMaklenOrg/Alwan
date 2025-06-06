@@ -7,7 +7,7 @@ import 'package:alwan/pika/user_stats.dart';
 import 'package:alwan/service_provider.dart';
 import 'package:alwan/ui/building_blocks/loading_icon_button.dart';
 import 'package:alwan/ui/pika/pika_filter_state.dart';
-import 'package:alwan/ui/pika/project_view.dart';
+import 'package:alwan/ui/pika/achievement_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +22,7 @@ class PikaGameView extends StatefulWidget {
 }
 
 class _PikaGameViewState extends State<PikaGameView> {
-  Project? _selectedProject;
+  Achievement? _selectedAchievement;
   Objective? _selectedObjective;
   Entity? _selectedEntity;
 
@@ -64,33 +64,33 @@ class _PikaGameViewState extends State<PikaGameView> {
   Row _buildMainView() {
     return Row(
       children: [
-        Expanded(child: _buildProjectColumn()),
+        Expanded(child: _buildAchievementColumn()),
         Expanded(child: _buildEntityList()),
         Expanded(child: _selectedEntity != null ? EntityView(entity: _selectedEntity!) : Container()),
       ],
     );
   }
 
-  Widget _buildProjectColumn() {
+  Widget _buildAchievementColumn() {
     var container = context.read<PikaContainer>();
     var filterState = context.watch<PikaFilterState>();
     var userStats = context.watch<UserStats>();
-    var list = PikaResourceListView<Project>(
-      resourceList: filterState.filterProject(container.projects, userStats),
-      selectedResource: _selectedProject,
-      onSelection: (project) => setState(() {
+    var list = PikaResourceListView<Achievement>(
+      resourceList: filterState.filterAchievement(container.achievements, userStats),
+      selectedResource: _selectedAchievement,
+      onSelection: (achievement) => setState(() {
         _selectedEntity = null;
         _selectedObjective = null;
-        _selectedProject = project;
+        _selectedAchievement = achievement;
       }),
     );
-    if (_selectedProject == null) return list;
+    if (_selectedAchievement == null) return list;
     return Column(
       children: [
         Expanded(child: list),
         Expanded(
-            child: ProjectView(
-          project: _selectedProject!,
+            child: AchievementView(
+          achievement: _selectedAchievement!,
           selectedObjective: _selectedObjective,
           onSelection: (o) => setState(() {
             _selectedEntity = null;

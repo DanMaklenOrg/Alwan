@@ -56,8 +56,8 @@ class DtoConverter {
     return Attribute(id: ResourceId(id: dto.id), value: dto.value);
   }
 
-  Project fromProjectDto(ProjectDto dto) {
-    return Project(
+  Achievement fromAchievementDto(AchievementDto dto) {
+    return Achievement(
       id: ResourceId(id: dto.id),
       name: dto.name,
       objectives: [

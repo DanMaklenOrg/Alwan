@@ -39,7 +39,7 @@ final class GameSummaryDto {
 
 @JsonSerializable()
 final class GameDto {
-  GameDto({required this.id, required this.name, required this.projects, required this.classes, required this.entities});
+  GameDto({required this.id, required this.name, required this.achievements, required this.classes, required this.entities});
 
   factory GameDto.fromJson(Map<String, dynamic> json) => _$GameDtoFromJson(json);
 
@@ -47,18 +47,18 @@ final class GameDto {
 
   final String id;
   final String name;
-  final List<ProjectDto> projects;
+  final List<AchievementDto> achievements;
   final List<ClassDto> classes;
   final List<EntityDto> entities;
 }
 
 @JsonSerializable()
-final class ProjectDto {
-  ProjectDto({required this.id, required this.name, required this.objectives});
+final class AchievementDto {
+  AchievementDto({required this.id, required this.name, required this.objectives});
 
-  factory ProjectDto.fromJson(Map<String, dynamic> json) => _$ProjectDtoFromJson(json);
+  factory AchievementDto.fromJson(Map<String, dynamic> json) => _$AchievementDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ProjectDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AchievementDtoToJson(this);
 
   final String id;
   final String name;

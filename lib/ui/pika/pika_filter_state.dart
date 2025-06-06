@@ -12,8 +12,8 @@ class PikaFilterState extends ChangeNotifier {
     }).toList();
   }
 
-  List<Project> filterProject(List<Project> projectList, UserStats userStats) {
-    return projectList.where((p) {
+  List<Achievement> filterAchievement(List<Achievement> achievementList, UserStats userStats) {
+    return achievementList.where((p) {
       return true;
     }).toList();
   }

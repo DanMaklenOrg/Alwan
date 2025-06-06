@@ -39,8 +39,8 @@ final class Game extends PikaResource {
   Game({required super.id, required super.name});
 }
 
-final class Project extends PikaResource {
-  Project({required super.id, required super.name, required this.objectives});
+final class Achievement extends PikaResource {
+  Achievement({required super.id, required super.name, required this.objectives});
 
   List<Objective> objectives;
 }
