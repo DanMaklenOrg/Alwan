@@ -46,8 +46,7 @@ class _GameViewState extends State<GameWidget> {
     return AlwanDataTable<Achievement>(
       values: widget.game.achievements,
       columns: ['Title', 'Description', 'Progress'],
-      rowBuilder: (context, a, isSelected) =>
-      [
+      rowBuilder: (context, a, isSelected) => [
         AlwanDataCell.text(context, a.name, isSelected),
         AlwanDataCell.longText(context, a.description ?? '', isSelected),
         AlwanDataCell.checkBox(context, false, (b) {}),
@@ -57,8 +56,12 @@ class _GameViewState extends State<GameWidget> {
     );
   }
 
-  AchievementDetails? _buildAchievementDetails() {
+  Widget? _buildAchievementDetails() {
     if (_selectedAchievement == null) return null;
-    return AchievementDetails(achievement: _selectedAchievement!);
+    return AchievementDetails(
+      achievement: _selectedAchievement!,
+      selectedObjective: _selectedObjective,
+      onObjectiveSelect: (o) => setState(() => _selectedObjective = o),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AlwanDataTable<T> extends StatelessWidget {
-  const AlwanDataTable({super.key, required this.values, required this.columns, required this.rowBuilder, this.selected, required this.onSelect});
+  const AlwanDataTable({super.key, required this.values, required this.columns, required this.rowBuilder, required this.selected, required this.onSelect});
 
   final List<T> values;
   final List<String> columns;
