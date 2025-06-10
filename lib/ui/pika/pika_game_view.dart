@@ -1,10 +1,5 @@
-import 'package:alwan/api/api_client.dart';
-import 'package:alwan/api/dto.dart';
-import 'package:alwan/api/dto_converter.dart';
-import 'package:alwan/pika/game_models.dart';
-import 'package:alwan/pika/pika_container.dart';
-import 'package:alwan/pika/user_stats.dart';
-import 'package:alwan/service_provider.dart';
+import 'package:alwan/pika/domain/game_models.dart';
+import 'package:alwan/pika/domain/game_progress_models.dart';
 import 'package:alwan/ui/building_blocks/loading_icon_button.dart';
 import 'package:alwan/ui/pika/pika_filter_state.dart';
 import 'package:alwan/ui/pika/achievement_view.dart';
@@ -12,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'pika_resource_list_view.dart';
-import 'entity_view.dart';
 
 class PikaGameView extends StatefulWidget {
   const PikaGameView({super.key});
@@ -66,15 +60,14 @@ class _PikaGameViewState extends State<PikaGameView> {
       children: [
         Expanded(child: _buildAchievementColumn()),
         Expanded(child: _buildEntityList()),
-        Expanded(child: _selectedEntity != null ? EntityView(entity: _selectedEntity!) : Container()),
       ],
     );
   }
 
   Widget _buildAchievementColumn() {
-    var container = context.read<PikaContainer>();
+    var container = context.read<Game>();
     var filterState = context.watch<PikaFilterState>();
-    var userStats = context.watch<UserStats>();
+    var userStats = context.watch<GameProgress>();
     var list = PikaResourceListView<Achievement>(
       resourceList: filterState.filterAchievement(container.achievements, userStats),
       selectedResource: _selectedAchievement,
@@ -102,10 +95,10 @@ class _PikaGameViewState extends State<PikaGameView> {
   }
 
   Widget _buildEntityList() {
-    var container = context.read<PikaContainer>();
+    var container = context.read<Game>();
     var filterState = context.watch<PikaFilterState>();
-    var userStats = context.watch<UserStats>();
-    var entityList = container.getEntitiesMatchingObjective(_selectedObjective);
+    var userStats = context.watch<GameProgress>();
+    var entityList = <Entity>[];
     return PikaResourceListView<Entity>(
       resourceList: filterState.filterEntity(entityList, userStats),
       selectedResource: _selectedEntity,
@@ -115,9 +108,9 @@ class _PikaGameViewState extends State<PikaGameView> {
 
   Future _saveUserStats() async {
     // TODO: Finish Save UserStats
-    var userStats = context.read<UserStats>();
-    var converter = DtoConverter();
-    var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
+    // var userStats = context.read<GameProgress>();
+    // var converter = DtoConverter();
+    // var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
     // var dto = GameProgressDto(entityStats: entityStats);
     // await serviceProvider.get<ApiClient>().setUserStat(userStats.rootGameId, dto);
   }

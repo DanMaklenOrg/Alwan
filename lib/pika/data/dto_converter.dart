@@ -1,7 +1,7 @@
 import 'package:alwan/api/dto.dart';
-import 'package:alwan/pika/user_stats.dart';
 
-import '../pika/game_models.dart';
+import '../domain/game_models.dart';
+import '../domain/game_progress_models.dart';
 
 class DtoConverter {
   Game fromGameDto(GameDto game) {

@@ -1,4 +1,4 @@
-import 'package:alwan/pika/game_models.dart';
+import 'package:alwan/pika/domain/game_models.dart';
 import 'package:alwan/ui/pika/pika_resource_list_view.dart';
 import 'package:flutter/material.dart';
 
