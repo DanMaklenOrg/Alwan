@@ -1,7 +1,7 @@
 import 'package:alwan/api/api_client.dart';
 import 'package:alwan/api/dto.dart';
-import 'package:alwan/pika/dto_converter.dart';
-import 'package:alwan/pika/models.dart';
+import 'package:alwan/api/dto_converter.dart';
+import 'package:alwan/pika/game_models.dart';
 import 'package:alwan/pika/pika_container.dart';
 import 'package:alwan/pika/user_stats.dart';
 import 'package:alwan/service_provider.dart';
@@ -114,10 +114,11 @@ class _PikaGameViewState extends State<PikaGameView> {
   }
 
   Future _saveUserStats() async {
+    // TODO: Finish Save UserStats
     var userStats = context.read<UserStats>();
     var converter = DtoConverter();
     var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
-    var dto = UserStatsDto(entityStats: entityStats);
-    await serviceProvider.get<ApiClient>().setUserStat(userStats.rootGameId, dto);
+    // var dto = GameProgressDto(entityStats: entityStats);
+    // await serviceProvider.get<ApiClient>().setUserStat(userStats.rootGameId, dto);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:alwan/pika/models.dart';
+import 'package:alwan/pika/game_models.dart';
 
 typedef ResourceMap<T extends PikaResource> = Map<ResourceId, T>;
 
