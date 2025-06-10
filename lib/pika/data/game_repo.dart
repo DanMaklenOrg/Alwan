@@ -1,12 +1,13 @@
 import 'package:alwan/api/api_client.dart';
-import 'package:alwan/service_provider.dart';
 
 import '../domain/game_models.dart';
 import '../domain/i_game_repo.dart';
 import 'dto_converter.dart';
 
-sealed class GameRepo implements IGameRepo {
-  final ApiClient client = serviceProvider.get<ApiClient>();
+final class GameRepo implements IGameRepo {
+  GameRepo(this.client);
+
+  final ApiClient client;
 
   @override
   Future<Game> getGame(String gameId) async {
