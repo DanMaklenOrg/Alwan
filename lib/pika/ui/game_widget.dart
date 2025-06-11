@@ -17,6 +17,8 @@ class _GameViewState extends State<GameWidget> {
   Achievement? _selectedAchievement;
   Objective? _selectedObjective;
 
+  bool progress = false;
+
   @override
   Widget build(BuildContext context) {
     return _buildLayout(
@@ -30,6 +32,7 @@ class _GameViewState extends State<GameWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(child: left),
+        SizedBox(width: 32),
         Expanded(
           child: Column(
             children: [
@@ -45,11 +48,11 @@ class _GameViewState extends State<GameWidget> {
   Widget _buildAchievementList() {
     return AlwanDataTable<Achievement>(
       values: widget.game.achievements,
-      columns: ['Title', 'Description', 'Progress'],
+      columns: ['Achievement Title', 'Description', 'Progress'],
       rowBuilder: (context, a, isSelected) => [
         AlwanDataCell.text(context, a.name, isSelected),
         AlwanDataCell.longText(context, a.description ?? '', isSelected),
-        AlwanDataCell.checkBox(context, false, (b) {}),
+        AlwanDataCell.checkBox(context, '??%', progress, isSelected, () => setState(() => progress = !progress)),
       ],
       selected: _selectedAchievement,
       onSelect: (a) => setState(() => _selectedAchievement = a),

@@ -11,10 +11,12 @@ class AlwanDataTable<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      showCheckboxColumn: false,
-      columns: [for (var c in columns) _buildHeader(context, c)],
-      rows: [for (var v in values) _buildRow(context, v)],
+    return SingleChildScrollView(
+      child: DataTable(
+        showCheckboxColumn: false,
+        columns: [for (var c in columns) _buildHeader(context, c)],
+        rows: [for (var v in values) _buildRow(context, v)],
+      ),
     );
   }
 
@@ -50,8 +52,18 @@ sealed class AlwanDataCell {
     );
   }
 
-  static DataCell checkBox(BuildContext context, bool checked, ValueChanged<bool?> onChanged) {
-    return DataCell(Checkbox(value: checked, onChanged: onChanged));
+  static DataCell checkBox(BuildContext context, String label, bool checked, bool isRowSelected, VoidCallback onTap) {
+    return DataCell(
+      IgnorePointer(
+        child: Row(
+          children: [
+            Checkbox(value: checked, onChanged: (_) {}),
+            Text(label, style: _textStyle(context, isRowSelected)),
+          ],
+        ),
+      ),
+      onTap: onTap,
+    );
   }
 
   static TextStyle? _textStyle(BuildContext context, bool isSelected) =>

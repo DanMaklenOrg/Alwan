@@ -33,7 +33,7 @@ final class PikaHomeScreen extends StatelessWidget {
       child: Card(
         child: Align(
           alignment: Alignment.center,
-          child: Text(game.name, style: Theme.of(context).textTheme.headlineSmall),
+          child: Text(game.name, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
         ),
       ),
     );
