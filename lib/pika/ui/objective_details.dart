@@ -5,9 +5,10 @@ import 'description_box.dart';
 import 'progress_card.dart';
 
 final class ObjectiveDetails extends StatelessWidget {
-  const ObjectiveDetails({super.key, required this.objective});
+  const ObjectiveDetails({super.key, required this.objective, required this.onChecklistTap});
 
   final Objective objective;
+  final VoidCallback onChecklistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ final class ObjectiveDetails extends StatelessWidget {
     return Row(
       children: [
         ProgressCard(title: 'Overall', icon: Icons.insights, progress: 100),
-        if (objective.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: () {}),
+        if (objective.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: onChecklistTap),
       ],
     );
   }

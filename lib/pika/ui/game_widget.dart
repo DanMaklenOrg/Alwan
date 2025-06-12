@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
 import 'achievement_details.dart';
+import 'entity_checklist_panel.dart';
 import 'objective_details.dart';
 
 class GameWidget extends StatefulWidget {
@@ -24,8 +25,8 @@ class _GameViewState extends State<GameWidget> {
   Widget build(BuildContext context) {
     return _buildLayout(
       left: _buildAchievementList(),
-      topRight: _selectedAchievement == null ? null : _buildAchievementDetails(),
-      bottomRight: _selectedObjective == null ? null : _buildObjectiveDetails(),
+      topRight: _selectedAchievement == null ? null : _buildAchievementDetails(context),
+      bottomRight: _selectedObjective == null ? null : _buildObjectiveDetails(context),
     );
   }
 
@@ -69,15 +70,25 @@ class _GameViewState extends State<GameWidget> {
     );
   }
 
-  Widget _buildAchievementDetails() {
+  Widget _buildAchievementDetails(BuildContext context) {
     return AchievementDetails(
       achievement: _selectedAchievement!,
       selectedObjective: _selectedObjective,
       onObjectiveSelect: (o) => setState(() => _selectedObjective = o),
+      onChecklistTap: () => showEntityChecklistPanel(
+        context,
+        entityList: widget.game.entitiesByCategoryId(_selectedAchievement!.criteriaCategory!),
+      ),
     );
   }
 
-  Widget _buildObjectiveDetails() {
-    return ObjectiveDetails(objective: _selectedObjective!);
+  Widget _buildObjectiveDetails(BuildContext context) {
+    return ObjectiveDetails(
+      objective: _selectedObjective!,
+      onChecklistTap: () => showEntityChecklistPanel(
+        context,
+        entityList: widget.game.entitiesByCategoryId(_selectedObjective!.criteriaCategory!),
+      ),
+    );
   }
 }

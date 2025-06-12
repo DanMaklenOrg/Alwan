@@ -41,6 +41,8 @@ final class Game extends PikaResource {
   List<Achievement> achievements;
   List<Category> categories;
   List<Entity> entities;
+
+  List<Entity> entitiesByCategoryId(ResourceId categoryId) => entities.where((e) => e.category == categoryId).toList();
 }
 
 final class Achievement extends PikaResource {

@@ -6,11 +6,12 @@ import 'description_box.dart';
 import 'progress_card.dart';
 
 final class AchievementDetails extends StatelessWidget {
-  const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
+  const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect, required this.onChecklistTap});
 
   final Achievement achievement;
   final Objective? selectedObjective;
   final ValueChanged<Objective?> onObjectiveSelect;
+  final VoidCallback onChecklistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ final class AchievementDetails extends StatelessWidget {
       children: [
         ProgressCard(title: 'Overall', icon: Icons.insights, progress: 100),
         if (achievement.objectives.isNotEmpty) ProgressCard(title: 'Objective', icon: Icons.task_alt, progress: 100),
-        if (achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: () {}),
+        if (achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: onChecklistTap),
       ],
     );
   }
