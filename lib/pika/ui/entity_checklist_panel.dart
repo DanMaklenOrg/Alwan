@@ -9,59 +9,37 @@ class EntityChecklistPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _buildLayout(Column(children: [
+      SizedBox(height: 8),
+      Text('Checklist', style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.left),
+      SizedBox(height: 8),
+      Expanded(child: _buildList()),
+    ]));
+  }
+
+  Widget _buildLayout(Widget child) {
     return Align(
       alignment: Alignment.centerRight,
-      child: Material(
-        // color: Colors.white,
-        child: Container(
-          width: 300,
-          height: double.infinity,
-          padding: const EdgeInsets.all(16),
-          child: ListView(
-            children: [
-              const Text("Checklist", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              ...entityList.asMap().entries.map((entry) {
-                final index = entry.key;
-                final item = entry.value;
-                return CheckboxListTile(
-                  title: Text(item.name),
-                  value: false,
-                  onChanged: (val) {
-                    // setState(() => item.isChecked = val ?? false);
-                  },
-                );
-              }),
-            ],
-          ),
-        ),
+      child: FractionallySizedBox(
+        widthFactor: 0.3,
+        child: Material(child: child),
       ),
     );
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Material(
-  //     child: Container(
-  //       width: 300,
-  //       child: ListView.builder(
-  //           itemCount: entityList.length,
-  //           itemBuilder: (context, index) {
-  //             return CheckboxListTile(
-  //               title: Text(entityList[index].name),
-  //               value: false,
-  //               onChanged: (b) {},
-  //             );
-  //           }),
-  //     ),
-  //   );
-  // }
+  Widget _buildList() {
+    return ListView.builder(
+      itemCount: entityList.length,
+      itemBuilder: (_, i) => CheckboxListTile(title: Text(entityList[i].name), value: false, onChanged: (b) {}),
+    );
+  }
 }
 
 void showEntityChecklistPanel(BuildContext context, {required List<Entity> entityList}) {
   showGeneralDialog(
     context: context,
-
+    barrierLabel: 'DismissChecklistSideSheet',
+    barrierDismissible: true,
     pageBuilder: (_, __, ___) => EntityChecklistPanel(entityList: entityList),
   );
 }
