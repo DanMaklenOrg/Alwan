@@ -1,8 +1,8 @@
-import 'package:alwan/pika/domain/game_models.dart';
-import 'package:alwan/pika/ui/achievement_details.dart';
+import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
 import 'package:flutter/material.dart';
 
-import '../../ui/building_blocks/alwan_data_table.dart';
+import '../domain/game_models.dart';
+import 'achievement_details.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key, required this.game});
@@ -23,7 +23,8 @@ class _GameViewState extends State<GameWidget> {
   Widget build(BuildContext context) {
     return _buildLayout(
       left: _buildAchievementList(),
-      topRight: _buildAchievementDetails(),
+      topRight: _selectedAchievement == null ? null : _buildAchievementDetails(),
+      bottomRight: _selectedObjective == null ? null : _buildObjectiveDetails(),
     );
   }
 
@@ -55,12 +56,22 @@ class _GameViewState extends State<GameWidget> {
         AlwanDataCell.checkBox(context, '??%', progress, isSelected, () => setState(() => progress = !progress)),
       ],
       selected: _selectedAchievement,
-      onSelect: (a) => setState(() => _selectedAchievement = a),
+      onSelect: (a) => setState(() {
+        _selectedObjective = null;
+        _selectedAchievement = a;
+      }),
     );
   }
 
-  Widget? _buildAchievementDetails() {
-    if (_selectedAchievement == null) return null;
+  Widget _buildAchievementDetails() {
+    return AchievementDetails(
+      achievement: _selectedAchievement!,
+      selectedObjective: _selectedObjective,
+      onObjectiveSelect: (o) => setState(() => _selectedObjective = o),
+    );
+  }
+
+  Widget _buildObjectiveDetails() {
     return AchievementDetails(
       achievement: _selectedAchievement!,
       selectedObjective: _selectedObjective,

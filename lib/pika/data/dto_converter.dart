@@ -20,7 +20,7 @@ class DtoConverter {
       name: dto.name,
       description: dto.description,
       objectives: dto.objectives?.map(fromObjectiveDto).toList() ?? [],
-      criterionCategory: dto.criterionCategory == null ? null : ResourceId(id: dto.criterionCategory!),
+      criteriaCategory: dto.criteriaCategory == null ? null : ResourceId(id: dto.criteriaCategory!),
     );
   }
 
@@ -28,7 +28,7 @@ class DtoConverter {
     return Objective(
       id: ResourceId(id: dto.id),
       name: dto.name,
-      criterionCategory: dto.criterionCategory == null ? null : ResourceId(id: dto.criterionCategory!),
+      criteriaCategory: dto.criteriaCategory == null ? null : ResourceId(id: dto.criteriaCategory!),
       description: dto.description,
     );
   }

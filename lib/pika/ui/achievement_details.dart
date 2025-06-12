@@ -12,55 +12,74 @@ final class AchievementDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _buildLayout(
+      title: _buildTitle(context),
+      progress: _buildProgressSummary(context),
+      description: achievement.description == null ? null : _buildDescription(context),
+      objectives: achievement.objectives.isEmpty ? null : _buildObjectiveList(),
+    );
+  }
+
+  Widget _buildLayout({required Widget title, required Widget progress, required Widget? description, required Widget? objectives}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildTitle(context),
         Row(
-          children: [
-            Expanded(child: _buildDescription()),
-            _buildProgressSummary(context),
-          ],
+          children: [SizedBox(width: 8), Expanded(child: title), progress, SizedBox(width: 4)],
         ),
-        Expanded(child: _buildObjectiveList()),
+        if (description != null) description,
+        if (objectives != null) Expanded(child: objectives),
       ],
     );
   }
 
   Widget _buildTitle(BuildContext context) {
-    return Text(achievement.name, style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center);
+    return Text(achievement.name, style: Theme.of(context).textTheme.headlineSmall);
   }
 
-  Widget _buildDescription() {
-    if (achievement.description == null) return Container();
+  Widget _buildDescription(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(maxHeight: 150),
+      margin: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 5, style: BorderStyle.solid, strokeAlign: 2)
+        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      padding: EdgeInsets.all(8),
-      child: Text(achievement.description!),
+      padding: EdgeInsets.all(12),
+      child: SingleChildScrollView(child: Text(achievement.description!)),
     );
   }
 
   Widget _buildProgressSummary(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          _buildProgressCard(context, 'Overall', Icons.insights, 100),
-        ],
-      ),
+    return Row(
+      children: [
+        _buildProgressCard('Overall', Icons.insights, 100),
+        if(achievement.objectives.isNotEmpty) _buildProgressCard('Objective', Icons.task_alt, 100),
+        if(achievement.criteriaCategory != null) _buildProgressCard('Criteria', Icons.checklist, 100, () {}),
+      ],
     );
   }
 
-  Widget _buildProgressCard(BuildContext context, String title, IconData icon, int progress) {
+  Widget _buildProgressCard(String title, IconData icon, int progress, [VoidCallback? onTap]) {
     return Card(
-      child: Column(
-        children: [
-          Icon(icon),
-          Text(title),
-          Text('$progress%'),
-        ],
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          height: 50,
+          width: 75,
+          margin: EdgeInsets.all(4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(icon), SizedBox(width: 4), Text('$progress%')],
+              ),
+              Text(title),
+            ],
+          ),
+        ),
       ),
     );
   }

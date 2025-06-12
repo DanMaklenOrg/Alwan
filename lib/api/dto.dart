@@ -54,7 +54,7 @@ final class GameDto {
 
 @JsonSerializable()
 final class AchievementDto {
-  AchievementDto({required this.id, required this.name, this.description, this.objectives, this.criterionCategory});
+  AchievementDto({required this.id, required this.name, this.description, this.objectives, this.criteriaCategory});
 
   factory AchievementDto.fromJson(Map<String, dynamic> json) => _$AchievementDtoFromJson(json);
 
@@ -64,12 +64,12 @@ final class AchievementDto {
   final String name;
   final String? description;
   final List<ObjectiveDto>? objectives;
-  final String? criterionCategory;
+  final String? criteriaCategory;
 }
 
 @JsonSerializable()
 final class ObjectiveDto {
-  ObjectiveDto({required this.id, required this.name, this.description, this.criterionCategory});
+  ObjectiveDto({required this.id, required this.name, this.description, this.criteriaCategory});
 
   factory ObjectiveDto.fromJson(Map<String, dynamic> json) => _$ObjectiveDtoFromJson(json);
 
@@ -78,7 +78,7 @@ final class ObjectiveDto {
   final String id;
   final String name;
   final String? description;
-  final String? criterionCategory;}
+  final String? criteriaCategory;}
 
 @JsonSerializable()
 final class CategoryDto {

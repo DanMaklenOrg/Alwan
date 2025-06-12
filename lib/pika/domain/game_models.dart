@@ -44,18 +44,18 @@ final class Game extends PikaResource {
 }
 
 final class Achievement extends PikaResource {
-  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criterionCategory});
+  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory});
 
   final String? description;
   final List<Objective> objectives;
-  final ResourceId? criterionCategory;
+  final ResourceId? criteriaCategory;
 }
 
 final class Objective extends PikaResource {
-  Objective({required super.id, required super.name, this.description, this.criterionCategory});
+  Objective({required super.id, required super.name, this.description, this.criteriaCategory});
 
   final String? description;
-  final ResourceId? criterionCategory;
+  final ResourceId? criteriaCategory;
 }
 
 final class Category extends PikaResource {
