@@ -28,8 +28,8 @@ class DtoConverter {
     return Objective(
       id: ResourceId(id: dto.id),
       name: dto.name,
-      criteriaCategory: dto.criteriaCategory == null ? null : ResourceId(id: dto.criteriaCategory!),
       description: dto.description,
+      criteriaCategory: dto.criteriaCategory == null ? null : ResourceId(id: dto.criteriaCategory!),
     );
   }
 

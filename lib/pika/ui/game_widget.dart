@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
 import 'achievement_details.dart';
+import 'objective_details.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key, required this.game});
@@ -37,8 +38,13 @@ class _GameViewState extends State<GameWidget> {
         Expanded(
           child: Column(
             children: [
-              if (topRight != null) Expanded(child: topRight),
-              if (bottomRight != null) Expanded(child: bottomRight),
+              if (topRight != null) Expanded(flex: 2, child: topRight),
+              if (bottomRight != null) ...[
+                // SizedBox(height: 8),
+                Divider(thickness: 4, height: 12, radius: BorderRadiusGeometry.circular(12)),
+                // SizedBox(height: 8),
+                Expanded(flex: 1, child: bottomRight),
+              ]
             ],
           ),
         )
@@ -72,10 +78,6 @@ class _GameViewState extends State<GameWidget> {
   }
 
   Widget _buildObjectiveDetails() {
-    return AchievementDetails(
-      achievement: _selectedAchievement!,
-      selectedObjective: _selectedObjective,
-      onObjectiveSelect: (o) => setState(() => _selectedObjective = o),
-    );
+    return ObjectiveDetails(objective: _selectedObjective!);
   }
 }

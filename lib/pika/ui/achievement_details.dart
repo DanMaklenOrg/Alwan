@@ -2,6 +2,8 @@ import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
+import 'description_box.dart';
+import 'progress_card.dart';
 
 final class AchievementDetails extends StatelessWidget {
   const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
@@ -38,49 +40,16 @@ final class AchievementDetails extends StatelessWidget {
   }
 
   Widget _buildDescription(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(maxHeight: 150),
-      margin: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-      padding: EdgeInsets.all(12),
-      child: SingleChildScrollView(child: Text(achievement.description!)),
-    );
+    return DescriptionBox(text: achievement.description!);
   }
 
   Widget _buildProgressSummary(BuildContext context) {
     return Row(
       children: [
-        _buildProgressCard('Overall', Icons.insights, 100),
-        if(achievement.objectives.isNotEmpty) _buildProgressCard('Objective', Icons.task_alt, 100),
-        if(achievement.criteriaCategory != null) _buildProgressCard('Criteria', Icons.checklist, 100, () {}),
+        ProgressCard(title: 'Overall', icon: Icons.insights, progress: 100),
+        if (achievement.objectives.isNotEmpty) ProgressCard(title: 'Objective', icon: Icons.task_alt, progress: 100),
+        if (achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: () {}),
       ],
-    );
-  }
-
-  Widget _buildProgressCard(String title, IconData icon, int progress, [VoidCallback? onTap]) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          height: 50,
-          width: 75,
-          margin: EdgeInsets.all(4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(icon), SizedBox(width: 4), Text('$progress%')],
-              ),
-              Text(title),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
