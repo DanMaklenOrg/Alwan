@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 final class AppState extends ChangeNotifier {
   AppState() {
@@ -15,6 +16,7 @@ final class AuthState extends ChangeNotifier {
 
   void login(String t) {
     token = t;
+    name = JwtDecoder.decode(t)['name'];
     notifyListeners();
   }
 

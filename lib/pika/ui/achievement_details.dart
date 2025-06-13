@@ -61,7 +61,7 @@ final class AchievementDetails extends StatelessWidget {
       rowBuilder: (context, o, isSelected) => [
         AlwanDataCell.text(context, o.name, isSelected),
         AlwanDataCell.longText(context, o.description ?? '', isSelected),
-        AlwanDataCell.checkBox(context, '??%', false, isSelected, () {}),
+        AlwanDataCell.checkBox(context, '??%', o.progress.done.value, isSelected, () => o.progress.done.value = !o.progress.done.value),
       ],
       selected: selectedObjective,
       onSelect: onObjectiveSelect,

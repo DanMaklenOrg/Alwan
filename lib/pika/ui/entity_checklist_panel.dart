@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../domain/game_models.dart';
 
 class EntityChecklistPanel extends StatelessWidget {
-  const EntityChecklistPanel({super.key, required this.entityList});
+  const EntityChecklistPanel({super.key, required this.entityList, required this.progressTracker});
 
   final List<Entity> entityList;
+  final PikaProgress progressTracker;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +31,27 @@ class EntityChecklistPanel extends StatelessWidget {
   Widget _buildList() {
     return ListView.builder(
       itemCount: entityList.length,
-      itemBuilder: (_, i) => CheckboxListTile(title: Text(entityList[i].name), value: false, onChanged: (b) {}),
+      itemBuilder: (_, i) => CheckboxListTile(
+        title: Text(entityList[i].name),
+        value: false,
+        onChanged: (b) => onChanged(b, entityList[i]),
+      ),
     );
+  }
+
+  void onChanged(bool? b, Entity e) {
+    if (b ?? false)
+      progressTracker.setEntityAsDone(e);
+    else
+      progressTracker.setEntityAsNotDone(e);
   }
 }
 
-void showEntityChecklistPanel(BuildContext context, {required List<Entity> entityList}) {
+void showEntityChecklistPanel(BuildContext context, {required List<Entity> entityList, required PikaProgress progressTracker}) {
   showGeneralDialog(
     context: context,
     barrierLabel: 'DismissChecklistSideSheet',
     barrierDismissible: true,
-    pageBuilder: (_, __, ___) => EntityChecklistPanel(entityList: entityList),
+    pageBuilder: (_, __, ___) => EntityChecklistPanel(entityList: entityList, progressTracker: progressTracker),
   );
 }

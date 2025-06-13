@@ -19,8 +19,6 @@ class _GameViewState extends State<GameWidget> {
   Achievement? _selectedAchievement;
   Objective? _selectedObjective;
 
-  bool progress = false;
-
   @override
   Widget build(BuildContext context) {
     return _buildLayout(
@@ -60,7 +58,7 @@ class _GameViewState extends State<GameWidget> {
       rowBuilder: (context, a, isSelected) => [
         AlwanDataCell.text(context, a.name, isSelected),
         AlwanDataCell.longText(context, a.description ?? '', isSelected),
-        AlwanDataCell.checkBox(context, '??%', progress, isSelected, () => setState(() => progress = !progress)),
+        AlwanDataCell.checkBox(context, '??%', a.progress.done.value, isSelected, () => setState(() => a.progress.done.value = !a.progress.done.value)),
       ],
       selected: _selectedAchievement,
       onSelect: (a) => setState(() {
@@ -78,6 +76,7 @@ class _GameViewState extends State<GameWidget> {
       onChecklistTap: () => showEntityChecklistPanel(
         context,
         entityList: widget.game.entitiesByCategoryId(_selectedAchievement!.criteriaCategory!),
+        progressTracker: _selectedAchievement!.progress,
       ),
     );
   }
@@ -88,6 +87,7 @@ class _GameViewState extends State<GameWidget> {
       onChecklistTap: () => showEntityChecklistPanel(
         context,
         entityList: widget.game.entitiesByCategoryId(_selectedObjective!.criteriaCategory!),
+        progressTracker: _selectedObjective!.progress,
       ),
     );
   }

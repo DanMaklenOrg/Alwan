@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../domain/game_models.dart';
-import '../domain/game_progress_models.dart';
-import '../domain/i_game_progress_repo.dart';
 import '../domain/i_game_repo.dart';
 import 'game_widget.dart';
 import 'pika_ui_state.dart';
@@ -21,18 +19,17 @@ final class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreenLayout(
       title: 'Pika Game',
-      body: AsyncDataBuilder<({Game game, GameProgress gameProgress})>(
+      body: AsyncDataBuilder<Game>(
         fetcher: _fetchData,
-        builder: (context, data) => MultiProvider(
+        builder: (context, game) => MultiProvider(
           providers: [
-            Provider(create: (_) => data.game),
-            ChangeNotifierProvider(create: (_) => data.gameProgress),
+            ChangeNotifierProvider(create: (_) => game),
             ChangeNotifierProvider(create: (_) => PikaUiState()),
           ],
           child: Column(
             children: [
               _Header(),
-              Expanded(child: GameWidget(game: data.game)),
+              Expanded(child: GameWidget(game: game)),
             ],
           ),
         ),
@@ -40,10 +37,8 @@ final class GameScreen extends StatelessWidget {
     );
   }
 
-  Future<({Game game, GameProgress gameProgress})> _fetchData() async {
-    var game = await serviceProvider.get<IGameRepo>().getGame(gameId);
-    var gameProgress = await serviceProvider.get<IGameProgressRepo>().getGameProgress(gameId);
-    return (game: game, gameProgress: gameProgress);
+  Future<Game> _fetchData() async {
+    return await serviceProvider.get<IGameRepo>().getGame(gameId);
   }
 }
 
