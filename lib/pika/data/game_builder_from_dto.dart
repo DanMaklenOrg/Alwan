@@ -6,7 +6,6 @@ import '../domain/pika_progress.dart';
 
 final class GameBuilderFromDto {
   GameBuilderFromDto(this.gameDto, this.gameProgressDto) {
-    // TODO: implement GameBuilderFromDto
     _entities = gameDto.entities?.map(_buildEntity).toList() ?? [];
     _entitiesByCategory = groupBy(_entities, (e) => e.category.toString());
     _categories = {for (var c in gameDto.categories ?? []) c.id: _buildCategory(c)};
