@@ -17,7 +17,7 @@ final class AuthState extends ChangeNotifier {
 
   void login(String t) {
     token = t;
-    name = JwtDecoder.decode(t)['name'];
+    name = JwtDecoder.decode(t)['unique_name'];
     notifyListeners();
   }
 
