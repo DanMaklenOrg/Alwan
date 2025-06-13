@@ -11,6 +11,7 @@ final class AppState extends ChangeNotifier {
 
 final class AuthState extends ChangeNotifier {
   String? token;
+  String? name;
 
   bool get isLoggedIn => token != null;
 
