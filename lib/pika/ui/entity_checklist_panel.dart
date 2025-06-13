@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
+import '../domain/pika_progress.dart';
 
-class EntityChecklistPanel extends StatelessWidget {
-  const EntityChecklistPanel({super.key, required this.entityList, required this.progressTracker});
+class EntityChecklistPanel extends StatefulWidget {
+  const EntityChecklistPanel({super.key, required this.criteria, required this.progressTracker});
 
-  final List<Entity> entityList;
-  final PikaProgress progressTracker;
+  final Category criteria;
+  final CriteriaProgress progressTracker;
 
+  @override
+  State<EntityChecklistPanel> createState() => _EntityChecklistPanelState();
+}
+
+class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
   @override
   Widget build(BuildContext context) {
     return _buildLayout(Column(children: [
@@ -30,28 +36,28 @@ class EntityChecklistPanel extends StatelessWidget {
 
   Widget _buildList() {
     return ListView.builder(
-      itemCount: entityList.length,
+      itemCount: widget.criteria.entities.length,
       itemBuilder: (_, i) => CheckboxListTile(
-        title: Text(entityList[i].name),
-        value: false,
-        onChanged: (b) => onChanged(b, entityList[i]),
+        title: Text(widget.criteria.entities[i].name),
+        value: widget.progressTracker.isEntityDone(widget.criteria.entities[i]),
+        onChanged: (b) => onChanged(b, widget.criteria.entities[i]),
       ),
     );
   }
 
   void onChanged(bool? b, Entity e) {
     if (b ?? false)
-      progressTracker.setEntityAsDone(e);
+      setState(() => widget.progressTracker.setEntityAsDone(e));
     else
-      progressTracker.setEntityAsNotDone(e);
+      setState(() => widget.progressTracker.setEntityAsNotDone(e));
   }
 }
 
-void showEntityChecklistPanel(BuildContext context, {required List<Entity> entityList, required PikaProgress progressTracker}) {
+void showEntityChecklistPanel(BuildContext context, {required Category criteria, required CriteriaProgress progressTracker}) {
   showGeneralDialog(
     context: context,
     barrierLabel: 'DismissChecklistSideSheet',
     barrierDismissible: true,
-    pageBuilder: (_, __, ___) => EntityChecklistPanel(entityList: entityList, progressTracker: progressTracker),
+    pageBuilder: (_, __, ___) => EntityChecklistPanel(criteria: criteria, progressTracker: progressTracker),
   );
 }
