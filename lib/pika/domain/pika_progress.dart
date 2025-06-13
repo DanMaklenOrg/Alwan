@@ -5,8 +5,7 @@ import 'game_models.dart';
 
 final class PikaProgress {
   PikaProgress({this.manual, this.dependents, this.criteria})
-      : assert(manual == null && (dependents != null || criteria != null)),
-        assert(manual != null && dependents == null && criteria == null) {}
+      : assert((manual != null) ^ (dependents != null || criteria != null));
 
   final ManualProgress? manual;
   final DependencyProgress? dependents;
