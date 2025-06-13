@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'game_models.dart';
 
 final class PikaProgress {
-  PikaProgress({required bool done, this.manual, this.dependents, this.criteria})
+  PikaProgress({this.manual, this.dependents, this.criteria})
       : assert(manual == null && (dependents != null || criteria != null)),
         assert(manual != null && dependents == null && criteria == null) {}
 
@@ -43,7 +43,7 @@ final class DependencyProgress {
 }
 
 final class CriteriaProgress with ChangeNotifier {
-  CriteriaProgress({required targetCount, required Set<ResourceId> entitiesDone})
+  CriteriaProgress({required int targetCount, required Set<ResourceId> entitiesDone})
       : _entitiesDone = entitiesDone,
         _targetCount = targetCount;
 
