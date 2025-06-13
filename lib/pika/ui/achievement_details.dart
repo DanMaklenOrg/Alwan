@@ -3,23 +3,29 @@ import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
 import 'description_box.dart';
+import 'entity_checklist_panel.dart';
 import 'progress_card.dart';
 
-final class AchievementDetails extends StatelessWidget {
-  const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect, required this.onChecklistTap});
+final class AchievementDetails extends StatefulWidget {
+  const AchievementDetails(
+      {super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
 
   final Achievement achievement;
   final Objective? selectedObjective;
   final ValueChanged<Objective?> onObjectiveSelect;
-  final VoidCallback onChecklistTap;
 
+  @override
+  State<AchievementDetails> createState() => _AchievementDetailsState();
+}
+
+class _AchievementDetailsState extends State<AchievementDetails> {
   @override
   Widget build(BuildContext context) {
     return _buildLayout(
-      title: _buildTitle(context),
-      progress: _buildProgressSummary(context),
-      description: achievement.description == null ? null : _buildDescription(context),
-      objectives: achievement.objectives.isEmpty ? null : _buildObjectiveList(),
+      title: _buildTitle(),
+      progress: _buildProgressSummary(),
+      description: widget.achievement.description == null ? null : _buildDescription(),
+      objectives: widget.achievement.objectives.isEmpty ? null : _buildObjectiveList(),
     );
   }
 
@@ -36,35 +42,49 @@ final class AchievementDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(BuildContext context) {
-    return Text(achievement.name, style: Theme.of(context).textTheme.headlineSmall);
+  Widget _buildTitle() {
+    return Text(widget.achievement.name, style: Theme.of(context).textTheme.headlineSmall);
   }
 
-  Widget _buildDescription(BuildContext context) {
-    return DescriptionBox(text: achievement.description!);
+  Widget _buildDescription() {
+    return DescriptionBox(text: widget.achievement.description!);
   }
 
-  Widget _buildProgressSummary(BuildContext context) {
+  Widget _buildProgressSummary() {
     return Row(
       children: [
         ProgressCard(title: 'Overall', icon: Icons.insights, progress: 100),
-        if (achievement.objectives.isNotEmpty) ProgressCard(title: 'Objective', icon: Icons.task_alt, progress: 100),
-        if (achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: onChecklistTap),
+        if (widget.achievement.objectives.isNotEmpty) ProgressCard(title: 'Objective', icon: Icons.task_alt, progress: 100),
+        if (widget.achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: _showCriteriaChecklist),
       ],
     );
   }
 
   Widget _buildObjectiveList() {
     return AlwanDataTable<Objective>(
-      values: achievement.objectives,
+      values: widget.achievement.objectives,
       columns: ['Objective Title', 'Description', 'Progress'],
       rowBuilder: (context, o, isSelected) => [
         AlwanDataCell.text(context, o.name, isSelected),
         AlwanDataCell.longText(context, o.description ?? '', isSelected),
-        AlwanDataCell.checkBox(context, '??%', o.progress.done.value, isSelected, () => o.progress.done.value = !o.progress.done.value),
+        AlwanDataCell.checkBox(
+          context,
+          label: '??%',
+          checked: o.progress.isCompleted,
+          isRowSelected: isSelected,
+          onTap: !o.progress.isManual ? null : () => setState(() => o.progress.manual!.toggle()),
+        ),
       ],
-      selected: selectedObjective,
-      onSelect: onObjectiveSelect,
+      selected: widget.selectedObjective,
+      onSelect: widget.onObjectiveSelect,
+    );
+  }
+
+  void _showCriteriaChecklist() {
+    showEntityChecklistPanel(
+      context,
+      criteria: widget.achievement.criteriaCategory!,
+      progressTracker: widget.achievement.progress.criteria!,
     );
   }
 }
