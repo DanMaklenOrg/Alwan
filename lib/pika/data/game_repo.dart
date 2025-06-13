@@ -4,7 +4,7 @@ import 'package:alwan/service_provider.dart';
 
 import '../domain/game_models.dart';
 import '../domain/i_game_repo.dart';
-import 'GameProgressDtoConverter.dart';
+import 'game_progress_dto_converter.dart';
 import 'game_builder_from_dto.dart';
 
 final class GameRepo implements IGameRepo {
