@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+typedef AsyncVoidCallback = Future Function();
+
 class LoadingIconButton extends StatefulWidget {
   const LoadingIconButton({super.key, required this.iconData, required this.onPressed});
 
   final IconData iconData;
-  final Future Function() onPressed;
+  final AsyncVoidCallback onPressed;
 
   @override
   State<LoadingIconButton> createState() => _LoadingIconButtonState();

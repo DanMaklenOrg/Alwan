@@ -27,7 +27,7 @@ final class GameScreen extends StatelessWidget {
           ],
           child: Column(
             children: [
-              _Header(),
+              _Header(onSave: () => _saveGameProgress(game)),
               Expanded(child: GameWidget(game: game)),
             ],
           ),
@@ -39,9 +39,17 @@ final class GameScreen extends StatelessWidget {
   Future<Game> _fetchData() async {
     return await serviceProvider.get<IGameRepo>().getGame(gameId);
   }
+
+  Future _saveGameProgress(Game game) async {
+    return await serviceProvider.get<IGameRepo>().saveGameProgress(game);
+  }
 }
 
 final class _Header extends StatelessWidget {
+  const _Header({required this.onSave});
+
+  final AsyncVoidCallback onSave;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -49,7 +57,7 @@ final class _Header extends StatelessWidget {
       children: [
         _buildHideCompletedCheckbox(context),
         const Spacer(),
-        LoadingIconButton(iconData: Icons.save_outlined, onPressed: () => _saveProgress(context)),
+        LoadingIconButton(iconData: Icons.save_outlined, onPressed: onSave),
       ],
     );
   }
@@ -64,10 +72,5 @@ final class _Header extends StatelessWidget {
         onChanged: (value) => filterState.hideCompletedEntities.value = value ?? false,
       ),
     );
-  }
-
-  Future _saveProgress(BuildContext context) async {
-    var game = context.read<Game>();
-    return await serviceProvider.get<IGameRepo>().saveGameProgress(game);
   }
 }

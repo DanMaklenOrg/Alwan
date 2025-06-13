@@ -1,11 +1,10 @@
 import 'package:alwan/pika/ui/pika_data_cell.dart';
+import 'package:alwan/pika/ui/progress_summary_widget.dart';
 import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
 import 'package:flutter/material.dart';
 
 import '../domain/game_models.dart';
 import 'description_box.dart';
-import 'entity_checklist_panel.dart';
-import 'progress_card.dart';
 
 final class AchievementDetails extends StatefulWidget {
   const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
@@ -23,7 +22,7 @@ class _AchievementDetailsState extends State<AchievementDetails> {
   Widget build(BuildContext context) {
     return _buildLayout(
       title: _buildTitle(),
-      progress: _buildProgressSummary(),
+      progress: ProgressSummaryWidget(progress: widget.achievement.progress, criteria: widget.achievement.criteriaCategory),
       description: widget.achievement.description == null ? null : _buildDescription(),
       objectives: widget.achievement.objectives.isEmpty ? null : _buildObjectiveList(),
     );
@@ -50,16 +49,6 @@ class _AchievementDetailsState extends State<AchievementDetails> {
     return DescriptionBox(text: widget.achievement.description!);
   }
 
-  Widget _buildProgressSummary() {
-    return Row(
-      children: [
-        ProgressCard(title: 'Overall', icon: Icons.insights, progress: 100),
-        if (widget.achievement.objectives.isNotEmpty) ProgressCard(title: 'Objective', icon: Icons.task_alt, progress: 100),
-        if (widget.achievement.criteriaCategory != null) ProgressCard(title: 'Criteria', icon: Icons.checklist, progress: 100, onTap: _showCriteriaChecklist),
-      ],
-    );
-  }
-
   Widget _buildObjectiveList() {
     return AlwanDataTable<Objective>(
       values: widget.achievement.objectives,
@@ -71,14 +60,6 @@ class _AchievementDetailsState extends State<AchievementDetails> {
       ],
       selected: widget.selectedObjective,
       onSelect: widget.onObjectiveSelect,
-    );
-  }
-
-  void _showCriteriaChecklist() {
-    showEntityChecklistPanel(
-      context,
-      criteria: widget.achievement.criteriaCategory!,
-      progressTracker: widget.achievement.progress.criteria!,
     );
   }
 }
