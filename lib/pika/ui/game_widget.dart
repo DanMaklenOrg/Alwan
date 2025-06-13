@@ -39,9 +39,7 @@ class _GameViewState extends State<GameWidget> {
             children: [
               if (topRight != null) Expanded(flex: 2, child: topRight),
               if (bottomRight != null) ...[
-                // SizedBox(height: 8),
                 Divider(thickness: 4, height: 12, radius: BorderRadiusGeometry.circular(12)),
-                // SizedBox(height: 8),
                 Expanded(flex: 1, child: bottomRight),
               ]
             ],
@@ -58,7 +56,13 @@ class _GameViewState extends State<GameWidget> {
       rowBuilder: (context, a, isSelected) => [
         AlwanDataCell.text(context, a.name, isSelected),
         AlwanDataCell.longText(context, a.description ?? '', isSelected),
-        AlwanDataCell.checkBox(context, '??%', a.progress.done.value, isSelected, () => setState(() => a.progress.done.value = !a.progress.done.value)),
+        AlwanDataCell.checkBox(
+          context,
+          label: '${a.progress.summary.percent}%',
+          checked: a.progress.summary.isCompleted,
+          isRowSelected: isSelected,
+          onTap: !a.progress.isManual ? null : () => setState(() => a.progress.manual!.toggle()),
+        ),
       ],
       selected: _selectedAchievement,
       onSelect: (a) => setState(() {
@@ -73,22 +77,10 @@ class _GameViewState extends State<GameWidget> {
       achievement: _selectedAchievement!,
       selectedObjective: _selectedObjective,
       onObjectiveSelect: (o) => setState(() => _selectedObjective = o),
-      onChecklistTap: () => showEntityChecklistPanel(
-        context,
-        entityList: widget.game.entitiesByCategoryId(_selectedAchievement!.criteriaCategory!),
-        progressTracker: _selectedAchievement!.progress,
-      ),
     );
   }
 
   Widget _buildObjectiveDetails(BuildContext context) {
-    return ObjectiveDetails(
-      objective: _selectedObjective!,
-      onChecklistTap: () => showEntityChecklistPanel(
-        context,
-        entityList: widget.game.entitiesByCategoryId(_selectedObjective!.criteriaCategory!),
-        progressTracker: _selectedObjective!.progress,
-      ),
-    );
+    return ObjectiveDetails(objective: _selectedObjective!);
   }
 }
