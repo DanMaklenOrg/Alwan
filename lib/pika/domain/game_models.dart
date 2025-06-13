@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:alwan/pika/domain/pika_progress.dart';
 
 final class ResourceId implements Comparable<ResourceId> {
   ResourceId({required this.id});
@@ -37,11 +37,8 @@ abstract class PikaResource implements Comparable<PikaResource> {
   int compareTo(PikaResource other) => name.compareTo(other.name);
 }
 
-final class Game extends PikaResource with ChangeNotifier {
-  Game({required super.id, required super.name, required this.achievements, this.categories = const [], this.entities = const [], required this.progress}) {
-    progress.addListener(notifyListeners);
-    achievements.forEach((a) => a.addListener(notifyListeners));
-  }
+final class Game extends PikaResource {
+  Game({required super.id, required super.name, required this.achievements, this.categories = const [], this.entities = const [], required this.progress}) {}
 
   final List<Achievement> achievements;
   final List<Category> categories;
@@ -50,67 +47,51 @@ final class Game extends PikaResource with ChangeNotifier {
   PikaProgress progress;
 
   List<Entity> entitiesByCategoryId(ResourceId categoryId) => entities.where((e) => e.category == categoryId).toList();
+
+  // void markAsCompletedRecursively() {
+  //   if (achievements.isEmpty) progress.manual!.setAsDone();
+  //   if (achievements.isNotEmpty) achievements.forEach((a) => a.markAsCompletedRecursively());
+  // }
 }
 
-final class Achievement extends PikaResource with ChangeNotifier {
-  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory, required this.progress}) {
-    progress.addListener(notifyListeners);
-    objectives.forEach((a) => a.addListener(notifyListeners));
-  }
+final class Achievement extends PikaResource {
+  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory, required this.progress}) {}
 
   final String? description;
   final List<Objective> objectives;
-  final ResourceId? criteriaCategory;
+  final Category? criteriaCategory;
 
   PikaProgress progress;
+
+  // void markAsCompletedRecursively() {
+  //   if (criteriaCategory == null && objectives.isEmpty) progress.manual!.setAsDone();
+  //   if (criteriaCategory != null) progress.criteria!.setAllEntitiesAsDone(criteriaCategory!.entities);
+  //   if (objectives.isNotEmpty) objectives.forEach((o) => o.markAsCompleted());
+  // }
 }
 
-final class Objective extends PikaResource with ChangeNotifier {
-  Objective({required super.id, required super.name, this.description, this.criteriaCategory, required this.progress}) {
-    progress.addListener(notifyListeners);
-  }
+final class Objective extends PikaResource {
+  Objective({required super.id, required super.name, this.description, this.criteriaCategory, required this.progress}) {}
 
   final String? description;
-  final ResourceId? criteriaCategory;
+  final Category? criteriaCategory;
 
   PikaProgress progress;
+
+  // void markAsCompleted() {
+  //   if (criteriaCategory == null) progress.manual!.setAsDone();
+  //   if (criteriaCategory != null) progress.criteria!.setAllEntitiesAsDone(criteriaCategory!.entities);
+  // }
 }
 
 final class Category extends PikaResource {
-  Category({required super.id, required super.name});
+  Category({required super.id, required super.name, required this.entities});
+
+  final List<Entity> entities;
 }
 
 final class Entity extends PikaResource {
   Entity({required super.id, required super.name, required this.category});
 
   final ResourceId category;
-}
-
-final class PikaProgress with ChangeNotifier {
-  PikaProgress({required bool done, Set<ResourceId> entitiesDone = const {}, required this.targetCount})
-      : done = ValueNotifier(done),
-        _entitiesDone = entitiesDone {
-    this.done.addListener(notifyListeners);
-  }
-
-  final int targetCount;
-  final Set<ResourceId> _entitiesDone;
-  ValueNotifier<bool> done;
-
-  List<ResourceId> get entitiesDone => _entitiesDone.toList();
-
-  bool isEntityDone(Entity e) {
-    return _entitiesDone.contains(e.id);
-  }
-
-  void setEntityAsDone(Entity e) {
-    _entitiesDone.add(e.id);
-    done.value = false;
-    notifyListeners();
-  }
-
-  void setEntityAsNotDone(Entity e) {
-    _entitiesDone.remove(e.id);
-    notifyListeners();
-  }
 }
