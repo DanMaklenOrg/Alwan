@@ -47,11 +47,6 @@ final class Game extends PikaResource {
   PikaProgress progress;
 
   List<Entity> entitiesByCategoryId(ResourceId categoryId) => entities.where((e) => e.category == categoryId).toList();
-
-  // void markAsCompletedRecursively() {
-  //   if (achievements.isEmpty) progress.manual!.setAsDone();
-  //   if (achievements.isNotEmpty) achievements.forEach((a) => a.markAsCompletedRecursively());
-  // }
 }
 
 final class Achievement extends PikaResource {
@@ -62,12 +57,6 @@ final class Achievement extends PikaResource {
   final Category? criteriaCategory;
 
   PikaProgress progress;
-
-  // void markAsCompletedRecursively() {
-  //   if (criteriaCategory == null && objectives.isEmpty) progress.manual!.setAsDone();
-  //   if (criteriaCategory != null) progress.criteria!.setAllEntitiesAsDone(criteriaCategory!.entities);
-  //   if (objectives.isNotEmpty) objectives.forEach((o) => o.markAsCompleted());
-  // }
 }
 
 final class Objective extends PikaResource {
@@ -77,11 +66,6 @@ final class Objective extends PikaResource {
   final Category? criteriaCategory;
 
   PikaProgress progress;
-
-  // void markAsCompleted() {
-  //   if (criteriaCategory == null) progress.manual!.setAsDone();
-  //   if (criteriaCategory != null) progress.criteria!.setAllEntitiesAsDone(criteriaCategory!.entities);
-  // }
 }
 
 final class Category extends PikaResource {
