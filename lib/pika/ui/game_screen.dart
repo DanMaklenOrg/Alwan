@@ -23,7 +23,6 @@ final class GameScreen extends StatelessWidget {
         fetcher: _fetchData,
         builder: (context, game) => MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => game),
             ChangeNotifierProvider(create: (_) => PikaUiState()),
           ],
           child: Column(
@@ -50,7 +49,7 @@ final class _Header extends StatelessWidget {
       children: [
         _buildHideCompletedCheckbox(context),
         const Spacer(),
-        LoadingIconButton(iconData: Icons.save_outlined, onPressed: _saveProgress),
+        LoadingIconButton(iconData: Icons.save_outlined, onPressed: () => _saveProgress(context)),
       ],
     );
   }
@@ -67,12 +66,8 @@ final class _Header extends StatelessWidget {
     );
   }
 
-  Future _saveProgress() async {
-    // TODO: Finish Save UserStats
-    // var userStats = context.read<GameProgress>();
-    // var converter = DtoConverter();
-    // var entityStats = userStats.getEntityStatList().map(converter.toEntityUserStatDto).toList();
-    // var dto = GameProgressDto(entityStats: entityStats);
-    // await serviceProvider.get<ApiClient>().setUserStat(userStats.rootGameId, dto);
+  Future _saveProgress(BuildContext context) async {
+    var game = context.read<Game>();
+    return await serviceProvider.get<IGameRepo>().saveGameProgress(game);
   }
 }
