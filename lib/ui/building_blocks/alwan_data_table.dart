@@ -52,12 +52,12 @@ sealed class AlwanDataCell {
     );
   }
 
-  static DataCell checkBox(BuildContext context, String label, bool checked, bool isRowSelected, VoidCallback onTap) {
+  static DataCell checkBox(BuildContext context, String label, bool checked, bool isRowSelected, VoidCallback? onTap) {
     return DataCell(
       IgnorePointer(
         child: Row(
           children: [
-            Checkbox(value: checked, onChanged: (_) {}),
+            Checkbox(value: checked, onChanged: onTap == null ? null : (b) {}),
             Text(label, style: _textStyle(context, isRowSelected)),
           ],
         ),
