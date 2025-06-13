@@ -23,19 +23,19 @@ class ApiClient {
     return (response.data as List).map((e) => GameSummaryDto.fromJson(e)).toList();
   }
 
-  Future<UserStatsDto> getUserStat(String gameId) async {
+  Future<GameProgressDto> getGameProgress(String gameId) async {
     var token = serviceProvider.get<AppState>().auth.token;
     var response = await _dio.get(
-      '/pika/game/$gameId/stats',
+      '/pika/game/$gameId/progress',
       options: Options(headers: {"Authorization": "Bearer $token"}),
-    );    return UserStatsDto.fromJson(response.data);
+    );    return GameProgressDto.fromJson(response.data);
   }
 
-  Future setUserStat(String gameId, UserStatsDto userStatsDto) async {
+  Future setGameProgress(String gameId, GameProgressDto gameProgressDto) async {
     var token = serviceProvider.get<AppState>().auth.token;
-    var json = userStatsDto.toJson();
+    var json = gameProgressDto.toJson();
     await _dio.post(
-      '/pika/game/$gameId/stats',
+      '/pika/game/$gameId/progress',
       data: json,
       options: Options(headers: {"Authorization": "Bearer $token"}),
     );

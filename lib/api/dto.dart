@@ -39,7 +39,7 @@ final class GameSummaryDto {
 
 @JsonSerializable()
 final class GameDto {
-  GameDto({required this.id, required this.name, required this.achievements, required this.classes, required this.entities});
+  GameDto({required this.id, required this.name, required this.achievements, this.categories, this.entities});
 
   factory GameDto.fromJson(Map<String, dynamic> json) => _$GameDtoFromJson(json);
 
@@ -48,13 +48,13 @@ final class GameDto {
   final String id;
   final String name;
   final List<AchievementDto> achievements;
-  final List<ClassDto> classes;
-  final List<EntityDto> entities;
+  final List<CategoryDto>? categories;
+  final List<EntityDto>? entities;
 }
 
 @JsonSerializable()
 final class AchievementDto {
-  AchievementDto({required this.id, required this.name, required this.objectives});
+  AchievementDto({required this.id, required this.name, this.description, this.objectives, this.criteriaCategory});
 
   factory AchievementDto.fromJson(Map<String, dynamic> json) => _$AchievementDtoFromJson(json);
 
@@ -62,12 +62,14 @@ final class AchievementDto {
 
   final String id;
   final String name;
-  final List<ObjectiveDto> objectives;
+  final String? description;
+  final List<ObjectiveDto>? objectives;
+  final String? criteriaCategory;
 }
 
 @JsonSerializable()
 final class ObjectiveDto {
-  ObjectiveDto({required this.id, required this.name, required this.requirements});
+  ObjectiveDto({required this.id, required this.name, this.description, this.criteriaCategory});
 
   factory ObjectiveDto.fromJson(Map<String, dynamic> json) => _$ObjectiveDtoFromJson(json);
 
@@ -75,40 +77,24 @@ final class ObjectiveDto {
 
   final String id;
   final String name;
-  final List<ObjectiveRequirementDto> requirements;
-}
+  final String? description;
+  final String? criteriaCategory;}
 
 @JsonSerializable()
-final class ObjectiveRequirementDto {
-  ObjectiveRequirementDto({required this.$class, required this.stat, required this.min});
+final class CategoryDto {
+  CategoryDto({required this.id, required this.name});
 
-  factory ObjectiveRequirementDto.fromJson(Map<String, dynamic> json) => _$ObjectiveRequirementDtoFromJson(json);
+  factory CategoryDto.fromJson(Map<String, dynamic> json) => _$CategoryDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ObjectiveRequirementDtoToJson(this);
-
-  @JsonKey(name: 'class')
-  final String $class;
-  final String stat;
-  final int min;
-}
-
-@JsonSerializable()
-final class ClassDto {
-  ClassDto({required this.id, required this.name, required this.attributes, required this.stats});
-
-  factory ClassDto.fromJson(Map<String, dynamic> json) => _$ClassDtoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ClassDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CategoryDtoToJson(this);
 
   final String id;
   final String name;
-  final List<AttributeDto> attributes;
-  final List<StatDto> stats;
 }
 
 @JsonSerializable()
 final class EntityDto {
-  EntityDto({required this.id, required this.name, required this.$class, required this.attributes, required this.stats});
+  EntityDto({required this.id, required this.name, required this.category});
 
   factory EntityDto.fromJson(Map<String, dynamic> json) => _$EntityDtoFromJson(json);
 
@@ -116,80 +102,46 @@ final class EntityDto {
 
   final String id;
   final String name;
-  @JsonKey(name: 'class')
-  final String $class;
-  final List<AttributeDto> attributes;
-  final List<StatDto> stats;
+  final String category;
 }
 
 @JsonSerializable()
-final class AttributeDto {
-  AttributeDto({required this.id, required this.value});
+final class GameProgressDto {
+  GameProgressDto({required this.userId, required this.game, required this.completed, required this.achievementProgress});
 
-  factory AttributeDto.fromJson(Map<String, dynamic> json) => _$AttributeDtoFromJson(json);
+  factory GameProgressDto.fromJson(Map<String, dynamic> json) => _$GameProgressDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AttributeDtoToJson(this);
+  Map<String, dynamic> toJson() => _$GameProgressDtoToJson(this);
 
-  final String id;
-  final int value;
+  final String userId;
+  final String game;
+  final bool completed;
+  final List<AchievementProgressDto> achievementProgress;
 }
 
 @JsonSerializable()
-final class StatDto {
-  StatDto({required this.id, required this.name, required this.type, required this.min, required this.max, required this.enumValues});
+final class AchievementProgressDto {
+  AchievementProgressDto({required this.achievement, required this.completed, required this.objectiveProgress, required this.entitiesDone});
 
-  factory StatDto.fromJson(Map<String, dynamic> json) => _$StatDtoFromJson(json);
+  factory AchievementProgressDto.fromJson(Map<String, dynamic> json) => _$AchievementProgressDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$StatDtoToJson(this);
+  Map<String, dynamic> toJson() => _$AchievementProgressDtoToJson(this);
 
-  final String id;
-  final String name;
-  final StatTypeEnumDto type;
-  final IntOrAttributeDto? min;
-  final IntOrAttributeDto? max;
-  final List<String>? enumValues;
+  final String achievement;
+  final bool completed;
+  final List<ObjectiveProgressDto> objectiveProgress;
+  final List<String> entitiesDone;
 }
 
 @JsonSerializable()
-final class IntOrAttributeDto {
-  IntOrAttributeDto({this.constValue, this.attributeId})
-    : assert(constValue != null || attributeId != null);
+final class ObjectiveProgressDto {
+  ObjectiveProgressDto({required this.objective, required this.completed, required this.entitiesDone});
 
-  factory IntOrAttributeDto.fromJson(Map<String, dynamic> json) => _$IntOrAttributeDtoFromJson(json);
+  factory ObjectiveProgressDto.fromJson(Map<String, dynamic> json) => _$ObjectiveProgressDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$IntOrAttributeDtoToJson(this);
+  Map<String, dynamic> toJson() => _$ObjectiveProgressDtoToJson(this);
 
-  final int? constValue;
-  final String? attributeId;
-}
-
-@JsonEnum(fieldRename: FieldRename.pascal)
-enum StatTypeEnumDto {
-  boolean,
-  integerRange,
-  orderedEnum;
-}
-
-@JsonSerializable()
-final class UserStatsDto {
-  UserStatsDto({required this.entityStats});
-
-  factory UserStatsDto.fromJson(Map<String, dynamic> json) => _$UserStatsDtoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserStatsDtoToJson(this);
-
-  final List<UserEntityStatDto> entityStats;
-}
-
-@JsonSerializable()
-final class UserEntityStatDto {
-  UserEntityStatDto({required this.entityId, required this.statId, required this.value});
-
-  factory UserEntityStatDto.fromJson(Map<String, dynamic> json) => _$UserEntityStatDtoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserEntityStatDtoToJson(this);
-
-  final String entityId;
-  final String statId;
-  final String value;
+  final String objective;
+  final bool completed;
+  final List<String> entitiesDone;
 }
