@@ -1,11 +1,12 @@
 import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../domain/game_models.dart';
 import 'achievement_details.dart';
-import 'entity_checklist_panel.dart';
 import 'objective_details.dart';
 import 'pika_data_cell.dart';
+import 'pika_ui_state.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key, required this.game});
@@ -51,19 +52,26 @@ class _GameViewState extends State<GameWidget> {
   }
 
   Widget _buildAchievementList() {
-    return AlwanDataTable<Achievement>(
-      values: widget.game.achievements,
-      columns: ['Achievement Title', 'Description', 'Progress'],
-      rowBuilder: (context, a, isSelected) => [
-        AlwanDataCell.text(context, a.name, isSelected),
-        AlwanDataCell.longText(context, a.description ?? '', isSelected),
-        PikaDataCell.progressCell(progress: a.progress, isRowSelected: isSelected),
-      ],
-      selected: _selectedAchievement,
-      onSelect: (a) => setState(() {
-        _selectedObjective = null;
-        _selectedAchievement = a;
-      }),
+    return ValueListenableBuilder(
+      valueListenable: widget.game.progress,
+      builder: (context, __, ___) {
+        var achList = widget.game.achievements;
+        if(context.watch<PikaUiState>().hideCompleted.value) achList = achList.where((a) => !a.progress.isCompleted).toList();
+        return AlwanDataTable<Achievement>(
+          values: achList,
+          columns: ['Achievement Title', 'Description', 'Progress'],
+          rowBuilder: (context, a, isSelected) => [
+            AlwanDataCell.text(context, a.name, isSelected),
+            AlwanDataCell.longText(context, a.description ?? '', isSelected),
+            PikaDataCell.progressCell(progress: a.progress, isRowSelected: isSelected),
+          ],
+          selected: _selectedAchievement,
+          onSelect: (a) => setState(() {
+            _selectedObjective = null;
+            _selectedAchievement = a;
+          }),
+        );
+      }
     );
   }
 

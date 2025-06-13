@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class PikaUiState extends ChangeNotifier {
   PikaUiState() {
-    hideCompletedEntities.addListener(notifyListeners);
+    hideCompleted.addListener(notifyListeners);
   }
 
-  final ValueNotifier<bool> hideCompletedEntities = ValueNotifier(true);
+  final ValueNotifier<bool> hideCompleted = ValueNotifier(true);
 }

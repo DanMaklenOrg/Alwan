@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../domain/game_models.dart';
 import '../domain/pika_progress.dart';
+import 'pika_ui_state.dart';
 
 class EntityChecklistPanel extends StatefulWidget {
-  const EntityChecklistPanel({super.key, required this.criteria, required this.progressTracker});
+  const EntityChecklistPanel({super.key, required this.criteria, required this.progressTracker, required this.hideCompleted});
 
   final Category criteria;
   final CriteriaProgress progressTracker;
+  final bool hideCompleted;
 
   @override
   State<EntityChecklistPanel> createState() => _EntityChecklistPanelState();
@@ -35,12 +38,14 @@ class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
   }
 
   Widget _buildList() {
+    var entityList = widget.criteria.entities;
+    if (widget.hideCompleted) entityList = entityList.where((e) => !widget.progressTracker.isEntityDone(e)).toList();
     return ListView.builder(
-      itemCount: widget.criteria.entities.length,
+      itemCount: entityList.length,
       itemBuilder: (_, i) => CheckboxListTile(
-        title: Text(widget.criteria.entities[i].name),
-        value: widget.progressTracker.isEntityDone(widget.criteria.entities[i]),
-        onChanged: (b) => onChanged(b, widget.criteria.entities[i]),
+        title: Text(entityList[i].name),
+        value: widget.progressTracker.isEntityDone(entityList[i]),
+        onChanged: (b) => onChanged(b, entityList[i]),
       ),
     );
   }
@@ -58,6 +63,10 @@ void showEntityChecklistPanel(BuildContext context, {required Category criteria,
     context: context,
     barrierLabel: 'DismissChecklistSideSheet',
     barrierDismissible: true,
-    pageBuilder: (_, __, ___) => EntityChecklistPanel(criteria: criteria, progressTracker: progressTracker),
+    pageBuilder: (_, __, ___) => EntityChecklistPanel(
+      criteria: criteria,
+      progressTracker: progressTracker,
+      hideCompleted: context.watch<PikaUiState>().hideCompleted.value,
+    ),
   );
 }

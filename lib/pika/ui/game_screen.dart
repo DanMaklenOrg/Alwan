@@ -68,8 +68,8 @@ final class _Header extends StatelessWidget {
       width: 175,
       child: CheckboxListTile(
         title: const Text("Hide Completed"),
-        value: filterState.hideCompletedEntities.value,
-        onChanged: (value) => filterState.hideCompletedEntities.value = value ?? false,
+        value: filterState.hideCompleted.value,
+        onChanged: (value) => filterState.hideCompleted.value = value ?? false,
       ),
     );
   }
