@@ -5,6 +5,7 @@ import '../domain/game_models.dart';
 import 'achievement_details.dart';
 import 'entity_checklist_panel.dart';
 import 'objective_details.dart';
+import 'pika_data_cell.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key, required this.game});
@@ -56,13 +57,7 @@ class _GameViewState extends State<GameWidget> {
       rowBuilder: (context, a, isSelected) => [
         AlwanDataCell.text(context, a.name, isSelected),
         AlwanDataCell.longText(context, a.description ?? '', isSelected),
-        AlwanDataCell.checkBox(
-          context,
-          label: '${a.progress.summary.percent}%',
-          checked: a.progress.summary.isCompleted,
-          isRowSelected: isSelected,
-          onTap: !a.progress.isManual ? null : () => setState(() => a.progress.manual!.toggle()),
-        ),
+        PikaDataCell.progressCell(progress: a.progress, isRowSelected: isSelected),
       ],
       selected: _selectedAchievement,
       onSelect: (a) => setState(() {

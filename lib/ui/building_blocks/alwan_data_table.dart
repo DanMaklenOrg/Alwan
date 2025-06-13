@@ -36,7 +36,7 @@ class AlwanDataTable<T> extends StatelessWidget {
 
 sealed class AlwanDataCell {
   static DataCell text(BuildContext context, String text, bool isRowSelected) {
-    return DataCell(Text(text, style: _textStyle(context, isRowSelected)));
+    return DataCell(Text(text, style: textStyle(context, isRowSelected)));
   }
 
   static DataCell longText(BuildContext context, String text, bool isRowSelected) {
@@ -45,27 +45,13 @@ sealed class AlwanDataCell {
         constraints: BoxConstraints(maxWidth: 300),
         child: Text(
           text,
-          style: _textStyle(context, isRowSelected),
+          style: textStyle(context, isRowSelected),
           overflow: TextOverflow.ellipsis,
         ),
       ),
     );
   }
 
-  static DataCell checkBox(BuildContext context, {required String label, required bool checked, required bool isRowSelected, VoidCallback? onTap}) {
-    return DataCell(
-      IgnorePointer(
-        child: Row(
-          children: [
-            Checkbox(value: checked, onChanged: onTap == null ? null : (b) {}),
-            Text(label, style: _textStyle(context, isRowSelected)),
-          ],
-        ),
-      ),
-      onTap: onTap,
-    );
-  }
-
-  static TextStyle? _textStyle(BuildContext context, bool isSelected) =>
+  static TextStyle? textStyle(BuildContext context, bool isSelected) =>
       isSelected ? Theme.of(context).textTheme.bodyMedium!.apply(color: Theme.of(context).colorScheme.primary) : null;
 }

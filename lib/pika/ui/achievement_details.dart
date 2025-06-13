@@ -1,3 +1,4 @@
+import 'package:alwan/pika/ui/pika_data_cell.dart';
 import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +8,7 @@ import 'entity_checklist_panel.dart';
 import 'progress_card.dart';
 
 final class AchievementDetails extends StatefulWidget {
-  const AchievementDetails(
-      {super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
+  const AchievementDetails({super.key, required this.achievement, required this.selectedObjective, required this.onObjectiveSelect});
 
   final Achievement achievement;
   final Objective? selectedObjective;
@@ -67,13 +67,7 @@ class _AchievementDetailsState extends State<AchievementDetails> {
       rowBuilder: (context, o, isSelected) => [
         AlwanDataCell.text(context, o.name, isSelected),
         AlwanDataCell.longText(context, o.description ?? '', isSelected),
-        AlwanDataCell.checkBox(
-          context,
-          label: '??%',
-          checked: o.progress.isCompleted,
-          isRowSelected: isSelected,
-          onTap: !o.progress.isManual ? null : () => setState(() => o.progress.manual!.toggle()),
-        ),
+        PikaDataCell.progressCell(progress: o.progress, isRowSelected: isSelected),
       ],
       selected: widget.selectedObjective,
       onSelect: widget.onObjectiveSelect,

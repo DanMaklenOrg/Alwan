@@ -3,9 +3,14 @@ import 'package:flutter/foundation.dart';
 
 import 'game_models.dart';
 
-final class PikaProgress {
+final class PikaProgress extends ChangeNotifier implements ValueListenable<PikaProgress> {
   PikaProgress({this.manual, this.dependents, this.criteria})
-      : assert((manual != null) ^ (dependents != null || criteria != null));
+      : assert((manual != null) ^ (dependents != null || criteria != null))
+  {
+    manual?.addListener(notifyListeners);
+    dependents?.addListener(notifyListeners);
+    criteria?.addListener(notifyListeners);
+  }
 
   final ManualProgress? manual;
   final DependencyProgress? dependents;
@@ -16,25 +21,39 @@ final class PikaProgress {
   bool get isCompleted => summary.isCompleted;
 
   bool get isManual => manual != null;
+
+  @override
+  PikaProgress get value => this;
 }
 
-final class ManualProgress {
-  ManualProgress({this.done = false});
+final class ManualProgress extends ChangeNotifier {
+  ManualProgress({bool done = false}) : _done = done;
 
-  bool done;
+  bool _done;
 
-  ProgressSummary get summary => ProgressSummary(current: done.toInt(), target: 1);
+  ProgressSummary get summary => ProgressSummary(current: _done.toInt(), target: 1);
 
-  void setAsDone() => done = true;
+  void setAsDone() {
+    _done = true;
+    notifyListeners();
+  }
 
-  void setAsNotDone() => done = false;
+  void setAsNotDone() {
+    _done = false;
+    notifyListeners();
+  }
 
-  void toggle() => done = !done;
+  void toggle() {
+    _done = !_done;
+    notifyListeners();
+  }
 }
 
 // Assumes it's a tree-like. This logic might break if there are cycles.
-final class DependencyProgress {
-  DependencyProgress({required Set<PikaProgress> dependents}) : _dependents = dependents;
+final class DependencyProgress extends ChangeNotifier {
+  DependencyProgress({required Set<PikaProgress> dependents}) : _dependents = dependents {
+    _dependents.forEach((d) => d.addListener(notifyListeners));
+  }
 
   final Set<PikaProgress> _dependents;
 
