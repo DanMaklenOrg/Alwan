@@ -38,19 +38,26 @@ abstract class PikaResource implements Comparable<PikaResource> {
 }
 
 final class Game extends PikaResource {
-  Game({required super.id, required super.name, required this.achievements, this.categories = const [], this.entities = const [], required this.progress}) {}
+  Game({
+    required super.id,
+    required super.name,
+    required this.achievements,
+    this.categories = const [],
+    this.tags = const [],
+    this.entities = const [],
+    required this.progress,
+  });
 
   final List<Achievement> achievements;
   final List<Category> categories;
+  final List<Tag> tags;
   final List<Entity> entities;
 
   PikaProgress progress;
-
-  List<Entity> entitiesByCategoryId(ResourceId categoryId) => entities.where((e) => e.category == categoryId).toList();
 }
 
 final class Achievement extends PikaResource {
-  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory, required this.progress}) {}
+  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory, required this.progress});
 
   final String? description;
   final List<Objective> objectives;
@@ -60,7 +67,7 @@ final class Achievement extends PikaResource {
 }
 
 final class Objective extends PikaResource {
-  Objective({required super.id, required super.name, this.description, this.criteriaCategory, required this.progress}) {}
+  Objective({required super.id, required super.name, this.description, this.criteriaCategory, required this.progress});
 
   final String? description;
   final Category? criteriaCategory;
@@ -74,8 +81,13 @@ final class Category extends PikaResource {
   final List<Entity> entities;
 }
 
+final class Tag extends PikaResource {
+  Tag({required super.id, required super.name});
+}
+
 final class Entity extends PikaResource {
-  Entity({required super.id, required super.name, required this.category});
+  Entity({required super.id, required super.name, required this.category, required this.tags});
 
   final ResourceId category;
+  final List<Tag> tags;
 }
