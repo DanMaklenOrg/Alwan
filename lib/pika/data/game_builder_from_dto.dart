@@ -6,6 +6,7 @@ import '../domain/pika_progress.dart';
 
 final class GameBuilderFromDto {
   GameBuilderFromDto(this.gameDto, this.gameProgressDto) {
+    _tags = {for (var t in gameDto.tags ?? []) t.id: _buildTag(t)};
     _entities = gameDto.entities?.map(_buildEntity).toList() ?? [];
     _entitiesByCategory = groupBy(_entities, (e) => e.category.toString());
     _categories = {for (var c in gameDto.categories ?? []) c.id: _buildCategory(c)};
@@ -13,19 +14,22 @@ final class GameBuilderFromDto {
 
   final GameDto gameDto;
   final GameProgressDto gameProgressDto;
+
+  late final Map<String, Tag> _tags;
   late final List<Entity> _entities;
   late final Map<String, List<Entity>> _entitiesByCategory;
   late final Map<String, Category> _categories;
 
   Game build() {
     var achievementProgressMap = {for (var a in gameProgressDto.achievementProgress) a.achievement: a};
-    var achievements = gameDto.achievements.map((a) => _buildAchievement(a, achievementProgressMap[a.id])).toList();
+    var achievements = gameDto.achievements?.map((a) => _buildAchievement(a, achievementProgressMap[a.id])).toList() ?? [];
     return Game(
       id: ResourceId(id: gameDto.id),
       name: gameDto.name,
       achievements: achievements,
       categories: _categories.values.toList(),
       entities: _entities,
+      tags: _tags.values.toList(),
       progress: PikaProgress(
         manual: achievements.isEmpty ? _buildManualProgress(gameProgressDto.completed) : null,
         dependents: achievements.isNotEmpty ? _buildDependencyProgress(achievements.map((o) => o.progress).toList()) : null,
@@ -67,11 +71,16 @@ final class GameBuilderFromDto {
     return Category(id: ResourceId(id: dto.id), name: dto.name, entities: _entitiesByCategory[dto.id]!);
   }
 
+  Tag _buildTag(TagDto dto) {
+    return Tag(id: ResourceId(id: dto.id), name: dto.name);
+  }
+
   Entity _buildEntity(EntityDto dto) {
     return Entity(
       id: ResourceId(id: dto.id),
       name: dto.name,
       category: ResourceId(id: dto.category),
+      tags: dto.tags?.map((t) => _tags[t]!).toList() ?? [],
     );
   }
 

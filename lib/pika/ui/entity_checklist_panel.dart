@@ -13,16 +13,31 @@ class EntityChecklistPanel extends StatefulWidget {
   final CriteriaProgress progressTracker;
   final bool hideCompleted;
 
+  List<Entity> get entities {
+    var entityList = criteria.entities.sortedBy((e) => e.name);
+    if (hideCompleted) entityList = entityList.where((e) => !progressTracker.isEntityDone(e)).toList();
+    return entityList;
+  }
+
+  List<Tag> get tags {
+    return entities.expand((e) => e.tags).toSet().toList().sortedBy((t) => t.name);
+  }
+
   @override
   State<EntityChecklistPanel> createState() => _EntityChecklistPanelState();
 }
 
 class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
+  Tag? _selectedTag;
+  final dropdownController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return _buildLayout(Column(children: [
       SizedBox(height: 8),
       Text('Checklist', style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.left),
+      SizedBox(height: 8),
+      _buildToolbar(),
       SizedBox(height: 8),
       Expanded(child: _buildList()),
     ]));
@@ -38,9 +53,32 @@ class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
     );
   }
 
+  Widget _buildToolbar() {
+    var tagList = widget.tags;
+    return DropdownMenu<Tag?>(
+      initialSelection: _selectedTag,
+      label: Text('Filter by Tag'),
+      enableSearch: true,
+      enableFilter: true,
+      controller: dropdownController,
+      leadingIcon: IconButton(
+          onPressed: () {
+            setState(() => _selectedTag = null);
+            dropdownController.clear();
+          },
+          icon: Icon(Icons.clear)),
+      onSelected: (t) {
+        setState(() => _selectedTag = t);
+      },
+      dropdownMenuEntries: [
+        for (var t in tagList) DropdownMenuEntry(value: t, label: t.name),
+      ],
+    );
+  }
+
   Widget _buildList() {
-    var entityList = widget.criteria.entities.sortedBy((e) => e.name);
-    if (widget.hideCompleted) entityList = entityList.where((e) => !widget.progressTracker.isEntityDone(e)).toList();
+    var entityList = widget.entities;
+    if(_selectedTag != null) entityList = entityList.where((e) => e.tags.contains(_selectedTag)).toList();
     return ListView.builder(
       itemCount: entityList.length,
       itemBuilder: (_, i) => CheckboxListTile(
