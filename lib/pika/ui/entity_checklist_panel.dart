@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,7 @@ class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
   }
 
   Widget _buildList() {
-    var entityList = widget.criteria.entities;
+    var entityList = widget.criteria.entities.sortedBy((e) => e.name);
     if (widget.hideCompleted) entityList = entityList.where((e) => !widget.progressTracker.isEntityDone(e)).toList();
     return ListView.builder(
       itemCount: entityList.length,
