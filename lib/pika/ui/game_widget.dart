@@ -1,4 +1,5 @@
 import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class _GameViewState extends State<GameWidget> {
     return ValueListenableBuilder(
       valueListenable: widget.game.progress,
       builder: (context, __, ___) {
-        var achList = widget.game.achievements;
+        var achList = widget.game.achievements.sortedBy((a) => a.name);
         if(context.watch<PikaUiState>().hideCompleted.value) achList = achList.where((a) => !a.progress.isCompleted).toList();
         return AlwanDataTable<Achievement>(
           values: achList,

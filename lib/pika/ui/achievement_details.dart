@@ -1,6 +1,7 @@
 import 'package:alwan/pika/ui/pika_data_cell.dart';
 import 'package:alwan/pika/ui/progress_summary_widget.dart';
 import 'package:alwan/ui/building_blocks/alwan_data_table.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class _AchievementDetailsState extends State<AchievementDetails> {
     return ValueListenableBuilder(
       valueListenable: widget.achievement.progress,
       builder: (context, _, __) {
-        var objList = widget.achievement.objectives;
+        var objList = widget.achievement.objectives.sortedBy((o) => o.name);
         if(context.watch<PikaUiState>().hideCompleted.value) objList = objList.where((o) => !o.progress.isCompleted).toList();
         return AlwanDataTable<Objective>(
           values: objList,
