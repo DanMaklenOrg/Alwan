@@ -13,7 +13,7 @@ final class ObjectiveDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return _buildLayout(
       title: _buildTitle(context),
-      progress: ProgressSummaryWidget(progress: objective.progress, criteria: objective.criteriaCategory),
+      progress: ProgressSummaryWidget(progress: objective.progress, criteria: objective.criterion),
       description: objective.description == null ? null : _buildDescription(context),
     );
   }

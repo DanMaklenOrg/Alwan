@@ -40,30 +40,39 @@ final class GameBuilderFromDto {
   Achievement _buildAchievement(AchievementDto dto, AchievementProgressDto? progressDto) {
     var objProgressMap = {for (var o in progressDto?.objectiveProgress ?? []) o.objective: o};
     var objectives = dto.objectives?.map((o) => _buildObjective(o, objProgressMap[o.id])).toList() ?? [];
+    var criterion = dto.criterion == null ? null : _buildCriterion(dto.criterion!);
     return Achievement(
       id: ResourceId(id: dto.id),
       name: dto.name,
       description: dto.description,
       objectives: objectives,
-      criteriaCategory: dto.criteriaCategory == null ? null : _categories[dto.criteriaCategory],
+      criterion: criterion,
       progress: PikaProgress(
-        manual: dto.criteriaCategory == null && objectives.isEmpty ? _buildManualProgress(progressDto?.completed) : null,
+        manual: criterion == null && objectives.isEmpty ? _buildManualProgress(progressDto?.completed) : null,
         dependents: objectives.isNotEmpty ? _buildDependencyProgress(objectives.map((o) => o.progress).toList()) : null,
-        criteria: dto.criteriaCategory != null ? _buildCriteriaProgress(dto.criteriaCategory!, progressDto?.entitiesDone) : null,
+        criteria: criterion != null ? _buildCriteriaProgress(criterion, progressDto?.entitiesDone) : null,
       ),
     );
   }
 
   Objective _buildObjective(ObjectiveDto dto, ObjectiveProgressDto? progressDto) {
+    var criterion = dto.criterion == null ? null : _buildCriterion(dto.criterion!);
     return Objective(
       id: ResourceId(id: dto.id),
       name: dto.name,
       description: dto.description,
-      criteriaCategory: dto.criteriaCategory == null ? null : _categories[dto.criteriaCategory],
+      criterion: criterion,
       progress: PikaProgress(
-        manual: dto.criteriaCategory == null ? _buildManualProgress(progressDto?.completed) : null,
-        criteria: dto.criteriaCategory != null ? _buildCriteriaProgress(dto.criteriaCategory!, progressDto?.entitiesDone) : null,
+        manual: criterion == null ? _buildManualProgress(progressDto?.completed) : null,
+        criteria: criterion != null ? _buildCriteriaProgress(criterion, progressDto?.entitiesDone) : null,
       ),
+    );
+  }
+
+  Criterion _buildCriterion(CriterionDto dto) {
+    return Criterion(
+      category: _categories[dto.category]!,
+      tags: dto.tags?.map((t) => _tags[t]!).toSet() ?? {},
     );
   }
 
@@ -80,7 +89,7 @@ final class GameBuilderFromDto {
       id: ResourceId(id: dto.id),
       name: dto.name,
       category: ResourceId(id: dto.category),
-      tags: dto.tags?.map((t) => _tags[t]!).toList() ?? [],
+      tags: dto.tags?.map((t) => _tags[t]!).toSet() ?? {},
     );
   }
 
@@ -92,9 +101,9 @@ final class GameBuilderFromDto {
     return DependencyProgress(dependents: dependents?.toSet() ?? {});
   }
 
-  CriteriaProgress _buildCriteriaProgress(String criteriaCategory, List<String>? entitiesDone) {
+  CriteriaProgress _buildCriteriaProgress(Criterion criterion, List<String>? entitiesDone) {
     return CriteriaProgress(
-      targetCount: _categories[criteriaCategory]!.entities.length,
+      targetCount: criterion.entities.length,
       entitiesDone: entitiesDone?.map((id) => ResourceId(id: id)).toSet() ?? {},
     );
   }
