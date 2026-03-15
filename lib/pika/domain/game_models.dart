@@ -57,22 +57,34 @@ final class Game extends PikaResource {
 }
 
 final class Achievement extends PikaResource {
-  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criteriaCategory, required this.progress});
+  Achievement({required super.id, required super.name, this.description, this.objectives = const [], this.criterion, required this.progress});
 
   final String? description;
   final List<Objective> objectives;
-  final Category? criteriaCategory;
+  final Criterion? criterion;
 
   PikaProgress progress;
 }
 
 final class Objective extends PikaResource {
-  Objective({required super.id, required super.name, this.description, this.criteriaCategory, required this.progress});
+  Objective({required super.id, required super.name, this.description, this.criterion, required this.progress});
 
   final String? description;
-  final Category? criteriaCategory;
+  final Criterion? criterion;
 
   PikaProgress progress;
+}
+
+final class Criterion {
+  Criterion({required this.category, this.tags = const {}});
+
+  final Category category;
+  final Set<Tag> tags;
+
+  List<Entity> get entities {
+    if(tags.isEmpty) return category.entities;
+    return category.entities.where((e) => e.tags.intersection(tags).isNotEmpty).toList();
+  }
 }
 
 final class Category extends PikaResource {
@@ -89,5 +101,5 @@ final class Entity extends PikaResource {
   Entity({required super.id, required super.name, required this.category, required this.tags});
 
   final ResourceId category;
-  final List<Tag> tags;
+  final Set<Tag> tags;
 }

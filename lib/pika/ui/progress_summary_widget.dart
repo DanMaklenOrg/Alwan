@@ -8,7 +8,7 @@ final class ProgressSummaryWidget extends StatelessWidget {
   const ProgressSummaryWidget({super.key, required this.progress, required this.criteria});
 
   final PikaProgress progress;
-  final Category? criteria;
+  final Criterion? criteria;
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'pika_ui_state.dart';
 class EntityChecklistPanel extends StatefulWidget {
   const EntityChecklistPanel({super.key, required this.criteria, required this.progressTracker, required this.hideCompleted});
 
-  final Category criteria;
+  final Criterion criteria;
   final CriteriaProgress progressTracker;
   final bool hideCompleted;
 
@@ -97,7 +97,7 @@ class _EntityChecklistPanelState extends State<EntityChecklistPanel> {
   }
 }
 
-void showEntityChecklistPanel(BuildContext context, {required Category criteria, required CriteriaProgress progressTracker}) {
+void showEntityChecklistPanel(BuildContext context, {required Criterion criteria, required CriteriaProgress progressTracker}) {
   showGeneralDialog(
     context: context,
     barrierLabel: 'DismissChecklistSideSheet',

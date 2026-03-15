@@ -25,7 +25,7 @@ class _AchievementDetailsState extends State<AchievementDetails> {
   Widget build(BuildContext context) {
     return _buildLayout(
       title: _buildTitle(),
-      progress: ProgressSummaryWidget(progress: widget.achievement.progress, criteria: widget.achievement.criteriaCategory),
+      progress: ProgressSummaryWidget(progress: widget.achievement.progress, criteria: widget.achievement.criterion),
       description: widget.achievement.description == null ? null : _buildDescription(),
       objectives: widget.achievement.objectives.isEmpty ? null : _buildObjectiveList(),
     );
